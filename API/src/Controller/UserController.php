@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,6 +12,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends AbstractController
 {
+
+    private $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * @Route("/addUser", name="addUser", methods={"POST"})
      */
@@ -19,7 +28,7 @@ class UserController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $username = $data['username'];
 
-        if ($this->userRepository->usernameEmpty($username)) {
+        if (empty($this->userRepository->findOneBy(['username' => $username]))) {
             $password = $data['password'];
             $city = $data['city'];
             $phoneContact = $data['phone_contact'];
@@ -69,7 +78,7 @@ class UserController extends AbstractController
         empty($data['city']) ? true : $user->setCity($data['city']);
         empty($data['phone_contact']) ? true : $user->setPhoneContact($data['phone_contact']);
         empty($data['mail']) ? true : $user->setMail($data['mail']);
-        empty($data['address']) ? true : $user->setMainLanguage($data['address']);
+        empty($data['address']) ? true : $user->setAddress($data['address']);
         $user->setRoles(['ROLE_USER']);
 
         $updatedUser = $this->userRepository->updateUser($user);
