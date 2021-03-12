@@ -12,7 +12,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends AbstractController
 {
-
     private $userRepository;
 
     public function __construct(UserRepository $userRepository)

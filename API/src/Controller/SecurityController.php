@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +13,6 @@ class SecurityController extends AbstractController
     public function login(Request $request)
     {
         $user = $this->getUser();
-
         return $this->json([
             'username' => $user->getUsername(),
             'roles' => $user->getRoles(),
