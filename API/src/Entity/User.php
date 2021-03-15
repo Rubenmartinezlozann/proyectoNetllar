@@ -55,6 +55,11 @@ class User implements UserInterface
      */
     private $address;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Token::class, mappedBy="user", cascade={"persist", "remove"})
+     */
+    private $token;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -175,6 +180,28 @@ class User implements UserInterface
     public function setAddress(string $address): self
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getToken(): ?Token
+    {
+        return $this->token;
+    }
+
+    public function setToken(?Token $token): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($token === null && $this->token !== null) {
+            $this->token->setUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($token !== null && $token->getUser() !== $this) {
+            $token->setUser($this);
+        }
+
+        $this->token = $token;
 
         return $this;
     }

@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\Token;
+use App\Repository\TokenRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -19,12 +21,15 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager)
+    public function __construct(ManagerRegistry $registry, UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $manager, TokenRepository $tokenRepository)
     {
         parent::__construct($registry, User::class);
         $this->passwordEncoder = $passwordEncoder;
         $this->manager = $manager;
+        $this->tokenRepository = $tokenRepository;
     }
+    private $manager;
+    private $tokenRepository;
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
@@ -36,8 +41,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         }
 
         $user->setPassword($newEncodedPassword);
-        $this->_em->persist($user);
-        $this->_em->flush();
+        $this->manager->persist($user);
+        $this->manager->flush();
     }
 
     public function saveUser($username, $password, $roles, $city, $phone_contact, $mail, $address)
@@ -71,32 +76,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->manager->flush();
     }
 
-    // /**
-    //  * @return User[] Returns an array of User objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function login(User $user)
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('u.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $this->tokenRepository->addToken($user);
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?User
+    public function loginOk(User $user): bool
     {
-        return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $user->getToken() !== null
+            ? ($user->getToken()->getExpiationDate() > date('Y-m-d H:i:s')
+                ? true
+                : ($this->logout($user)
+                    ? false
+                    : true))
+            : false;
     }
-    */
+
+    public function logout(User $user): bool
+    {
+        $token = null;
+        $user->setToken($token);
+        return $user->$this->tokenRepository->removeToken($user->getToken());
+    }
 }
