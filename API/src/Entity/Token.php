@@ -2,38 +2,53 @@
 
 namespace App\Entity;
 
-use App\Repository\TokenRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=TokenRepository::class)
+ * Token
+ *
+ * @ORM\Table(name="token", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_5F37A13BA76ED395", columns={"user_id"})})
+ * @ORM\Entity
  */
 class Token
 {
     /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=255, nullable=false)
      */
     private $token;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="login_date", type="string", length=255, nullable=true)
      */
-    private $login_date;
+    private $loginDate;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="expiation_date", type="string", length=255, nullable=true)
      */
-    private $expiation_date;
+    private $expiationDate;
 
     /**
-     * @ORM\OneToOne(targetEntity=user::class, inversedBy="token", cascade={"persist", "remove"})
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * })
      */
     private $user;
 
@@ -56,37 +71,39 @@ class Token
 
     public function getLoginDate(): ?string
     {
-        return $this->login_date;
+        return $this->loginDate;
     }
 
-    public function setLoginDate(?string $login_date): self
+    public function setLoginDate(?string $loginDate): self
     {
-        $this->login_date = $login_date;
+        $this->loginDate = $loginDate;
 
         return $this;
     }
 
     public function getExpiationDate(): ?string
     {
-        return $this->expiation_date;
+        return $this->expiationDate;
     }
 
-    public function setExpiationDate(?string $expiation_date): self
+    public function setExpiationDate(?string $expiationDate): self
     {
-        $this->expiation_date = $expiation_date;
+        $this->expiationDate = $expiationDate;
 
         return $this;
     }
 
-    public function getUser(): ?user
+    public function getUser()
     {
         return $this->user;
     }
 
-    public function setUser(?user $user): self
+    public function setUser(?User $user): self
     {
         $this->user = $user;
 
         return $this;
     }
+
+
 }

@@ -11,6 +11,8 @@ export class HomePageComponent implements AfterViewInit {
   constructor(private http: HttpClient) { }
 
   ngAfterViewInit(): void {
-    
+
   }
+
+  
 }

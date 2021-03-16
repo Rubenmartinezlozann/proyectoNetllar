@@ -3,7 +3,7 @@
         <label class="col-md-4">Nombre de usuario</label>
     </div>
     <div class="row justify-content-center">
-        <input (input)="getUsername($event)" id="username" class="col-md-4" type="text">
+        <input (input)="getUsername($event)" id="username" class="col-md-4 " type="text">
     </div>
 
     <div class="row justify-content-center">
@@ -11,6 +11,9 @@
     </div>
     <div class="row justify-content-center">
         <input (input)='getPassword($event)' id="password" class="col-md-4" type="password">
+    </div>
+    <div class="row justify-content-center errorMensaje">
+        <label id="errorMensaje" class="col-md-4">Usuario o Contraseña incorrectos</label>
     </div>
     <br>
     <div class="row justify-content-center">

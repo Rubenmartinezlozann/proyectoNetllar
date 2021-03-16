@@ -2,3 +2,7 @@
     text-align: center;
     min-width: 10%;
 }
+
+.errorMensaje{
+    display: none;
+}

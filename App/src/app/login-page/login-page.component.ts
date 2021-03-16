@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BuiltinTypeName } from '@angular/compiler';
 import { Router } from '@angular/router';
 
 
@@ -21,11 +20,23 @@ export class LoginPageComponent implements OnInit {
   getPassword = (value: any) => this.password = value.currentTarget.value
 
   login() {
-    this.http.post(this.urlLogin, { "username": this.user, "password": this.password }).subscribe(res => {
-      this.router.navigate(['/home']);
+    this.http.post(this.urlLogin, { "username": this.user, "password": this.password }).subscribe((res: any) => {
+      const txtUser = document.getElementById("username");
+      const txtPassword = document.getElementById("password");
+      const lblError = document.getElementById("errorMensaje");
+      if (res.token !== null) {
+        txtUser?.classList.contains('border-danger') ? (txtUser.classList.remove("border-danger")) : true;
+        txtPassword?.classList.contains('border-danger') ? (txtPassword.classList.remove("border-danger")) : true;
+        lblError !== null ? lblError.style.display = 'none' : true
+        sessionStorage.setItem("token", res.token);
+        this.router.navigate(['/Home']);
+      } else {
+        txtUser?.classList.contains('border-danger') ? true : txtUser?.classList.add("border-danger");
+        txtPassword?.classList.contains('border-danger') ? true : txtPassword?.classList.add("border-danger");
+        lblError !== null ? lblError.style.display = 'block' : true
+      }
     })
   }
-
 
   ngOnInit(): void {
   }
