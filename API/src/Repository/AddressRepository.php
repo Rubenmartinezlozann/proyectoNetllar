@@ -139,8 +139,7 @@ class AddressRepository extends ServiceEntityRepository
 
             foreach ($sugestedAddress as $sugestedValue) {
                 foreach ($dbAddressData as $dbValue) {
-                    // echo("provincia => ".$sugestedValue['province']." municipio => ".$sugestedValue['municipality']." tipoVia => ".$sugestedValue['typeRoad']." calle => ".$sugestedValue['street']."\n\t");
-                    if (str_contains($dbValue->getProvincia(), $sugestedValue['province']) && str_contains($dbValue->getMunicipio(), $sugestedValue['municipality']) && str_contains($dbValue->getTipovia(), $sugestedValue['typeRoad']) && str_contains($dbValue->getCalle(), $sugestedValue['street'])) {
+                    if (str_contains(strtolower($dbValue->getProvincia()), strtolower($sugestedValue['province'])) && str_contains(strtolower($dbValue->getMunicipio()), strtolower($sugestedValue['municipality'])) && str_contains(strtolower($dbValue->getTipovia()), strtolower($sugestedValue['typeRoad'])) && str_contains(strtolower($dbValue->getCalle()), strtolower($sugestedValue['street']))) {
                         $data[] = [$dbValue->getTipovia(), $dbValue->getCalle(), $dbValue->getMunicipio(), $dbValue->getProvincia()];
                     }
                 }
