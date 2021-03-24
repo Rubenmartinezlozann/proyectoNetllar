@@ -131,27 +131,38 @@ class AddressRepository extends ServiceEntityRepository
 
             $lastValue = '';
             foreach ($dbAddressData as $dbValue) {
-                if (str_contains(strtolower($dbValue->getProvincia()), strtolower($sugestedValue['province'])) && str_contains(strtolower($dbValue->getMunicipio()), strtolower($sugestedValue['municipality'])) && str_contains(strtolower($dbValue->getTipovia()), strtolower($sugestedValue['typeRoad'])) && str_contains(strtolower($dbValue->getCalle()), strtolower($sugestedValue['street']))) {
-                    if (strtolower($lastValue) !== strtolower($dbValue->getCalle())) {
-                        $data[] = [
-                            strtoupper(substr($dbValue->getTipovia(), 0, 1)) . strtolower(substr($dbValue->getTipovia(), 1)),
-                            strtoupper(substr($dbValue->getCalle(), 0, 1)) . strtolower(substr($dbValue->getCalle(), 1)),
-                            strtoupper(substr($dbValue->getMunicipio(), 0, 1)) . strtolower(substr($dbValue->getMunicipio(), 1)),
-                            strtoupper(substr($dbValue->getProvincia(), 0, 1)) . strtolower(substr($dbValue->getProvincia(), 1)),
-                        ];
+                if ($lastValue !== [$dbValue->getTipovia(), $dbValue->getCalle(), $dbValue->getMunicipio(), $dbValue->getProvincia()] && str_contains(strtolower($dbValue->getProvincia()), strtolower($sugestedValue['province'])) && str_contains(strtolower($dbValue->getMunicipio()), strtolower($sugestedValue['municipality'])) && str_contains(strtolower($dbValue->getTipovia()), strtolower($sugestedValue['typeRoad'])) && str_contains(strtolower($dbValue->getCalle()), strtolower($sugestedValue['street']))) {
+                    $duplicated = false;
+                    $nextValue = [
+                        strtoupper(substr($dbValue->getTipovia(), 0, 1)) . strtolower(substr($dbValue->getTipovia(), 1)),
+                        strtoupper(substr($dbValue->getCalle(), 0, 1)) . strtolower(substr($dbValue->getCalle(), 1)),
+                        strtoupper(substr($dbValue->getMunicipio(), 0, 1)) . strtolower(substr($dbValue->getMunicipio(), 1)),
+                        strtoupper(substr($dbValue->getProvincia(), 0, 1)) . strtolower(substr($dbValue->getProvincia(), 1)),
+                    ];
+
+                    if (count($data) > 1) {
+                        foreach ($data as $key => $value) {
+                            if ($value === $nextValue) {
+                                $duplicated = true;
+                            }
+                        }
+                    }
+
+                    if (!$duplicated) {
+                        $data[] = $nextValue;
                     }
                 }
-                $lastValue = $dbValue->getCalle();
+                $lastValue = [$dbValue->getTipovia(), $dbValue->getCalle(), $dbValue->getMunicipio(), $dbValue->getProvincia()];
             }
         }
 
-        foreach ($data as $key => $value) {
+        /* foreach ($data as $key => $value) {
             foreach ($data as $key2 => $value2) {
                 if ($key !== $key2 && $value === $value2) {
                     unset($data[$key]);
                 }
             }
-        }
+        } */
         return !empty($data) ? $data : [];
     }
 
