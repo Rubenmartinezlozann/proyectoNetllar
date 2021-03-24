@@ -60,7 +60,7 @@ class AddressRepository extends ServiceEntityRepository
                 if ($frist !== $second) {
                     foreach ($wordsSort as $third) {
                         if ($second !== $third && $third !== $frist) {
-                            foreach ($wordsSort as $key => $fourth) {
+                            foreach ($wordsSort as $fourth) {
                                 if ($fourth !== $frist && $fourth !== $second && $fourth !== $third) {
                                     $wordsOrder[] = [$frist, $second, $third, $fourth];
                                 }
@@ -103,10 +103,17 @@ class AddressRepository extends ServiceEntityRepository
         ];
 
         foreach ($data as $value) {
-            $maxWords['province'] = count($this->getWords($value->getProvincia())) > $maxWords['province'] ? (count($this->getWords($value->getProvincia())) <= $maxValue ? count($this->getWords($value->getProvincia())) : $maxValue) : $maxWords['province'];
-            $maxWords['municipality'] = count($this->getWords($value->getMunicipio())) > $maxWords['municipality'] ? (count($this->getWords($value->getMunicipio())) <= $maxValue ? count($this->getWords($value->getMunicipio())) : $maxValue) : $maxWords['municipality'];
-            $maxWords['typeRoad'] = (count($this->getWords($value->getTipovia())) > $maxWords['typeRoad'] ? (count($this->getWords($value->getTipovia())) <= $maxValue ? count($this->getWords($value->getTipovia())) : $maxValue) : $maxWords['typeRoad']);
-            $maxWords['street'] = count($this->getWords($value->getCalle())) > $maxWords['street'] ? (count($this->getWords($value->getCalle())) <= $maxValue ? count($this->getWords($value->getCalle())) : $maxValue) : $maxWords['street'];
+            $countWords = [
+                'province' => count($this->getWords($value->getProvincia())),
+                'municipality' => count($this->getWords($value->getMunicipio())),
+                'typeRoad' => count($this->getWords($value->getTipovia())),
+                'street' => count($this->getWords($value->getCalle()))
+            ];
+
+            $maxWords['province'] = $countWords['province'] > $maxWords['province'] ? ($countWords['province'] <= $maxValue ? $countWords['province'] : $maxValue) : $maxWords['province'];
+            $maxWords['municipality'] = $countWords['municipality'] > $maxWords['municipality'] ? ($countWords['municipality'] <= $maxValue ? $countWords['municipality'] : $maxValue) : $maxWords['municipality'];
+            $maxWords['typeRoad'] = ($countWords['typeRoad'] > $maxWords['typeRoad'] ? ($countWords['typeRoad'] <= $maxValue ? $countWords['typeRoad'] : $maxValue) : $maxWords['typeRoad']);
+            $maxWords['street'] = $countWords['street'] > $maxWords['street'] ? ($countWords['street'] <= $maxValue ? $countWords['street'] : $maxValue) : $maxWords['street'];
         }
 
         return $maxWords;
@@ -154,13 +161,6 @@ class AddressRepository extends ServiceEntityRepository
             }
         }
 
-        /* foreach ($data as $key => $value) {
-            foreach ($data as $key2 => $value2) {
-                if ($key !== $key2 && $value === $value2) {
-                    unset($data[$key]);
-                }
-            }
-        } */
         return !empty($data) ? $data : [];
     }
 

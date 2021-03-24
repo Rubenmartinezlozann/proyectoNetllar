@@ -26,7 +26,7 @@ export class HomePageComponent {
 				});
 				textArray.push(text);
 			});
-			if (this.countRequest === num) this.data = textArray;
+			if (this.countRequest===num) this.data = textArray;
 		});
 	}
 }

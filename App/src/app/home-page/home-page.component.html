@@ -3,15 +3,15 @@
         <div class="col-md-7">
             <label class="">Dirección</label><br>
             <input class="address" (input)=getAddressData($event) type="text"
-                placeholder="Ejemplo Calle Provincia Municipio"><br>
-            <div *ngFor='let address of data;'>
-                <label>{{address}}</label>
+                placeholder="Ejemplo: Calle Sargento Alcoi Alicante"><br>
+            <div *ngFor='let address of data;' class="">
+                <label (click)="writeAddress">{{address}}</label>
             </div>
         </div>
 
         <div class="col-md-2">
             <label class="">Número</label><br>
-            <input class="number" type="text">
+            <input class="number" type="number">
         </div>
 
     </div>
