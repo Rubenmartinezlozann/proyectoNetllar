@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Token;
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,9 +24,10 @@ class SecurityController extends AbstractController
     public function login(Request $request)
     {
         $user = $this->getUser();
-        $this->userRepository->login($user);
+        $token = $this->userRepository->login($user);
         return $this->json([
-            'token' => $this->userRepository->loginOk($user) ? $user->getToken()->getToken() : null
+            'token' => $token->getToken(),
+            'exp_date' => $token->getExpiationDate()
         ]);
     }
 }

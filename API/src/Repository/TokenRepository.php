@@ -38,6 +38,7 @@ class TokenRepository extends ServiceEntityRepository
         $token->setLoginDate(date('Y-m-d H:i:s'));
         $token->setExpiationDate(date(('Y-m-d H:i:s'), time() + 60 * 30));
         $token->setUser($user);
+        $user->setToken($token);
 
         $this->manager->persist($token);
         $this->manager->flush();
@@ -45,7 +46,7 @@ class TokenRepository extends ServiceEntityRepository
         return $token;
     }
 
-    public function removeToken(Token $token): bool
+    public function removeToken($token): bool
     {
         if ($token !== null) {
             $this->manager->remove($token);

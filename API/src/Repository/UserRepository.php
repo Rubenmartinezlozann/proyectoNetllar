@@ -76,9 +76,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->manager->flush();
     }
 
-    public function login(User $user)
+    public function login(User $user): Token
     {
-        $this->tokenRepository->addToken($user);
+        if (!$this->loginOk($user)) $this->tokenRepository->addToken($user);
+        return $user->getToken();
     }
 
     public function loginOk(User $user): bool
