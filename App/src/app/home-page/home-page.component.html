@@ -1,1 +1,19 @@
-<div class="container"></div>
+<div class="container">
+    <div class="row justify-content-around">
+        <div class="col-md-7">
+            <label class="">Dirección</label><br>
+            <input class="address" (input)=getAddressData($event) type="text"
+                placeholder="Ejemplo Calle Provincia Municipio"><br>
+            <div *ngFor='let address of data;'>
+                <label>{{address}}</label>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <label class="">Número</label><br>
+            <input class="number" type="text">
+        </div>
+
+    </div>
+
+</div>

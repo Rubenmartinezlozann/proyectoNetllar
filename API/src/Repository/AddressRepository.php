@@ -140,11 +140,9 @@ class AddressRepository extends ServiceEntityRepository
                         strtoupper(substr($dbValue->getProvincia(), 0, 1)) . strtolower(substr($dbValue->getProvincia(), 1)),
                     ];
 
-                    if (count($data) > 1) {
-                        foreach ($data as $key => $value) {
-                            if ($value === $nextValue) {
-                                $duplicated = true;
-                            }
+                    foreach ($data as $key => $value) {
+                        if ($value == $nextValue) {
+                            $duplicated = true;
                         }
                     }
 

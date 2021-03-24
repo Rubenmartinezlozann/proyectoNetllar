@@ -3,6 +3,7 @@
     min-width: 10%;
 }
 
-.errorMensaje{
+#errorMensaje{
     display: none;
+    color:red
 }
