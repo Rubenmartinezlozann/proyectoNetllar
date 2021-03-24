@@ -95,8 +95,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function logout(User $user): bool
     {
-        $token = null;
-        $user->setToken($token);
-        return $user->$this->tokenRepository->removeToken($user->getToken());
+        // $token = null;
+        // $user->setToken($token);
+        return $this->tokenRepository->removeToken($user);
     }
 }

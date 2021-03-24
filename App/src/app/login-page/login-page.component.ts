@@ -13,30 +13,39 @@ export class LoginPageComponent implements OnInit {
   user: any;
   password: any;
   urlLogin = "http://127.0.0.1:8000/login";
+  ok: boolean = false;
 
   constructor(private http: HttpClient, private router: Router) { }
 
   getUsername = (value: any) => this.user = value.currentTarget.value
   getPassword = (value: any) => this.password = value.currentTarget.value
 
-  login() {
-    this.http.post(this.urlLogin, { "username": this.user, "password": this.password }).subscribe((res: any) => {
-      const txtUser = document.getElementById("username");
-      const txtPassword = document.getElementById("password");
-      const lblError = document.getElementById("errorMensaje");
-      if (res.token !== null) {
-        txtUser?.classList.contains('border-danger') ? (txtUser.classList.remove("border-danger")) : true;
-        txtPassword?.classList.contains('border-danger') ? (txtPassword.classList.remove("border-danger")) : true;
-        lblError !== null ? lblError.style.display = 'none' : true
-        sessionStorage.setItem("token", res.token);
-        this.router.navigate(['/Home']);
-      } else {
-        txtUser?.classList.contains('border-danger') ? true : txtUser?.classList.add("border-danger");
-        txtPassword?.classList.contains('border-danger') ? true : txtPassword?.classList.add("border-danger");
-        lblError !== null ? lblError.style.display = 'block' : true
-      }
-    })
+  private setErrorStyles = () => {
+    const txtUser = document.getElementById("username");
+    const txtPassword = document.getElementById("password");
+    const lblError = document.getElementById("errorMensaje");
+
+    if (this.ok) {
+      txtUser?.classList.contains('border-danger') ? (txtUser.classList.remove("border-danger")) : true;
+      txtPassword?.classList.contains('border-danger') ? (txtPassword.classList.remove("border-danger")) : true;
+      lblError !== null ? lblError.style.display = 'none' : true
+    } else {
+      txtUser?.classList.contains('border-danger') ? true : txtUser?.classList.add("border-danger");
+      txtPassword?.classList.contains('border-danger') ? true : txtPassword?.classList.add("border-danger");
+      lblError !== null ? lblError.style.display = 'block' : true
+    }
   }
+
+  login = () => {
+    this.http.post(this.urlLogin, { "username": this.user, "password": this.password }).subscribe((res: any) => {
+      this.ok = true;
+      this.setErrorStyles();
+      sessionStorage.setItem("token", res.token);
+      sessionStorage.setItem("expDate", res.exp_date);
+      this.router.navigate(['/home']);
+    });
+  }
+
 
   ngOnInit(): void {
   }

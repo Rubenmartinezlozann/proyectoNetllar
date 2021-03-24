@@ -46,10 +46,10 @@ class TokenRepository extends ServiceEntityRepository
         return $token;
     }
 
-    public function removeToken($token): bool
+    public function removeToken(User $user): bool
     {
-        if ($token !== null) {
-            $this->manager->remove($token);
+        if ($user->getToken() !== null) {
+            $this->manager->remove($user->getToken());
             $this->manager->flush();
             return true;
         }
