@@ -2,18 +2,19 @@
     <div class="row justify-content-around">
         <div class="col-md-7">
             <label class="">Dirección</label><br>
-            <input class="address" (input)=getAddressData($event) type="text"
+            <input id="txtAddress" class="address" (input)=getAddressData($event) type="text"
                 placeholder="Ejemplo: Calle Sargento Alcoi Alicante"><br>
-            <div *ngFor='let address of data;' class="">
-                <label (click)="writeAddress">{{address}}</label>
+            <div *ngFor='let address of data;' class="suggestedAddress">
+                <button (click)=writeAddress(address)>{{address.typeRoad}} {{address.street}} {{address.township}}
+                    {{address.province}}</button>
             </div>
         </div>
-
         <div class="col-md-2">
             <label class="">Número</label><br>
-            <input class="number" type="number">
+            <input (change)=getNumberText($event) class="number" type="number">
         </div>
-
     </div>
-
+    <div class="row justify-content-center">
+        <button class="col-md-1" (click)=findProducts()>Confirmar</button>
+    </div>
 </div>

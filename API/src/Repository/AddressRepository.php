@@ -54,7 +54,7 @@ class AddressRepository extends ServiceEntityRepository
     private function getWordsSequences()
     {
         $wordsOrder = [];
-        $wordsSort = ['street', 'province', 'municipality', 'typeRoad'];
+        $wordsSort = ['street', 'province', 'township', 'typeRoad'];
         foreach ($wordsSort as $frist) {
             foreach ($wordsSort as $second) {
                 if ($frist !== $second) {
@@ -97,7 +97,7 @@ class AddressRepository extends ServiceEntityRepository
     {
         $maxWords = [
             'province' => 0,
-            'municipality' => 0,
+            'township' => 0,
             'typeRoad' => 0,
             'street' => 0
         ];
@@ -105,13 +105,13 @@ class AddressRepository extends ServiceEntityRepository
         foreach ($data as $value) {
             $countWords = [
                 'province' => count($this->getWords($value->getProvincia())),
-                'municipality' => count($this->getWords($value->getMunicipio())),
+                'township' => count($this->getWords($value->getMunicipio())),
                 'typeRoad' => count($this->getWords($value->getTipovia())),
                 'street' => count($this->getWords($value->getCalle()))
             ];
 
             $maxWords['province'] = $countWords['province'] > $maxWords['province'] ? ($countWords['province'] <= $maxValue ? $countWords['province'] : $maxValue) : $maxWords['province'];
-            $maxWords['municipality'] = $countWords['municipality'] > $maxWords['municipality'] ? ($countWords['municipality'] <= $maxValue ? $countWords['municipality'] : $maxValue) : $maxWords['municipality'];
+            $maxWords['township'] = $countWords['township'] > $maxWords['township'] ? ($countWords['township'] <= $maxValue ? $countWords['township'] : $maxValue) : $maxWords['township'];
             $maxWords['typeRoad'] = ($countWords['typeRoad'] > $maxWords['typeRoad'] ? ($countWords['typeRoad'] <= $maxValue ? $countWords['typeRoad'] : $maxValue) : $maxWords['typeRoad']);
             $maxWords['street'] = $countWords['street'] > $maxWords['street'] ? ($countWords['street'] <= $maxValue ? $countWords['street'] : $maxValue) : $maxWords['street'];
         }
@@ -135,16 +135,25 @@ class AddressRepository extends ServiceEntityRepository
                 $sugestedValue[$key] = $text !== null ? $text : '';
             }
 
-
             $lastValue = '';
             foreach ($dbAddressData as $dbValue) {
-                if ($lastValue !== [$dbValue->getTipovia(), $dbValue->getCalle(), $dbValue->getMunicipio(), $dbValue->getProvincia()] && str_contains(strtolower($dbValue->getProvincia()), strtolower($sugestedValue['province'])) && str_contains(strtolower($dbValue->getMunicipio()), strtolower($sugestedValue['municipality'])) && str_contains(strtolower($dbValue->getTipovia()), strtolower($sugestedValue['typeRoad'])) && str_contains(strtolower($dbValue->getCalle()), strtolower($sugestedValue['street']))) {
+                if ($lastValue !== [$dbValue->getTipovia(), $dbValue->getCalle(), $dbValue->getMunicipio(), $dbValue->getProvincia()] && str_contains(strtolower($dbValue->getProvincia()), strtolower($sugestedValue['province'])) && str_contains(strtolower($dbValue->getMunicipio()), strtolower($sugestedValue['township'])) && str_contains(strtolower($dbValue->getTipovia()), strtolower($sugestedValue['typeRoad'])) && str_contains(strtolower($dbValue->getCalle()), strtolower($sugestedValue['street']))) {
                     $duplicated = false;
+
+                    /* $nextValue = [
+                        // 'id' => $dbValue->getGescal17(),
+                        'typeRoad' => strtoupper(substr($dbValue->getTipovia(), 0, 1)) . strtolower(substr($dbValue->getTipovia(), 1)),
+                        'street' => strtoupper(substr($dbValue->getCalle(), 0, 1)) . strtolower(substr($dbValue->getCalle(), 1)),
+                        'township' => strtoupper(substr($dbValue->getMunicipio(), 0, 1)) . strtolower(substr($dbValue->getMunicipio(), 1)),
+                        'province' => strtoupper(substr($dbValue->getProvincia(), 0, 1)) . strtolower(substr($dbValue->getProvincia(), 1)),
+                    ]; */
+
                     $nextValue = [
-                        strtoupper(substr($dbValue->getTipovia(), 0, 1)) . strtolower(substr($dbValue->getTipovia(), 1)),
-                        strtoupper(substr($dbValue->getCalle(), 0, 1)) . strtolower(substr($dbValue->getCalle(), 1)),
-                        strtoupper(substr($dbValue->getMunicipio(), 0, 1)) . strtolower(substr($dbValue->getMunicipio(), 1)),
-                        strtoupper(substr($dbValue->getProvincia(), 0, 1)) . strtolower(substr($dbValue->getProvincia(), 1)),
+                        // 'id' => $dbValue->getGescal17(),
+                        'typeRoad' => $dbValue->getTipovia(),
+                        'street' => $dbValue->getCalle(),
+                        'township' => $dbValue->getMunicipio(),
+                        'province' => $dbValue->getProvincia(),
                     ];
 
                     foreach ($data as $key => $value) {
@@ -182,7 +191,7 @@ class AddressRepository extends ServiceEntityRepository
             ->andWhere('a.TIPOVIA like %:typ')
             ->andWhere('a.CALLE like %:street')
             ->setParameter('prov', $province)
-            ->setParameter('mun', $municipality)
+            ->setParameter('mun', $township)
             ->setParameter('typ', $typeRoad)
             ->setParameter('street', $street)
             ->orderBy('a.Calle', 'ASC')

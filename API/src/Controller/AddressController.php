@@ -28,4 +28,14 @@ class AddressController extends AbstractController
 
         return new JsonResponse($data, Response::HTTP_OK);
     }
+
+    /**
+     * @Route("/findProducts/{typeRoad}/{street}/{township}/{province}/{number}", name="findProducts", methods={"GET"})
+     */
+    public function findProducts($typeRoad, $street, $township, $province, $number): JsonResponse
+    {
+        $data = $this->addressRepository->findOneBy(['TIPOVIA' => $typeRoad, 'CALLE' => $street, 'MUNICIPIO' => $township, 'PROVINCIA' => $province, 'NUMERO' => $number])->getProducto();
+
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
 }

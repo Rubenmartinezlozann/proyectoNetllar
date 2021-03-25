@@ -1,14 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login-page',
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
-export class LoginPageComponent implements OnInit {
+export class LoginPageComponent {
 
   user: any = '';
   password: any = '';
@@ -28,11 +27,11 @@ export class LoginPageComponent implements OnInit {
     if (this.ok) {
       txtUser?.classList.contains('border-danger') ? (txtUser.classList.remove("border-danger")) : true;
       txtPassword?.classList.contains('border-danger') ? (txtPassword.classList.remove("border-danger")) : true;
-      lblError !== null ? lblError.style.display = 'none' : true;
+      if (lblError !== null) lblError.style.display = 'none';
     } else {
       txtUser?.classList.contains('border-danger') ? true : txtUser?.classList.add("border-danger");
       txtPassword?.classList.contains('border-danger') ? true : txtPassword?.classList.add("border-danger");
-      lblError === null ? true : lblError.style.display = 'block';
+      if (lblError !== null) lblError.style.display = 'block';
     }
   }
 
@@ -51,8 +50,5 @@ export class LoginPageComponent implements OnInit {
       console.log("aqui");
     }
     this.setErrorStyles();
-  }
-
-  ngOnInit(): void {
   }
 }
