@@ -5,8 +5,8 @@
             <input id="txtAddress" class="address" (input)=getAddressData($event) type="text"
                 placeholder="Ejemplo: Calle Sargento Alcoi Alicante"><br>
             <div *ngFor='let address of data;' class="suggestedAddress">
-                <button (click)=writeAddress(address)>{{address.typeRoad}} {{address.street}} {{address.township}}
-                    {{address.province}}</button>
+                <button (click)=writeAddress(address)>{{address.typeRoad}} {{address.street}}
+                    {{address.township}} {{address.province}}</button>
             </div>
         </div>
         <div class="col-md-2">
