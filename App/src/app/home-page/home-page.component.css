@@ -1,11 +1,16 @@
+@media (max-width: 767px) {
+    .suggestedAddressItem {
+        font-size: 0.8em;
+    }
+    h6 {
+        font-size: 1.1em;
+    }
+}
+
+.suggestedAddressContainer {
+    max-height: 50%;
+}
+
 .address, .number, .btn {
     width: 100%;
-}
-
-.btnConfirm{
-    float: right;
-}
-
-.label{
-    margin: 0% 1%;
 }

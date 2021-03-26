@@ -1,16 +1,21 @@
 <div class="container">
-    <div class="row">
-        <label class="label">Dirección:</label>
-        <input id="txtAddress" class="col-md-5 address" (input)=getAddressData($event) type="text"
-            placeholder="Ejemplo: Calle Sargento Alcoi Alicante">
-        <label class="label">Número:</label>
-        <input (change)=getNumberText($event) class="col-md-1 number" type="number">
-        <button class="col-md-2 offset-md-1 text-center btn btn-primary btnConfirm" (click)=findProducts()>Confirmar</button>
-    </div>
-    <div class="">
-        <div *ngFor='let address of data;' class="col-md-5 offset-md-1 offset-lg-1 card address">
-            <p class="card-text" (click)=writeAddress(address)><b>{{address.typeRoad}}
-                    {{address.street}}</b><br>{{address.township}} {{address.province}}</p>
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <label>Dirección:</label>
+            <br>
+            <input id="txtAddress" class="address" (input)=getAddressData($event) type="text"
+                placeholder="Ejemplo: Calle Sargento Alcoi Alicante">
+            <div *ngFor='let address of data;' class="card suggestedAddressContainer">
+                <p class="card-text suggestedAddressItem" (click)=writeAddress(address)><b>{{address.typeRoad}}
+                        {{address.street}}</b><br>{{address.township}} {{address.province}}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label class="label">Número:</label>
+            <br>
+            <input class="number" (change)=getNumberText($event) type="number">
+            <br><br>
+            <button class="btn btn-primary btnConfirm" (click)=findProducts()>Confirmar</button>
         </div>
     </div>
 </div>
