@@ -160,7 +160,7 @@ class AddressRepository extends ServiceEntityRepository
                 $lastValue = [$dbValue->getTipovia(), $dbValue->getCalle(), $dbValue->getMunicipio(), $dbValue->getProvincia()];
             }
         }
-        return !empty($data) ? $data : [];
+        return $data;
     }
 
     /* private function executeNativeQuery($text, $params = [])

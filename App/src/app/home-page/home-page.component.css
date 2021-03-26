@@ -1,3 +1,11 @@
-.address, .number{
+.address, .number, .btn {
     width: 100%;
+}
+
+.btnConfirm{
+    float: right;
+}
+
+.label{
+    margin: 0% 1%;
 }

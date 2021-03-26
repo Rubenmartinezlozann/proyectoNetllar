@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomePageComponent } from './home-page/home-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AdminComponent } from './admin/admin.component';
+import { CardComponent } from './card/card.component';
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { AdminComponent } from './admin/admin.component';
     AppComponent,
     HomePageComponent,
     LoginPageComponent,
-    AdminComponent
+    AdminComponent,
+    CardComponent
   ],
   imports: [
     BrowserModule,
