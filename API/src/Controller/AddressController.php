@@ -34,7 +34,11 @@ class AddressController extends AbstractController
      */
     public function findProducts($typeRoad, $street, $township, $province, $number): JsonResponse
     {
-        $data = $this->addressRepository->findOneBy(['TIPOVIA' => $typeRoad, 'CALLE' => $street, 'MUNICIPIO' => $township, 'PROVINCIA' => $province, 'NUMERO' => $number])->getProducto();
+        $data = [];
+        $products = $this->addressRepository->findOneBy(['tipovia' => $typeRoad, 'calle' => $street, 'municipio' => $township, 'provincia' => $province, 'numero' => $number]);
+        if (!empty($products)) {
+            $data[] = $products->getProducto();
+        }
 
         return new JsonResponse($data, Response::HTTP_OK);
     }
