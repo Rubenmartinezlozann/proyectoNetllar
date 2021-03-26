@@ -140,20 +140,11 @@ class AddressRepository extends ServiceEntityRepository
                 if ($lastValue !== [$dbValue->getTipovia(), $dbValue->getCalle(), $dbValue->getMunicipio(), $dbValue->getProvincia()] && str_contains(strtolower($dbValue->getProvincia()), strtolower($sugestedValue['province'])) && str_contains(strtolower($dbValue->getMunicipio()), strtolower($sugestedValue['township'])) && str_contains(strtolower($dbValue->getTipovia()), strtolower($sugestedValue['typeRoad'])) && str_contains(strtolower($dbValue->getCalle()), strtolower($sugestedValue['street']))) {
                     $duplicated = false;
 
-                    /* $nextValue = [
-                        // 'id' => $dbValue->getGescal17(),
+                    $nextValue = [
                         'typeRoad' => strtoupper(substr($dbValue->getTipovia(), 0, 1)) . strtolower(substr($dbValue->getTipovia(), 1)),
                         'street' => strtoupper(substr($dbValue->getCalle(), 0, 1)) . strtolower(substr($dbValue->getCalle(), 1)),
                         'township' => strtoupper(substr($dbValue->getMunicipio(), 0, 1)) . strtolower(substr($dbValue->getMunicipio(), 1)),
                         'province' => strtoupper(substr($dbValue->getProvincia(), 0, 1)) . strtolower(substr($dbValue->getProvincia(), 1)),
-                    ]; */
-
-                    $nextValue = [
-                        // 'id' => $dbValue->getGescal17(),
-                        'typeRoad' => $dbValue->getTipovia(),
-                        'street' => $dbValue->getCalle(),
-                        'township' => $dbValue->getMunicipio(),
-                        'province' => $dbValue->getProvincia(),
                     ];
 
                     foreach ($data as $key => $value) {
