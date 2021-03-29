@@ -38,8 +38,6 @@ export class HomePageComponent implements AfterViewInit {
 	getCpText = (value: any) => { this.cp = value.currentTarget.value; this.txtAddress.value = ''; };
 
 	getAddressText = (value: any) => {
-		this.txtCp.value = '';
-		this.cp = '';
 		return value.currentTarget.value;
 	};
 
@@ -59,7 +57,7 @@ export class HomePageComponent implements AfterViewInit {
 					if (this.cp !== undefined && this.cp !== '') url += `/${this.cp}`;
 					this.http.get(url).subscribe((res: any = []) => {
 						this.spinner.style.display = 'none';
-						if (this.countRequest === num) {
+						if (this.countRequest === num && res.length > 0) {
 							this.divSuggestedAddress.style.display = 'block	';
 							this.data = res;
 							if (this.selectedData !== undefined) this.selectedData = undefined;
