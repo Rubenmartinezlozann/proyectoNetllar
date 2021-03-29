@@ -36,7 +36,20 @@ h6 {
 .suggestedAddressContainer {
     max-height: 200px;
     display: none;
-    float: left;
+}
+
+.suggestedAddressContainer::-webkit-scrollbar-track {
+    background-color: whitesmoke;
+    border-radius: 5;
+}
+
+.suggestedAddressContainer::-webkit-scrollbar {
+    width: 10px;
+}
+
+.suggestedAddressContainer::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    border-radius: 5px;
 }
 
 .suggestedAddressItem :hover {
