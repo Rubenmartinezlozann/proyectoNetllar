@@ -14,7 +14,7 @@ export class HomePageComponent implements AfterViewInit {
 
 	countRequest: number = 0;
 
-	number: number = 0
+	number: any = 0
 	cp: any;
 	txtAddress: any;
 	txtCp: any;
@@ -71,6 +71,7 @@ export class HomePageComponent implements AfterViewInit {
 						this.spinner.style.display = 'none';
 						if (this.countRequest === num && res.length > 0) {
 							this.divSuggestedAddress.style.display = 'block	';
+							this.divSuggestedAddress.style.overflow = res.length > 4 ? 'auto' : 'initial';
 							this.data = res;
 							if (this.selectedData !== undefined) this.selectedData = undefined;
 						}
@@ -99,7 +100,10 @@ export class HomePageComponent implements AfterViewInit {
 
 	clear = () => {
 		this.txtCp.value = '';
+		this.cp = undefined;
 		this.clearAddressData();
+		this.txtNumber.value = '';
+		this.number = undefined;
 	}
 
 	findProducts = () => {

@@ -1,3 +1,12 @@
+/* @media (max-width: 575px) {
+    .suggestedAddressItem, .card-text {
+        font-size: 0.6em;
+    }
+    h6 {
+        font-size: 0.8em;
+    }
+} */
+
 @media (max-width: 767px) {
     .suggestedAddressItem, .card-text {
         font-size: 0.8em;
@@ -5,6 +14,14 @@
     h6 {
         font-size: 1.1em;
     }
+}
+
+.suggestedAddressItem, .card-text {
+    font-size: 1em;
+}
+
+h6 {
+    font-size: 1.4em;
 }
 
 .btnConfirm, .btnClear, .address, .number, .cp, .suggestedAddressContainer {
@@ -18,12 +35,11 @@
 
 .suggestedAddressContainer {
     max-height: 200px;
-    overflow-y: scroll;
     display: none;
     float: left;
 }
 
-.suggestedAddressItem :hover{
+.suggestedAddressItem :hover {
     background-color: lightblue;
 }
 
