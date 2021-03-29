@@ -9,22 +9,30 @@ import { Router } from '@angular/router';
 })
 export class HomePageComponent implements AfterViewInit {
 	data: any = [];
-	selectedData: any;
-	countRequest: number = 0;
-	number: number = 0
-	txtAddress: any;
 	products: any = [];
+	selectedData: any;
+
+	countRequest: number = 0;
+
+	number: number = 0
 	cp: any;
+	txtAddress: any;
 	txtCp: any;
+	txtNumber: any;
+	divSuggestedAddress: any;
+
+	spinner: any;
 
 	constructor(private http: HttpClient, private router: Router) { }
 
 	ngAfterViewInit() {
 		this.txtAddress = document.getElementById('txtAddress');
 		this.txtCp = document.getElementById('txtCp');
+		this.txtNumber = document.getElementById('txtNumber');
+		this.divSuggestedAddress = document.getElementById('suggestedAddressContainer');
 
-		const spinner = document.getElementById('spinnerContainer');
-		if (spinner !== null) spinner.style.display = 'none';
+		this.spinner = document.getElementById('spinnerContainer');
+		this.spinner.style.display = 'none';
 	}
 
 	getCpText = (value: any) => this.cp = value.currentTarget.value;
@@ -40,20 +48,19 @@ export class HomePageComponent implements AfterViewInit {
 		if (addressText !== '') {
 			setTimeout(() => {
 				if (this.countRequest === num) {
+					this.divSuggestedAddress.style.display = 'none';
 					this.data = [];
-					const spinner = document.getElementById('spinnerContainer');
-					if (spinner !== null) spinner.style.display = 'block';
+					this.spinner.style.display = 'block';
 					let url = `http://127.0.0.1:8000/suggestAddress/${addressText}`;
 					if (this.cp !== undefined && this.cp !== '') url += `/${this.cp}`;
 					this.http.get(url).subscribe((res: any = []) => {
-						if (spinner !== null) spinner.style.display = 'none';
+						this.spinner.style.display = 'none';
+						this.divSuggestedAddress.style.display = 'block	';
 						this.data = res;
 						if (this.selectedData !== undefined) this.selectedData = undefined;
 					});
 				}
 			}, 1000);
-		} else {
-			this.data = [];
 		}
 	}
 
@@ -67,6 +74,12 @@ export class HomePageComponent implements AfterViewInit {
 			'province': value.province,
 		};
 		this.data = [];
+		this.divSuggestedAddress.style.display = 'none';
+	}
+
+	clear = () => {
+		this.txtAddress.value = '';
+		this.txtCp.value = '';
 	}
 
 	findProducts = () => {

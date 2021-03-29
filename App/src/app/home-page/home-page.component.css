@@ -7,11 +7,22 @@
     }
 }
 
-.address, .number, .suggestedAddressItem, .cp, .btnConfirm {
+.btnConfirm, .btnClear, .address, .number, .cp, .suggestedAddressContainer {
     width: 100%;
-    border-radius: 5px;
 }
 
 .address, .number, .cp {
+    border-radius: 5px;
     border: 1px solid;
+}
+
+.suggestedAddressContainer {
+    height: 200px;
+    overflow-y: scroll;
+    display: none;
+    float: left;
+}
+
+.clearBoth {
+    clear: both;
 }

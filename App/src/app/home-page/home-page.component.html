@@ -1,16 +1,18 @@
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
+<div class="container-fluid">
+    <div class="row justify-content-start">
+        <div class="col-md-4">
             <label>Dirección:</label>
             <br>
             <input id="txtAddress" class="border-primary address" (input)=getAddressData($event) type="text"
-                placeholder="Ejemplo: Calle Sargento Alcoi Alicante">
-            <div *ngFor='let address of data;' class="card suggestedAddressContainer">
-                <p class="card-text border-primary suggestedAddressItem" (click)=writeAddress(address)>
+                placeholder="Calle municipio y provincia">
+            <div id="suggestedAddressContainer" class="card suggestedAddressContainer">
+                <div *ngFor='let address of data;' class="card-text border-primary suggestedAddressItem"
+                    (click)=writeAddress(address)>
                     <b>{{address.typeRoad}} {{address.street}}</b>
                     <br>
                     {{address.township}} {{address.province}}
-                </p>
+                </div>
+                <div class="clearBoth"></div>
             </div>
             <div id="spinnerContainer" class="spinner-border spinner-border-sm text-primary" role="status">
                 <div id="loadingIcon" class="sr-only"></div>
@@ -25,8 +27,16 @@
             <label class="label">Número:</label>
             <br>
             <input class="border-primary number" (change)=getNumberText($event) type="number">
-            <br><br>
-            <button id="btonConfirm" class="btn btn-primary btnConfirm" (click)=findProducts()>Confirmar</button>
         </div>
+        <div class="col-6 col-md-2">
+            <br>
+            <button id="btnConfirm" class="btn btn-primary btnConfirm" (click)=findProducts()>Confirmar</button>
+        </div>
+        <div class="col-6 col-md-2">
+            <br>
+            <button id="btnClear" class="btn btn-danger btnClear" (click)=clear()>Borrar</button>
+        </div>
+    </div>
+    <div class="row justify-content-start">
     </div>
 </div>
