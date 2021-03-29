@@ -20,11 +20,11 @@ class AddressController extends AbstractController
     }
 
     /**
-     * @Route("/suggestAddress/{address}", name="suggestAddress", methods={"GET"})
+     * @Route("/suggestAddress/{address}/{cp}", defaults={"cp": null}, name="suggestAddress", methods={"GET"})
      */
-    public function suggestAddress($address): JsonResponse
+    public function suggestAddress($address, $cp): JsonResponse
     {
-        $data = $this->addressRepository->suggestAddress($address);
+        $data = $this->addressRepository->suggestAddress($address, $cp);
 
         return new JsonResponse($data, Response::HTTP_OK);
     }

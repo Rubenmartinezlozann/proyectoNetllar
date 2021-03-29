@@ -23,9 +23,9 @@ class AddressRepository extends ServiceEntityRepository
         $this->manager = $manager;
     }
 
-    public function suggestAddress($addressText)
+    public function suggestAddress($addressText, $cp = null)
     {
-        $dbAddressData = $this->findAll();
+        $dbAddressData = $cp === null ? $this->findAll() : $this->findBy(['cp' => $cp]);
         $words = $this->getWords($addressText);
         $sequencesArray = $this->getWordsSequences();
         $lenghtSequencesArray = $this->getWordsLenghtSequences($words, $dbAddressData, $sequencesArray);
@@ -76,6 +76,7 @@ class AddressRepository extends ServiceEntityRepository
     private function getWordsLenghtSequences($words, $addressData, $wordsSequences)
     {
         $maxWords = $this->getMaxWordsNumber($addressData, count($words));
+        $wordsCombinations = [];
         foreach ($wordsSequences as $wordSequence) {
             for ($words1 = $maxWords[$wordSequence[0]]; $words1 >= 0; $words1--) {
                 for ($words2 = $maxWords[$wordSequence[1]]; $words2 >= 0; $words2--) {
@@ -145,6 +146,7 @@ class AddressRepository extends ServiceEntityRepository
                         'street' => strtoupper(substr($dbValue->getCalle(), 0, 1)) . strtolower(substr($dbValue->getCalle(), 1)),
                         'township' => strtoupper(substr($dbValue->getMunicipio(), 0, 1)) . strtolower(substr($dbValue->getMunicipio(), 1)),
                         'province' => strtoupper(substr($dbValue->getProvincia(), 0, 1)) . strtolower(substr($dbValue->getProvincia(), 1)),
+                        'cp' => $dbValue->getCp()
                     ];
 
                     foreach ($data as $key => $value) {
@@ -153,7 +155,7 @@ class AddressRepository extends ServiceEntityRepository
                         }
                     }
 
-                    if (!$duplicated) {
+                    if (!$duplicated /* && count($data) < 6 */) {
                         $data[] = $nextValue;
                     }
                 }

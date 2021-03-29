@@ -7,10 +7,11 @@
     }
 }
 
-.suggestedAddressContainer {
-    max-height: 50%;
+.address, .number, .suggestedAddressItem, .cp, .btnConfirm {
+    width: 100%;
+    border-radius: 5px;
 }
 
-.address, .number, .btn {
-    width: 100%;
+.address, .number, .cp {
+    border: 1px solid;
 }

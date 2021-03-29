@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -7,44 +7,59 @@ import { Router } from '@angular/router';
 	templateUrl: './home-page.component.html',
 	styleUrls: ['./home-page.component.css']
 })
-export class HomePageComponent implements OnInit {
+export class HomePageComponent implements AfterViewInit {
 	data: any = [];
 	selectedData: any;
 	countRequest: number = 0;
 	number: number = 0
 	txtAddress: any;
 	products: any = [];
+	cp: any;
+	txtCp: any;
 
 	constructor(private http: HttpClient, private router: Router) { }
 
-	ngOnInit = () => {
+	ngAfterViewInit() {
 		this.txtAddress = document.getElementById('txtAddress');
-		console.log("ng on init ok");
+		this.txtCp = document.getElementById('txtCp');
+
+		const spinner = document.getElementById('spinnerContainer');
+		if (spinner !== null) spinner.style.display = 'none';
 	}
 
-	getAddressText = (value: any) => value.currentTarget.value;
+	getCpText = (value: any) => this.cp = value.currentTarget.value;
+
+	getInputText = (value: any) => value.currentTarget.value;
 
 	getNumberText = (value: any) => this.number = value.currentTarget.value;
 
-	getAddressData = (text: any) => {
+	getAddressData = (event: any) => {
 		this.countRequest++;
 		const num = this.countRequest;
-		const addressText = this.getAddressText(text);
-		setTimeout(() => {
-			if (this.countRequest === num) {
-				if (addressText !== '') {
-					this.http.get(`http://127.0.0.1:8000/suggestAddress/${addressText}`).subscribe((res: any = []) => {
+		const addressText = this.getInputText(event);
+		if (addressText !== '') {
+			setTimeout(() => {
+				if (this.countRequest === num) {
+					this.data = [];
+					const spinner = document.getElementById('spinnerContainer');
+					if (spinner !== null) spinner.style.display = 'block';
+					let url = `http://127.0.0.1:8000/suggestAddress/${addressText}`;
+					if (this.cp !== undefined && this.cp !== '') url += `/${this.cp}`;
+					this.http.get(url).subscribe((res: any = []) => {
+						if (spinner !== null) spinner.style.display = 'none';
 						this.data = res;
 						if (this.selectedData !== undefined) this.selectedData = undefined;
 					});
 				}
-			}
-		}, 750);
+			}, 1000);
+		} else {
+			this.data = [];
+		}
 	}
 
 	writeAddress = (value: any) => {
-		this.txtAddress = document.getElementById('txtAddress');
 		this.txtAddress.value = `${value.typeRoad} ${value.street} ${value.township} ${value.province}`;
+		this.txtCp.value = value.cp;
 		this.selectedData = {
 			'typeRoad': value.typeRoad,
 			'street': value.street,
