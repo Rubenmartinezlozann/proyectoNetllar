@@ -1,5 +1,5 @@
 @media (max-width: 767px) {
-    .suggestedAddressItem {
+    .suggestedAddressItem, .card-text {
         font-size: 0.8em;
     }
     h6 {
@@ -21,6 +21,14 @@
     overflow-y: scroll;
     display: none;
     float: left;
+}
+
+.suggestedAddressItem :hover{
+    background-color: lightblue;
+}
+
+.rowAddressFinder {
+    position: inherit;
 }
 
 .clearBoth {

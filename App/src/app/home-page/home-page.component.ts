@@ -22,6 +22,7 @@ export class HomePageComponent implements AfterViewInit {
 	divSuggestedAddress: any;
 
 	spinner: any;
+	timeoutId: any;
 
 	constructor(private http: HttpClient, private router: Router) { }
 
@@ -35,7 +36,18 @@ export class HomePageComponent implements AfterViewInit {
 		this.spinner.style.display = 'none';
 	}
 
-	getCpText = (value: any) => { this.cp = value.currentTarget.value; this.txtAddress.value = ''; };
+	clearAddressData = () => {
+		this.txtAddress.value = '';
+		this.selectedData = undefined;
+		this.data = [];
+		this.countRequest++;
+		this.spinner.style.display = 'none';
+	}
+
+	getCpText = (value: any) => {
+		this.cp = value.currentTarget.value;
+		this.clearAddressData();
+	};
 
 	getAddressText = (value: any) => {
 		return value.currentTarget.value;
@@ -48,7 +60,7 @@ export class HomePageComponent implements AfterViewInit {
 		const num = this.countRequest;
 		const addressText = this.getAddressText(event);
 		if (addressText !== '') {
-			setTimeout(() => {
+			this.timeoutId = setTimeout(() => {
 				if (this.countRequest === num) {
 					this.divSuggestedAddress.style.display = 'none';
 					this.data = [];
@@ -86,8 +98,8 @@ export class HomePageComponent implements AfterViewInit {
 	}
 
 	clear = () => {
-		this.txtAddress.value = '';
 		this.txtCp.value = '';
+		this.clearAddressData();
 	}
 
 	findProducts = () => {

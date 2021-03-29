@@ -9,6 +9,7 @@ import { HomePageComponent } from './home-page/home-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AdminComponent } from './admin/admin.component';
 import { CardComponent } from './card/card.component';
+import { InputComponent } from './input/input.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { CardComponent } from './card/card.component';
     HomePageComponent,
     LoginPageComponent,
     AdminComponent,
-    CardComponent
+    CardComponent,
+    InputComponent
   ],
   imports: [
     BrowserModule,

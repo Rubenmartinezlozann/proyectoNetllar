@@ -1,28 +1,27 @@
+<nav></nav>
 <div class="container-fluid">
-    <div class="row justify-content-start">
-        <div class="col-md-4">
+    <div class="row justify-content-start rowAddressFinder">
+        <div class="col-md-4 offset-xl-1">
             <label>Dirección:</label>
             <br>
             <input id="txtAddress" class="border-primary address" (input)=getAddressData($event) type="text"
-                placeholder="Calle municipio y provincia">
-            <div id="suggestedAddressContainer" class="card suggestedAddressContainer">
-                <div *ngFor='let address of data;' class="card-text border-primary suggestedAddressItem"
-                    (click)=writeAddress(address)>
-                    <b>{{address.typeRoad}} {{address.street}}</b>
-                    <br>
-                    {{address.township}} {{address.province}}
+                placeholder="Calle Municipio Provincia">
+            <div id="suggestedAddressContainer" class="suggestedAddressContainer border-primary">
+                <div *ngFor='let address of data;' class="card suggestedAddressItem" (click)=writeAddress(address)>
+                    <p class="card-text"><b>{{address.typeRoad}} {{address.street}}</b><br>{{address.township}}
+                        {{address.province}}</p>
                 </div>
             </div>
             <div id="spinnerContainer" class="spinner-border spinner-border-sm text-primary" role="status">
                 <div id="loadingIcon" class="sr-only"></div>
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-sm-6 col-md-2 col-xl-1">
             <label class="label">CP:</label>
             <br>
             <input id="txtCp" class="border-primary cp" (input)=getCpText($event) type="number">
         </div>
-        <div class="col-md-2">
+        <div class="col-sm-6 col-md-2 col-lg-1">
             <label class="label">Número:</label>
             <br>
             <input class="border-primary number" (change)=getNumberText($event) type="number">
@@ -31,11 +30,12 @@
             <br>
             <button id="btnConfirm" class="btn btn-primary btnConfirm" (click)=findProducts()>Confirmar</button>
         </div>
-        <div class="col-6 col-md-2">
+        <div class="col-6 col-md-2 col-xl-1">
             <br>
             <button id="btnClear" class="btn btn-danger btnClear" (click)=clear()>Borrar</button>
         </div>
     </div>
-    <div class="row justify-content-start">
-    </div>
+    <footer>
+
+    </footer>
 </div>
