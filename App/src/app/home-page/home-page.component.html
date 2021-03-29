@@ -12,7 +12,6 @@
                     <br>
                     {{address.township}} {{address.province}}
                 </div>
-                <div class="clearBoth"></div>
             </div>
             <div id="spinnerContainer" class="spinner-border spinner-border-sm text-primary" role="status">
                 <div id="loadingIcon" class="sr-only"></div>
@@ -21,7 +20,7 @@
         <div class="col-md-2">
             <label class="label">CP:</label>
             <br>
-            <input id="txtCp" class="border-primary cp" (change)=getCpText($event) type="number">
+            <input id="txtCp" class="border-primary cp" (input)=getCpText($event) type="number">
         </div>
         <div class="col-md-2">
             <label class="label">Número:</label>

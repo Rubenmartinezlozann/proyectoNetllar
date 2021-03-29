@@ -35,16 +35,20 @@ export class HomePageComponent implements AfterViewInit {
 		this.spinner.style.display = 'none';
 	}
 
-	getCpText = (value: any) => this.cp = value.currentTarget.value;
+	getCpText = (value: any) => { this.cp = value.currentTarget.value; this.txtAddress.value = ''; };
 
-	getInputText = (value: any) => value.currentTarget.value;
+	getAddressText = (value: any) => {
+		this.txtCp.value = '';
+		this.cp = '';
+		return value.currentTarget.value;
+	};
 
 	getNumberText = (value: any) => this.number = value.currentTarget.value;
 
 	getAddressData = (event: any) => {
 		this.countRequest++;
 		const num = this.countRequest;
-		const addressText = this.getInputText(event);
+		const addressText = this.getAddressText(event);
 		if (addressText !== '') {
 			setTimeout(() => {
 				if (this.countRequest === num) {
@@ -55,12 +59,18 @@ export class HomePageComponent implements AfterViewInit {
 					if (this.cp !== undefined && this.cp !== '') url += `/${this.cp}`;
 					this.http.get(url).subscribe((res: any = []) => {
 						this.spinner.style.display = 'none';
-						this.divSuggestedAddress.style.display = 'block	';
-						this.data = res;
-						if (this.selectedData !== undefined) this.selectedData = undefined;
+						if (this.countRequest === num) {
+							this.divSuggestedAddress.style.display = 'block	';
+							this.data = res;
+							if (this.selectedData !== undefined) this.selectedData = undefined;
+						}
 					});
 				}
 			}, 1000);
+		} else {
+			this.data = [];
+			this.divSuggestedAddress.style.display = 'none';
+			this.spinner.style.display = 'none';
 		}
 	}
 
