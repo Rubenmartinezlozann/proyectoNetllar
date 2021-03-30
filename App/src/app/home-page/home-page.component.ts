@@ -32,6 +32,14 @@ export class HomePageComponent implements AfterViewInit {
 		this.txtNumber = document.getElementById('txtNumber');
 		this.divSuggestedAddress = document.getElementById('suggestedAddressContainer');
 
+		this.txtAddress.addEventListener('focus', () => {
+			if (this.data.length > 0) this.divSuggestedAddress.style.display = 'block';
+		});
+
+		this.txtAddress.addEventListener('blur', () => {
+			this.divSuggestedAddress.style.display = 'none';
+		});
+
 		this.spinner = document.getElementById('spinnerContainer');
 		this.spinner.style.display = 'none';
 	}
