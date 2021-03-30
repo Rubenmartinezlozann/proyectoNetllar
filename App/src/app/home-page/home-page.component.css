@@ -22,6 +22,11 @@ header.jumbotron {
     max-height: 20%;
 }
 
+.row{
+    float: right;
+    width: 100%;
+}
+
 img {
     margin-left: 5%;
 }
