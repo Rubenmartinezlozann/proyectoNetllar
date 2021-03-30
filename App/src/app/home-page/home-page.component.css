@@ -2,26 +2,31 @@
     .suggestedAddressItem, .card-text {
         font-size: 0.6em;
     }
-    h6 {
-        font-size: 0.8em;
-    }
 } */
 
 @media (max-width: 767px) {
     .suggestedAddressItem, .card-text {
         font-size: 0.8em;
     }
-    h6 {
-        font-size: 1.1em;
-    }
+}
+
+footer {
+    /* background-color: rgb(0, 59, 135); */
+    background-color: rgb(98, 135, 179);
+    margin-top: 40%;
+}
+
+header.jumbotron {
+    background-color: rgb(98, 135, 179);
+    max-height: 20%;
+}
+
+img {
+    margin-left: 5%;
 }
 
 .suggestedAddressItem, .card-text {
     font-size: 1em;
-}
-
-h6 {
-    font-size: 1.4em;
 }
 
 .btnConfirm, .btnClear, .address, .number, .cp, .suggestedAddressContainer {
