@@ -10,19 +10,21 @@ import { Router } from '@angular/router';
 export class HomePageComponent implements AfterViewInit {
 	data: any = [];
 	products: any = [];
-	selectedData: any;
+	selectedData: any = undefined;
 
 	countRequest: number = 0;
 
 	number: any = 0
 	cp: any;
+
 	txtAddress: any;
 	txtCp: any;
 	txtNumber: any;
 	divSuggestedAddress: any;
 
 	spinner: any;
-	timeoutId: any;
+
+	isAddressFocused: boolean = false;
 
 	constructor(private http: HttpClient, private router: Router) { }
 
@@ -37,7 +39,15 @@ export class HomePageComponent implements AfterViewInit {
 		});
 
 		this.txtAddress.addEventListener('blur', () => {
-			this.divSuggestedAddress.style.display = 'none';
+			if (!this.isAddressFocused) this.divSuggestedAddress.style.display = 'none';
+		});
+
+		this.divSuggestedAddress.addEventListener('mouseover', () => {
+			this.isAddressFocused = true;
+		});
+
+		this.divSuggestedAddress.addEventListener('mouseout', () => {
+			this.isAddressFocused = false;
 		});
 
 		this.spinner = document.getElementById('spinnerContainer');
@@ -68,7 +78,7 @@ export class HomePageComponent implements AfterViewInit {
 		const num = this.countRequest;
 		const addressText = this.getAddressText(event);
 		if (addressText !== '') {
-			this.timeoutId = setTimeout(() => {
+			setTimeout(() => {
 				if (this.countRequest === num) {
 					this.divSuggestedAddress.style.display = 'none';
 					this.data = [];
