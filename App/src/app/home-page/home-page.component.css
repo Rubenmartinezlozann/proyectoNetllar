@@ -11,9 +11,10 @@
 }
 
 footer {
+    margin-top: 30%;
     /* background-color: rgb(0, 59, 135); */
     background-color: rgb(98, 135, 179);
-    margin-top: 40%;
+    width: 100%;
 }
 
 header.jumbotron {
@@ -38,6 +39,10 @@ img {
     border: 1px solid;
 }
 
+#spinnerContainer, .suggestedAddressContainer {
+    float: left;
+}
+
 .suggestedAddressContainer {
     max-height: 200px;
     display: none;
@@ -58,11 +63,7 @@ img {
 }
 
 .suggestedAddressItem :hover {
-    background-color: lightblue;
-}
-
-.rowAddressFinder {
-    position: inherit;
+    background-color: rgb(128, 152, 182)
 }
 
 .clearBoth {
