@@ -86,16 +86,18 @@ export class HomePageComponent implements AfterViewInit {
 					let url = `http://127.0.0.1:8000/suggestAddress/${addressText}`;
 					if (this.cp !== undefined && this.cp !== '') url += `/${this.cp}`;
 					this.http.get(url).subscribe((res: any = []) => {
-						if (this.countRequest === num && res.length > 0) {
+						if (this.countRequest === num) {
 							this.spinner.style.display = 'none';
-							if (document.activeElement === this.txtAddress) this.divSuggestedAddress.style.display = 'block';
-							this.divSuggestedAddress.style.overflow = res.length > 4 ? 'auto' : 'initial';
-							this.data = res;
-							if (this.selectedData !== undefined) this.selectedData = undefined;
+							if (res.length > 0) {
+								if (document.activeElement === this.txtAddress) this.divSuggestedAddress.style.display = 'block';
+								this.divSuggestedAddress.style.overflow = res.length > 4 ? 'auto' : 'initial';
+								this.data = res;
+								if (this.selectedData !== undefined) this.selectedData = undefined;
+							}
 						}
 					});
 				}
-			}, 1000);
+			}, 750);
 		} else {
 			this.data = [];
 			this.divSuggestedAddress.style.display = 'none';
