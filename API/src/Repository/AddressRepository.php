@@ -23,7 +23,166 @@ class AddressRepository extends ServiceEntityRepository
         $this->manager = $manager;
     }
 
-    public function suggestAddress($addressText, $cp = null)
+    public function getProvinces($cp)
+    {
+        $qb = $this->manager->createQueryBuilder('a')
+            ->select('a.provincia')
+            ->from(Address::class, 'a');
+
+
+        if (!empty($cp)) {
+            $qb = $qb
+                ->where('a.cp = :cp')
+                ->setParameter('cp', $cp);
+        }
+
+        return $qb
+            ->orderBy('a.provincia', 'ASC')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getCp($province, $township, $typeRoad, $street, $number)
+    {
+        $qb = $this->manager->createQueryBuilder('a')
+            ->select('a.cp')
+            ->from(Address::class, 'a');
+        if ($province !== null) {
+            $qb = $qb
+                ->andWhere('a.provincia = :province')
+                ->setParameter('province', $province);
+            if ($township !== null) {
+                $qb = $qb
+                    ->andWhere('a.municipio = :township')
+                    ->setParameter('township', $township);
+                if ($typeRoad !== null) {
+                    $qb = $qb
+                        ->andWhere('a.tipovia = :typeRoad')
+                        ->setParameter('typeRoad', $typeRoad);
+                }
+                if ($street !== null) {
+                    $qb = $qb
+                        ->andWhere('a.calle = :street')
+                        ->setParameter('street', $street);
+                }
+
+                if ($number !== null) {
+                    $qb = $qb
+                        ->andWhere('a.numero = :number')
+                        ->setParameter('number', $number);
+                }
+            }
+        }
+
+        return $qb
+            ->orderBy('a.cp', 'ASC')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getTownship($province, $cp)
+    {
+        $qb = $this->manager->createQueryBuilder('a')
+            ->select('a.municipio')
+            ->from(Address::class, 'a')
+            ->Where('a.provincia = :province')
+            ->setParameter('province', $province);
+        if ($cp !== null) {
+            $qb = $qb
+                ->andWhere('a.cp = :cp')
+                ->setParameter('cp', $cp);
+        }
+
+        return $qb
+            ->orderBy('a.cp', 'ASC')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getStreet($province, $township, $typeRoad, $cp)
+    {
+        $qb = $this->manager->createQueryBuilder('a')
+            ->select('a.calle')
+            ->from(Address::class, 'a')
+            ->Where('a.province = :province AND a.municipio')
+            ->setParameter('province', $province)
+            ->setParameter('township', $township);
+
+        if ($typeRoad !== null) {
+            $qb = $qb
+                ->andWhere('a.tipovia = :typeRoad')
+                ->setParameter('typeRoad', $typeRoad);
+        }
+
+        if ($cp !== null) {
+            $qb = $qb
+                ->andWhere('a.cp = :cp')
+                ->setParameter('cp', $cp);
+        }
+
+        return $qb
+            ->orderBy('a.cp', 'ASC')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getTypeRoad($province, $township, $street, $cp)
+    {
+        $qb = $this->manager->createQueryBuilder('a')
+            ->select('a.tipovia')
+            ->from(Address::class, 'a')
+            ->Where('a.province = :province AND a.municipio')
+            ->setParameter('province', $province)
+            ->setParameter('township', $township);
+
+        if ($street !== null) {
+            $qb = $qb
+                ->andWhere('a.calle = :street')
+                ->setParameter('street', $street);
+        }
+
+        if ($cp !== null) {
+            $qb = $qb
+                ->andWhere('a.cp = :cp')
+                ->setParameter('cp', $cp);
+        }
+
+        return $qb
+            ->orderBy('a.cp', 'ASC')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getNumber($province, $township, $street, $typeRoad, $cp)
+    {
+        $qb = $this->manager->createQueryBuilder('a')
+            ->select('a.numero')
+            ->from(Address::class, 'a')
+            ->Where('a.province = :province AND a.municipio AND a.calle = :street AND a.tipovia = :typeRoad')
+            ->setParameter('province', $province)
+            ->setParameter('township', $township)
+            ->setParameter('street', $street)
+            ->setParameter('typeRoad', $typeRoad);
+
+        if ($cp !== null) {
+            $qb = $qb
+                ->andWhere('a.cp = :cp')
+                ->setParameter('cp', $cp);
+        }
+
+        return $qb
+            ->orderBy('a.cp', 'ASC')
+            ->distinct()
+            ->getQuery()
+            ->getResult();
+    }
+
+    /* public function suggestAddress($addressText, $cp = null)
     {
         $dbAddressData = $cp === null ? $this->findAll() : $this->findBy(['cp' => $cp]);
         $words = $this->getWords($addressText);
@@ -155,7 +314,7 @@ class AddressRepository extends ServiceEntityRepository
                         }
                     }
 
-                    if (!$duplicated /* && count($data) < 6 */) {
+                    if (!$duplicated) {
                         $data[] = $nextValue;
                     }
                 }
@@ -163,7 +322,7 @@ class AddressRepository extends ServiceEntityRepository
             }
         }
         return $data;
-    }
+    } */
 
     /* private function executeNativeQuery($text, $params = [])
     {
@@ -177,11 +336,11 @@ class AddressRepository extends ServiceEntityRepository
     } */
 
     /* return $this->createQueryBuilder('a')
-            ->select('a.PROVINCIA, a.MUNICIPIO, a.TIPOVIA, a.CALLE')
-            ->andWhere('a.PROVINCIA like %:prov')
-            ->andWhere('a.MUNICIPIO like %:mun')
-            ->andWhere('a.TIPOVIA like %:typ')
-            ->andWhere('a.CALLE like %:street')
+            ->select('a.provincia, a.municipio, a.tipovia, a.calle')
+            ->andWhere('a.provincia like %:prov')
+            ->andWhere('a.municipio like %:mun')
+            ->andWhere('a.tipovia like %:typ')
+            ->andWhere('a.calle like %:street')
             ->setParameter('prov', $province)
             ->setParameter('mun', $township)
             ->setParameter('typ', $typeRoad)

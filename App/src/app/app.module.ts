@@ -10,6 +10,9 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { AdminComponent } from './admin/admin.component';
 import { CardComponent } from './card/card.component';
 import { InputComponent } from './input/input.component';
+import { DropDownComponent } from './drop-down/drop-down.component';
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 
 
 @NgModule({
@@ -19,7 +22,10 @@ import { InputComponent } from './input/input.component';
     LoginPageComponent,
     AdminComponent,
     CardComponent,
-    InputComponent
+    InputComponent,
+    DropDownComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

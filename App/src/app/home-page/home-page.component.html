@@ -4,42 +4,25 @@
     </header>
     <section>
         <div class="row justify-content-center">
-            <div class="col-md-4">
-                <label>Dirección:</label>
+            <div class="col-sm-4">
+                <label>Provincia</label>
                 <br>
-                <input id="txtAddress" class="border-primary address" (input)=getAddressData($event) type="text"
-                    placeholder="Calle Municipio Provincia">
-                <!-- <app-input id="txtAddress" key="txtAddress" (input)=getAddressData($event)
-                    placeHolder="Calle Municipio Provincia">
-                </app-input> -->
-                <div id="suggestedAddressContainer" class="border-primary suggestedAddressContainer">
-                    <div *ngFor='let address of data;' class="card suggestedAddressItem" (click)=writeAddress(address)>
-                        <p class="card-text"><b>{{address.typeRoad}} {{address.street}}</b><br>{{address.township}}
-                            {{address.province}}</p>
+                <!-- <app-drop-down data={{this.provinceArray}} (selectElement)=selectProvince($event)></app-drop-down> -->
+                <div class="dropdown">
+                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Dropdown button
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a *ngFor='let elem of provinceArray;' class="dropdown-item">eeeeeeeeeeee</a>
+                        <a class="dropdown-item" href="#">eeeeeeeeeeee</a>
                     </div>
                 </div>
-                <div class="clearBoth"></div>
-                <div id="spinnerContainer" class="spinner-border spinner-border-sm text-primary" role="status">
-                    <div id="loadingIcon" class="sr-only"></div>
-                </div>
             </div>
-            <div class="col-sm-6 col-md-2 col-xl-1">
-                <label class="label">CP:</label>
+            <div class="col-sm-4">
+                <label>Código postal</label>
                 <br>
-                <input id="txtCp" class="border-primary cp" (input)=getCpText($event) type="number">
-            </div>
-            <div class="col-sm-6 col-md-2 col-lg-1">
-                <label class="label">Número:</label>
-                <br>
-                <input id="txtNumber" class="border-primary number" (change)=getNumberText($event) type="number">
-            </div>
-            <div class="col-6 col-md-2">
-                <br>
-                <button id="btnConfirm" class="btn btn-primary btnConfirm" (click)=findProducts()>Confirmar</button>
-            </div>
-            <div class="col-6 col-md-2 col-xl-1">
-                <br>
-                <button id="btnClear" class="btn btn-danger btnClear" (click)=clear()>Borrar</button>
+                <app-input type="number"></app-input>
             </div>
         </div>
         <label id="products">{{products}}</label>

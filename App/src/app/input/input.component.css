@@ -1,9 +1,8 @@
 input {
     width: 100%;
     color: rgb(0, 59, 135);
-    background-color: white;
     border: 2px solid rgb(0, 59, 135);
-    border-radius: 10px;
+    border-radius: 5px;
     font-size: 1em;
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }

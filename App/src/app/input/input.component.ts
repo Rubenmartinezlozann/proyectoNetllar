@@ -8,10 +8,9 @@ import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 export class InputComponent implements AfterViewInit {
 
   @Input() type: string = 'text';
-  @Input() classList: string = '';
-  @Input() text: string = '';
-  @Input() placeHolder: string = 'text';
-  @Input() key: string = '';
+  @Input() value: string = '';
+  @Input() placeholder: string = '';
+  @Input() dissabled: boolean = false;
 
   constructor() { }
 
