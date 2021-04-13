@@ -3,29 +3,71 @@
         <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
     </header>
     <section>
-        <div class="row justify-content-center">
-            <div class="col-sm-4">
-                <label>Provincia</label>
-                <br>
-                <!-- <app-drop-down data={{this.provinceArray}} (selectElement)=selectProvince($event)></app-drop-down> -->
-                <div class="dropdown">
-                    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        Dropdown button
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a *ngFor='let elem of provinceArray;' class="dropdown-item">eeeeeeeeeeee</a>
-                        <a class="dropdown-item" href="#">eeeeeeeeeeee</a>
-                    </div>
+        <form>
+            <div class="row justify-content-around">
+                <div class="col-sm-4">
+                    <label for="province">Provincia</label>
+                    <br>
+                    <!-- <app-drop-down data={{this.provinceArray}} (selectElement)=selectProvince($event)></app-drop-down> -->
+                    <!-- <div class="dropdown">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Dropdown button
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <a *ngFor='let elem of provinceArray;' class="dropdown-item">eeeeeeeeeeee</a>
+                            <a class="dropdown-item" href="#">eeeeeeeeeeee</a>
+                        </div>
+                    </div> -->
+                    <select name="province" id="province" class="">
+                        <option id="defaultProvince" selected value="">Seleccionar</option>
+                        <option *ngFor='let elem of provinceArray;' value="{{elem}}">{{elem}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label>Código postal</label>
+                    <br>
+                    <input type="number" id="cp" />
                 </div>
             </div>
-            <div class="col-sm-4">
-                <label>Código postal</label>
-                <br>
-                <app-input type="number"></app-input>
+            <div class="row justify-content-around">
+                <div class="col-sm-4">
+                    <label for="township">Municipio</label>
+                    <br>
+                    <select name="township" id="township" class="" disabled>
+                        <option selected value="" id="defaultTownship">Seleccionar</option>
+                        <option *ngFor='let elem of townshipArray;' value="{{elem}}">{{elem}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label>Tipo de via</label>
+                    <br>
+                    <select name="typeRoad" id="typeRoad" class="" disabled>
+                        <option selected value="" id="defaultTypeRoad">Seleccionar</option>
+                        <option *ngFor='let elem of typeRoadArray;' value="{{elem}}">{{elem}}
+                        </option>
+                    </select>
+                </div>
             </div>
-        </div>
-        <label id="products">{{products}}</label>
+            <div class="row justify-content-around">
+                <div class="col-sm-4">
+                    <label for="street">Calle</label>
+                    <br>
+                    <select name="street" id="street" class="" disabled>
+                        <option selected value="" id="defaultStreet">Seleccionar</option>
+                        <option *ngFor='let elem of streetArray;' value="{{elem}}">{{elem}}
+                        </option>
+                    </select>
+                </div>
+                <div class="col-sm-4">
+                    <label>Número</label>
+                    <br>
+                    <input type="number" id="number" disabled />
+                </div>
+            </div>
+        </form>
     </section>
     <footer>
         <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">

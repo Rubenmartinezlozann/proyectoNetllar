@@ -96,7 +96,7 @@ class AddressRepository extends ServiceEntityRepository
         }
 
         return $qb
-            ->orderBy('a.cp', 'ASC')
+            ->orderBy('a.municipio', 'ASC')
             ->distinct()
             ->getQuery()
             ->getResult();
@@ -107,7 +107,7 @@ class AddressRepository extends ServiceEntityRepository
         $qb = $this->manager->createQueryBuilder('a')
             ->select('a.calle')
             ->from(Address::class, 'a')
-            ->Where('a.province = :province AND a.municipio')
+            ->Where('a.provincia = :province AND a.municipio = :township')
             ->setParameter('province', $province)
             ->setParameter('township', $township);
 
@@ -124,7 +124,7 @@ class AddressRepository extends ServiceEntityRepository
         }
 
         return $qb
-            ->orderBy('a.cp', 'ASC')
+            ->orderBy('a.calle', 'ASC')
             ->distinct()
             ->getQuery()
             ->getResult();
@@ -135,7 +135,7 @@ class AddressRepository extends ServiceEntityRepository
         $qb = $this->manager->createQueryBuilder('a')
             ->select('a.tipovia')
             ->from(Address::class, 'a')
-            ->Where('a.province = :province AND a.municipio')
+            ->Where('a.provincia = :province AND a.municipio = :township')
             ->setParameter('province', $province)
             ->setParameter('township', $township);
 
@@ -152,7 +152,7 @@ class AddressRepository extends ServiceEntityRepository
         }
 
         return $qb
-            ->orderBy('a.cp', 'ASC')
+            ->orderBy('a.tipovia', 'ASC')
             ->distinct()
             ->getQuery()
             ->getResult();
@@ -163,7 +163,7 @@ class AddressRepository extends ServiceEntityRepository
         $qb = $this->manager->createQueryBuilder('a')
             ->select('a.numero')
             ->from(Address::class, 'a')
-            ->Where('a.province = :province AND a.municipio AND a.calle = :street AND a.tipovia = :typeRoad')
+            ->Where('a.provincia = :province AND a.municipio AND a.calle = :street AND a.tipovia = :typeRoad')
             ->setParameter('province', $province)
             ->setParameter('township', $township)
             ->setParameter('street', $street)

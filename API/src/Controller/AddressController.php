@@ -24,7 +24,6 @@ class AddressController extends AbstractController
      */
     public function suggestAddress($address, $cp): JsonResponse
     {
-        
         $data = $this->addressRepository->suggestAddress($address, $cp);
 
         return new JsonResponse($data, Response::HTTP_OK);
