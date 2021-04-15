@@ -34,7 +34,7 @@
                 <label>Tipo de via</label>
                 <br>
                 <select name="typeRoad" id="typeRoad" class="" disabled>
-                    <option selected value=" " id="defaultTypeRoad">Seleccionar</option>
+                    <option selected value="" id="defaultTypeRoad">Seleccionar</option>
                     <option *ngFor='let elem of typeRoadArray;' value="{{elem}}">{{elem}}
                     </option>
                 </select>
@@ -45,7 +45,7 @@
                 <label for="street">Calle</label>
                 <br>
                 <select name="street" id="street" class="" disabled>
-                    <option selected value=" " id="defaultStreet">Seleccionar</option>
+                    <option selected value="" id="defaultStreet">Seleccionar</option>
                     <option *ngFor='let elem of streetArray;' value="{{elem}}">{{elem}}
                     </option>
                 </select>

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { threadId } from 'node:worker_threads';
 
 @Component({
 	selector: 'app-home-page',
@@ -16,8 +17,8 @@ export class HomePageComponent implements OnInit {
 
 	selectedProvince: string = '';
 	selectedTowship: string = '';
-	selectedTypeRoad: string = ' ';
-	selectedStreet: string = ' ';
+	selectedTypeRoad: string = '';
+	selectedStreet: string = '';
 
 	provinceElem: any;
 	cpElem: any;
@@ -80,20 +81,16 @@ export class HomePageComponent implements OnInit {
 	}
 
 	getProvinceData = () => {
-		this.provinceElem?.setAttribute('disabled', '')
-		this.townshipElem?.setAttribute('disabled', '');
-		this.typeRoadElem?.setAttribute('disabled', '');
-		this.streetElem?.setAttribute('disabled', '');
-		this.numberElem?.setAttribute('disabled', '');
-
+		this.clearProvince();
 		const cp = this.getCp();
 		this.http.get(`http://127.0.0.1:8000/getProvinces/${cp}`).subscribe((res: any) => {
+			console.log(res)
 			this.provinceArray = [];
 			if (res.length !== 0) {
 				res.map((elem: any) => this.provinceArray.push(elem.provincia));
 				this.provinceElem?.removeAttribute('disabled');
 				if (this.hideDefaultOption('defaultProvince', res.length === 1)) {
-					this.selectedProvince = res[0].provincia
+					this.selectedProvince = res[0].provincia;
 					this.getTownshipData();
 				} else {
 					this.selectedProvince = '';
@@ -114,13 +111,12 @@ export class HomePageComponent implements OnInit {
 	}
 
 	getTownshipData = () => {
-		this.typeRoadElem?.setAttribute('disabled', '');
-		this.streetElem?.setAttribute('disabled', '');
-		this.numberElem?.setAttribute('disabled', '');
+		this.clearTownship();
 
 		if (this.selectedProvince === '') this.selectedProvince = this.provinceElem.value;
 		const cp = this.getCp();
 		this.http.get(`http://127.0.0.1:8000/getTownship/${this.selectedProvince}/${cp}`).subscribe((res: any) => {
+			console.log(res)
 			this.townshipArray = [];
 			res.map((elem: any) => this.townshipArray.push(elem.municipio));
 			if (this.hideDefaultOption('defaultTownship', res.length === 1)) {
@@ -134,21 +130,23 @@ export class HomePageComponent implements OnInit {
 	}
 
 	getTypeRoadData = () => {
-		console.log((this.selectedTypeRoad === ' ' && this.typeRoadElem.value === ' '))
-		if ((this.selectedTypeRoad === ' ' && this.typeRoadElem.value === ' ')) {
+		console.log((this.selectedTypeRoad === '' && this.typeRoadElem.value === ''))
+		if ((this.selectedTypeRoad === '' && this.typeRoadElem.value === '')) {
 			this.typeRoadArray = [];
 			console.log("dentro tipovia")
 			if (this.selectedTowship === '') this.selectedTowship = this.townshipElem.value;
-			if (this.selectedStreet === ' ') this.selectedStreet = this.streetElem.value;
+			if (this.selectedStreet === "") this.selectedStreet = this.streetElem.value;
 			const cp = this.getCp();
-			this.http.get(`http://127.0.0.1:8000/getTypeRoad/${this.selectedProvince}/${this.selectedTowship}/${this.selectedStreet}/${cp}`).subscribe((res: any) => {
+			this.http.get(`http://127.0.0.1:8000/getTypeRoad/${this.selectedProvince}/${this.selectedTowship}/${this.selectedStreet === '' ? ' ' : this.selectedStreet}/${cp}`).subscribe((res: any) => {
+				console.log(res)
 				res.map((elem: any) => this.typeRoadArray.push(elem.tipovia));
 				this.typeRoadElem.removeAttribute('disabled');
 				if (this.hideDefaultOption('defaultTypeRoad', res.length === 1)) {
-					this.getStreetData();
+					this.selectedTypeRoad = res[0].tipovia;
 				} else {
 					this.selectedTypeRoad = '';
 				}
+				this.getStreetData();
 			});
 		} else {
 			this.numberElem.removeAttribute('disabled');
@@ -158,14 +156,15 @@ export class HomePageComponent implements OnInit {
 	getStreetData = () => {
 		console.log(this.selectedStreet)
 		console.log(this.streetElem.value)
-		console.log(this.selectedStreet === ' ' && this.streetElem.value === ' ')
-		if (this.selectedStreet === ' ' && this.streetElem.value === ' ') {
+		console.log(this.selectedStreet === '' && this.streetElem.value === '')
+		if (this.selectedStreet === '' && this.streetElem.value === '') {
 			this.streetArray = [];
 			console.log("dentro calle")
 			if (this.selectedTowship === '') this.selectedTowship = this.townshipElem.value;
-			if (this.selectedTypeRoad === '') this.selectedTypeRoad = this.typeRoadElem.value;
+			if (this.selectedTypeRoad === "") this.selectedTypeRoad = this.typeRoadElem.value;
 			const cp = this.getCp();
-			this.http.get(`http://127.0.0.1:8000/getStreet/${this.selectedProvince}/${this.selectedTowship}/${this.selectedTypeRoad}/${cp}`).subscribe((res: any) => {
+			this.http.get(`http://127.0.0.1:8000/getStreet/${this.selectedProvince}/${this.selectedTowship}/${this.selectedTypeRoad === '' ? ' ' : this.selectedTypeRoad}/${cp}`).subscribe((res: any) => {
+				console.log(res)
 				res.map((elem: any) => this.streetArray.push(elem.calle));
 				this.streetElem.removeAttribute('disabled');
 				if (this.hideDefaultOption('defaultStreet', res.length === 1)) {
