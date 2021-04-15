@@ -64,6 +64,7 @@ class AddressController extends AbstractController
      */
     public function getTypeRoad($province, $township, $street, $cp): JsonResponse
     {
+        if ($street = ' ') $street = null;
         $data = $this->addressRepository->getTypeRoad($province, $township, $street, $cp);
 
         return new JsonResponse($data, Response::HTTP_OK);
@@ -74,6 +75,7 @@ class AddressController extends AbstractController
      */
     public function getStreet($province, $township, $typeRoad, $cp): JsonResponse
     {
+        if ($typeRoad = ' ') $typeRoad = null;
         $data = $this->addressRepository->getStreet($province, $township, $typeRoad, $cp);
 
         return new JsonResponse($data, Response::HTTP_OK);

@@ -8,12 +8,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomePageComponent } from './home-page/home-page.component';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { AdminComponent } from './admin/admin.component';
-import { CardComponent } from './card/card.component';
-import { InputComponent } from './input/input.component';
-import { DropDownComponent } from './drop-down/drop-down.component';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
-
 
 @NgModule({
   declarations: [
@@ -21,11 +15,6 @@ import { FooterComponent } from './footer/footer.component';
     HomePageComponent,
     LoginPageComponent,
     AdminComponent,
-    CardComponent,
-    InputComponent,
-    DropDownComponent,
-    HeaderComponent,
-    FooterComponent
   ],
   imports: [
     BrowserModule,
