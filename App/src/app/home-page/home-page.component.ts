@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
 	selector: 'app-home-page',
@@ -27,70 +26,52 @@ export class HomePageComponent implements OnInit {
 	streetElem: any;
 	numberElem: any;
 
-	constructor(private http: HttpClient, private router: Router) { }
+	constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute) { }
 
 	ngOnInit() {
-		this.provinceElem = document.getElementById('province') as HTMLSelectElement;
-		this.cpElem = document.getElementById('cp') as HTMLInputElement;
-		this.townshipElem = document.getElementById('township') as HTMLSelectElement;
-		this.typeRoadElem = document.getElementById('typeRoad') as HTMLSelectElement;
-		this.streetElem = document.getElementById('street') as HTMLSelectElement;
-		this.numberElem = document.getElementById('num') as HTMLElement;
+		this.http.get(`http://127.0.0.1:8000/getUserByToken/${this.activatedRoute.snapshot.params.token}`).subscribe((res: any) => {
+			if (res.role !== null) {
+				if (res.role.some((value: any) => value = 'ROLE_ADMIN')) {
+					this.createBtnAdmin();
+				}
+				this.provinceElem = document.getElementById('province') as HTMLSelectElement;
+				this.cpElem = document.getElementById('cp') as HTMLInputElement;
+				this.townshipElem = document.getElementById('township') as HTMLSelectElement;
+				this.typeRoadElem = document.getElementById('typeRoad') as HTMLSelectElement;
+				this.streetElem = document.getElementById('street') as HTMLSelectElement;
+				this.numberElem = document.getElementById('num') as HTMLElement;
 
-		this.getProvinceData();
+				this.getProvinceData();
 
-		this.provinceElem.addEventListener('change', this.getTownshipData);
+				this.provinceElem.addEventListener('change', this.getTownshipData);
 
-		this.cpElem.addEventListener('change', this.getProvinceData)
-		this.cpElem.addEventListener('change', this.showCpError)
-		this.cpElem.addEventListener('input', this.hideCpAlert)
+				this.cpElem.addEventListener('change', this.getProvinceData);
+				this.cpElem.addEventListener('input', this.hideCpAlert);
+				this.cpElem.addEventListener('change', this.showCpError);
 
-		this.townshipElem.addEventListener('change', this.getTypeRoadData);
+				this.townshipElem.addEventListener('change', this.getTypeRoadData);
 
-		this.typeRoadElem.addEventListener('change', this.getStreetData)
+				this.typeRoadElem.addEventListener('change', this.getStreetData);
 
-		this.streetElem.addEventListener('change', this.enableNum)
+				this.streetElem.addEventListener('change', this.enableNum);
 
-		this.numberElem.addEventListener('input', this.enableButton)
+				this.numberElem.addEventListener('input', this.enableButton);
+				this.numberElem, addEventListener('input', () => {
+					if (this.selectedStreet !== '') {
+						const numAlert = document.getElementById('numAlert');
+						if (numAlert !== null) numAlert.style.display = 'none';
+					}
+				})
 
-		document.getElementById("btnConfirm")?.addEventListener('click', this.findProducts);
-		document.getElementById("btnClear")?.addEventListener('click', this.clearData);
+				document.getElementById("btnConfirm")?.addEventListener('click', this.findProducts);
+				document.getElementById("btnClear")?.addEventListener('click', this.clearData);
+			} else {
+				this.router.navigate(['/login']);
+			}
+		})
 	}
 
 	getCp = () => this.cpElem.value.length === 4 ? this.cpElem.value : (this.cpElem.value.substring(0, 1) == 0 ? this.cpElem.value.substring(1) : this.cpElem.value);
-
-	showCpError = () => {
-		const text = this.cpElem.value.length;
-		if ((text < 4 || text > 5) && (text !== 0)) {
-			this.cpElem.style.border = '2px solid red';
-			const cpAlert = document.getElementById('cpAlert');
-			if (cpAlert !== null) {
-				cpAlert.textContent = 'El código postal debe tener una longitud de cinco carácteres.';
-				cpAlert.style.color = 'red';
-				cpAlert.style.display = 'block';
-			}
-		}
-	}
-
-	showNotFoundCp = () => {
-		const text = this.cpElem.value.length;
-		if (text >= 4 && text <= 5) {
-			this.cpElem.style.border = '2px solid darkorange';
-			const cpAlert = document.getElementById('cpAlert');
-			if (cpAlert !== null) {
-				cpAlert.textContent = 'No hay servicio para este código postal';
-				cpAlert.style.color = 'darkorange';
-				cpAlert.style.display = 'block';
-			}
-		}
-	}
-
-	hideCpAlert = () => {
-		const text = this.cpElem.value.length;
-		this.cpElem.style.border = '2px solid rgb(0, 59, 135)';
-		const cpAlert = document.getElementById('cpAlert');
-		if (cpAlert !== null) cpAlert.style.display = 'none';
-	}
 
 	getProvinceData = () => {
 		this.clearProvince();
@@ -122,7 +103,6 @@ export class HomePageComponent implements OnInit {
 				res.map((elem: any) => this.townshipArray.push(elem.municipio));
 				if (this.hideDefaultOption('defaultTownship', res.length === 1)) {
 					this.selectedTownship = res[0].municipio;
-					// this.clearTypeRoad();
 					this.getTypeRoadData();
 				} else {
 					this.selectedTownship = '';
@@ -191,25 +171,16 @@ export class HomePageComponent implements OnInit {
 					this.cpElem.value = res[0].cp.length === 4 ? `0${res[0].cp}` : res[0].cp;
 					this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.numberElem.value}/${this.getCp()}`)
 						.subscribe((res: any) => {
-							if (res.length === 1) {
-								console.log(res);
-							} else {
-								console.log('no hay servicio');
-							}
+							this.numAlert(res.length > 0);
+							console.log(res);
 						});
-				} else {
-					this.cpElem.value = '';
-					console.log('no hay servicio');
 				}
 			});
 		} else {
 			this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.numberElem.value}/${this.getCp()}`)
 				.subscribe((res: any) => {
-					if (res.length === 1) {
-						console.log(res);
-					} else {
-						console.log('no hay servicio');
-					}
+					this.numAlert(res.length > 0);
+					console.log(res);
 				});
 		}
 	}
@@ -237,6 +208,70 @@ export class HomePageComponent implements OnInit {
 	getSelectedTypeRoad = () => this.selectedTypeRoad === '' ? this.typeRoadElem.value : this.selectedTypeRoad;
 
 	getSelectedStreet = () => this.selectedStreet === '' ? this.streetElem.value : this.selectedStreet;
+
+	createBtnAdmin = () => {
+		const btnAdmin = document.createElement('button');
+		btnAdmin.type = 'button';
+		btnAdmin.innerText = 'Admin';
+		btnAdmin.style.float = 'right';
+		btnAdmin.style.height = '3em';
+		btnAdmin.style.background = 'white';
+		btnAdmin.style.fontFamily = 'Calibri';
+		btnAdmin.style.fontSize = '1em';
+		btnAdmin.style.borderRadius = '5px';
+		btnAdmin.style.border = '2px solid black';
+		btnAdmin.classList.add('col-md-2');
+		btnAdmin.classList.add('col-4');
+		btnAdmin.style.margin = `0px 20px 0px 0px`;
+		btnAdmin.addEventListener('click', () => {
+			this.router.navigate(['admin']);
+		})
+		document.getElementsByTagName('header')[0].appendChild(btnAdmin);
+	}
+
+	showCpError = () => {
+		const text = this.cpElem.value.length;
+		if ((text < 4 || text > 5) && (text !== 0)) {
+			this.cpElem.style.border = '2px solid red';
+			const cpAlert = document.getElementById('cpAlert');
+			if (cpAlert !== null) {
+				cpAlert.textContent = 'El código postal debe tener una longitud de cinco carácteres.';
+				cpAlert.style.color = 'red';
+				// cpAlert.style.display = 'block';
+			}
+		}
+	}
+
+	showNotFoundCp = () => {
+		const text = this.cpElem.value.length;
+		if (text >= 4 && text <= 5) {
+			this.cpElem.style.border = '2px solid darkorange';
+			const cpAlert = document.getElementById('cpAlert');
+			if (cpAlert !== null) {
+				cpAlert.textContent = 'No hay servicio para este código postal';
+				cpAlert.style.color = 'darkorange';
+				// cpAlert.style.display = 'block';
+			}
+		}
+	}
+
+	hideCpAlert = () => {
+		this.cpElem.style.border = '2px solid rgb(0, 59, 135)';
+		const cpAlert = document.getElementById('cpAlert');
+		// if (cpAlert !== null) cpAlert.style.display = 'none';
+		if (cpAlert !== null) cpAlert.textContent = '';
+	}
+
+	numAlert = (showAlert: boolean) => {
+		const numAlert = document.getElementById('numAlert');
+		if (showAlert) {
+			if (numAlert !== null) numAlert.textContent = 'No hay servicio para este número';
+			// if (numAlert !== null) numAlert.style.display = 'block'
+		} else {
+			if (numAlert !== null) numAlert.textContent = '';
+			// if (numAlert !== null) numAlert.style.display = 'none'
+		}
+	}
 
 	clearData = () => {
 		this.clearCp();

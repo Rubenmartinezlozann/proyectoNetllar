@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use App\Repository\TokenRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,11 +13,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends AbstractController
 {
-    private $userRepository;
-
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, TokenRepository $tokenRepository)
     {
         $this->userRepository = $userRepository;
+        $this->tokenRepository = $tokenRepository;
     }
 
     /**
@@ -60,6 +60,23 @@ class UserController extends AbstractController
             'mail' => $user->getMail(),
             'address' => $user->getAddress(),
         ];
+
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/getUserByToken/{token}", name="getUserByToken", methods={"GET"})
+     */
+    public function getUserByToken($token): JsonResponse
+    {
+        $token = $this->tokenRepository->findOneBy(['token' => $token]);
+        if (!empty($token)) {
+            $data = [
+                'role' => $token->getUser()->getRoles(),
+            ];
+        } else {
+            $data = ['role' => null];
+        }
 
         return new JsonResponse($data, Response::HTTP_OK);
     }

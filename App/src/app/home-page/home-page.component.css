@@ -95,8 +95,9 @@ button.btnClear:active {
 }
 
 #cpAlert, #numAlert {
-    display: none;
+    /* display: none; */
     color: red;
+    margin-bottom: -0.5em;
 }
 
 /* button.dropdown-toggle {
