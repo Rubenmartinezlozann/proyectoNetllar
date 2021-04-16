@@ -4,7 +4,7 @@
     }
 } */
 
-footer, header.jumbotron{
+footer, header.jumbotron {
     background-color: rgb(98, 135, 179);
     width: 100%;
 }
@@ -12,7 +12,6 @@ footer, header.jumbotron{
 footer {
     /* background-color: rgb(0, 59, 135); */
     margin-top: 13%;
-    
 }
 
 header.jumbotron {
@@ -71,6 +70,12 @@ input:disabled, select:disabled {
     background-color: rgb(228, 228, 228);
 }
 
+button[disabled], button[disabled]:hover {
+    background-color: rgb(228, 228, 228);
+    color: black;
+    border: 2px solid rgb(91, 125, 167) !important;
+}
+
 button.btnConfirm:hover {
     border-color: rgba(85, 207, 255, 0.589);
 }
@@ -89,7 +94,7 @@ button.btnClear:active {
     border-color: darkred;
 }
 
-#cpAlert{
+#cpAlert, #numAlert {
     display: none;
     color: red;
 }

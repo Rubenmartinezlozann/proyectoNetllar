@@ -60,17 +60,16 @@ class AddressRepository extends ServiceEntityRepository
                     $qb = $qb
                         ->andWhere('a.tipovia = :typeRoad')
                         ->setParameter('typeRoad', $typeRoad);
-                }
-                if ($street !== null) {
-                    $qb = $qb
-                        ->andWhere('a.calle = :street')
-                        ->setParameter('street', $street);
-                }
-
-                if ($number !== null) {
-                    $qb = $qb
-                        ->andWhere('a.numero = :number')
-                        ->setParameter('number', $number);
+                    if ($street !== null) {
+                        $qb = $qb
+                            ->andWhere('a.calle = :street')
+                            ->setParameter('street', $street);
+                        if ($number !== null) {
+                            $qb = $qb
+                                ->andWhere('a.numero = :number')
+                                ->setParameter('number', $number);
+                        }
+                    }
                 }
             }
         }
