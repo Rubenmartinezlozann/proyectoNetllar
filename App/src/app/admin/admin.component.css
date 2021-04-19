@@ -1,0 +1,100 @@
+footer, header.jumbotron {
+    background-color: rgb(98, 135, 179);
+    width: 100%;
+}
+
+footer {
+    margin-top: 13%;
+}
+
+header.jumbotron {
+    max-height: 20%;
+}
+
+section {
+    width: 100%;
+}
+
+.row {
+    margin-bottom: 30px;
+}
+
+img {
+    margin-left: 5%;
+}
+
+select, input, button {
+    width: 100%;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1em;
+    border-radius: 5px;
+    height: 2em;
+}
+
+select, input {
+    border: 2px solid rgb(0, 59, 135);
+}
+
+button {
+    border: 3px solid;
+    color: white;
+}
+
+button.btnClear {
+    border-color: red;
+    background-color: red;
+}
+
+button.btnConfirm {
+    border-color: rgb(0, 59, 135);
+    background-color: rgb(0, 59, 135);
+}
+
+input:focus, select:focus {
+    outline: none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: rgba(213, 245, 255, 0.521);
+}
+
+input:disabled {
+    border-color: rgb(91, 125, 167);
+}
+
+input:disabled, select:disabled {
+    background-color: rgb(228, 228, 228);
+}
+
+button[disabled], button[disabled]:hover {
+    background-color: rgb(228, 228, 228) !important;
+    color: grey;
+    border: 2px solid rgb(91, 125, 167) !important;
+}
+
+button.btnConfirm:hover {
+    border-color: rgba(85, 207, 255, 0.589);
+}
+
+button.btnConfirm:active {
+    background-color: rgb(0, 59, 135, 0.75);
+    border-color: rgb(0, 59, 135);
+}
+
+button.btnClear:hover {
+    border-color: lightcoral;
+}
+
+button.btnClear:active {
+    background-color: rgb(255, 0, 0, 0.75);
+    border-color: darkred;
+}
+
+.data-btn{
+    margin-top: 2em;
+}
+
+.find-section input, .find-section select{
+    margin-bottom: 1.5em;
+}

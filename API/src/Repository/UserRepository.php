@@ -61,13 +61,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->manager->flush();
     }
 
-    public function updateUser(User $user): User
+    public function updateUser(User $user): bool
     {
         $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPassword()));
         $this->manager->persist($user);
         $this->manager->flush();
 
-        return $user;
+        return true;
     }
 
     public function removeUser(User $user)

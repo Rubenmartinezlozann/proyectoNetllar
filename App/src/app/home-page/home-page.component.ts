@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
 	selector: 'app-home-page',
@@ -31,7 +31,7 @@ export class HomePageComponent implements OnInit {
 	ngOnInit() {
 		this.http.get(`http://127.0.0.1:8000/getUserByToken/${this.activatedRoute.snapshot.params.token}`).subscribe((res: any) => {
 			if (res.role !== null) {
-				if (res.role.some((value: any) => value = 'ROLE_ADMIN')) {
+				if (res.role.some((value: any) => value === 'ROLE_ADMIN')) {
 					this.createBtnAdmin();
 				}
 				this.provinceElem = document.getElementById('province') as HTMLSelectElement;

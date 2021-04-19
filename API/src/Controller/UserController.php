@@ -29,19 +29,37 @@ class UserController extends AbstractController
 
         if (empty($this->userRepository->findOneBy(['username' => $username]))) {
             $password = $data['password'];
-            $city = $data['city'];
-            $phoneContact = $data['phone_contact'];
-            $mail = $data['mail'];
-            $address = $data['address'];
+            // $city = $data['city'];
+            // $phoneContact = $data['phone_contact'];
+            // $mail = $data['mail'];
+            // $address = $data['address'];
 
-            if (empty($username) || empty($password) || empty($city) || empty($phoneContact) || empty($mail) || empty($address)) {
+            if (empty($username) || empty($password) /* || empty($city) || empty($phoneContact) || empty($mail) || empty($address) */) {
                 throw new NotFoundHttpException('Expecting mandatory parameters!');
             }
 
-            $this->userRepository->saveUser($username, $password, ['ROLE_USER'], $city, $phoneContact, $mail, $address);
-            return new JsonResponse(true, Response::HTTP_CREATED);
+            $this->userRepository->saveUser($username, $password, ['ROLE_USER'], '', 123456789, '', ''/* , $city, $phoneContact, $mail, $address */);
+            return new JsonResponse(['created' => true], Response::HTTP_CREATED);
         }
-        return new JsonResponse(false, Response::HTTP_BAD_REQUEST);
+        return new JsonResponse(['created' => false], Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/getUsers", name="getUsers", methods={"GET"})
+     */
+    public function getUsers(): JsonResponse
+    {
+        $users = $this->userRepository->findAll();
+
+        foreach ($users as $user) {
+            $data[] = [
+                'username' => $user->getUsername(),
+                // 'password' => $user->getPassword(),
+                // 'role' => $user->getRoles(),
+            ];
+        }
+
+        return new JsonResponse($data, Response::HTTP_OK);
     }
 
     /**
@@ -59,6 +77,21 @@ class UserController extends AbstractController
             'phone_contact' => $user->getPhoneContact(),
             'mail' => $user->getMail(),
             'address' => $user->getAddress(),
+        ];
+
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/getUserByUsername/{username}", name="getUserByUsername", methods={"GET"})
+     */
+    public function getUserByUsername($username): JsonResponse
+    {
+        $user = $this->userRepository->findOneBy(['username' => $username]);
+
+        $data = [
+            'username' => $user->getUsername(),
+            'password' => $user->getPassword(),
         ];
 
         return new JsonResponse($data, Response::HTTP_OK);
@@ -91,15 +124,15 @@ class UserController extends AbstractController
 
         empty($data['username']) ? true : $user->setUsername($data['username']);
         empty($data['password']) ? true : $user->setPassword($data['password']);
-        empty($data['city']) ? true : $user->setCity($data['city']);
-        empty($data['phone_contact']) ? true : $user->setPhoneContact($data['phone_contact']);
-        empty($data['mail']) ? true : $user->setMail($data['mail']);
-        empty($data['address']) ? true : $user->setAddress($data['address']);
-        $user->setRoles(['ROLE_USER']);
+        // empty($data['city']) ? true : $user->setCity($data['city']);
+        // empty($data['phone_contact']) ? true : $user->setPhoneContact($data['phone_contact']);
+        // empty($data['mail']) ? true : $user->setMail($data['mail']);
+        // empty($data['address']) ? true : $user->setAddress($data['address']);
+        // $user->setRoles(['ROLE_USER']);
 
         $updatedUser = $this->userRepository->updateUser($user);
 
-        return new JsonResponse(['status' => 'User updated!'], Response::HTTP_OK);
+        return new JsonResponse(['updated' => $updatedUser], Response::HTTP_OK);
     }
 
     /**
@@ -112,5 +145,20 @@ class UserController extends AbstractController
         $this->userRepository->removeUser($user);
 
         return new JsonResponse(['status' => 'user deleted!'], Response::HTTP_OK);
+    }
+
+    /**
+     * @Route("/deleteUserByUsername/{username}", name="deleteUserByUsername", methods={"DELETE"})
+     */
+    public function deleteUserByUsername($username): JsonResponse
+    {
+        $user = $this->userRepository->findOneBy(['username' => $username]);
+
+        if (!empty($user)) {
+            $this->userRepository->removeUser($user);
+            return new JsonResponse(['deleted' => true], Response::HTTP_OK);
+        } else {
+            return new JsonResponse(['deleted' => false], Response::HTTP_OK);
+        }
     }
 }

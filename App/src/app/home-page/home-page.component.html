@@ -15,7 +15,7 @@
                 <br>
                 <select name="province" id="province" class="">
                     <option id="defaultProvince" selected value="">Seleccionar</option>
-                    <option *ngFor='let elem of provinceArray;' value="{{elem}}">{{elem}}
+                    <option *ngFor='let elem of provinceArray;' class="text-capitalize" value="{{elem}}">{{elem}}
                     </option>
                 </select>
             </div>
@@ -44,9 +44,9 @@
             <div class="col-sm-4">
                 <label for="street">Calle</label>
                 <br>
-                <select name="street" id="street" class="" disabled>
+                <select name="street" id="street" class="text-capitalize" disabled>
                     <option selected value="" id="defaultStreet">Seleccionar</option>
-                    <option *ngFor='let elem of streetArray;' value="{{elem}}">{{elem}}
+                    <option *ngFor='let elem of streetArray;' class="text-capitalize" value="{{elem}}">{{elem}}
                     </option>
                 </select>
             </div>

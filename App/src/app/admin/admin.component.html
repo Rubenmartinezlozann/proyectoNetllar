@@ -1,1 +1,41 @@
-<p>admin works!</p>
+<div class="container-fluid">
+    <header class="jumbotron jumbotron-fluid">
+        <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+    </header>
+    <section class="row justify-content-center find-section">
+        <div class="col-sm-4 col-md-3 col-xl-2">
+            <select id="crud-select">
+                <option value="create" selected>Crear</option>
+                <option value="modify">Modificar</option>
+                <option value="delete">Eliminar</option>
+            </select>
+        </div>
+        <div class="col-sm-4 col-md-3 col-xl-2">
+            <input id="find-username" type="text" placeholder="Nombre de usuario" disabled>
+        </div>
+        <div class="col-sm-4 col-md-3 col-xl-2">
+            <button id="btn-find" class="btnConfirm" disabled>Buscar usuario</button>
+        </div>
+    </section>
+    <section id="data-section" class="data-section row justify-content-center">
+        <div class="col-sm-4 col-md-3 col-xl-2">
+            <label id="lblUsername">Nombre de usuario</label>
+            <input type="text" id="data-username" />
+        </div>
+        <div class="col-sm-4 col-md-3 col-xl-2">
+            <label id="lblPassword">Contraseña</label>
+            <input type="password" id="data-password" />
+        </div>
+        <div class="col-sm-4 col-md-3 col-xl-2">
+            <button id="data-btn" class="btnConfirm data-btn">Confirmar</button>
+        </div>
+    </section>
+
+    <footer>
+        <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+    </footer>
+</div>
+
+<!-- <ul class="list-group list-group-horizontal">
+    <li class="list-group-item">Cras justo odio</li>
+</ul>   *ngFor-->
