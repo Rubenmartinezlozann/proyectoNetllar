@@ -51,6 +51,7 @@ class UserController extends AbstractController
     {
         $users = $this->userRepository->findAll();
 
+        $data = [];
         foreach ($users as $user) {
             $data[] = [
                 'username' => $user->getUsername(),
@@ -88,11 +89,14 @@ class UserController extends AbstractController
     public function getUserByUsername($username): JsonResponse
     {
         $user = $this->userRepository->findOneBy(['username' => $username]);
-
-        $data = [
-            'username' => $user->getUsername(),
-            'password' => $user->getPassword(),
-        ];
+        if (!empty($user)) {
+            $data[] = [
+                'username' => $user->getUsername(),
+                'password' => $user->getPassword(),
+            ];
+        } else {
+            $data = null;
+        }
 
         return new JsonResponse($data, Response::HTTP_OK);
     }
