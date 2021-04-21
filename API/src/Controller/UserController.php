@@ -56,7 +56,7 @@ class UserController extends AbstractController
             $data[] = [
                 'username' => $user->getUsername(),
                 // 'password' => $user->getPassword(),
-                // 'role' => $user->getRoles(),
+                'role' => $user->getRoles(),
             ];
         }
 

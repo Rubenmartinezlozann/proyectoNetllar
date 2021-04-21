@@ -1,0 +1,74 @@
+footer, header.jumbotron {
+    background-color: rgb(98, 135, 179);
+    width: 100%;
+}
+
+footer {
+    margin-top: 13%;
+}
+
+header.jumbotron {
+    max-height: 20%;
+}
+
+section, div {
+    width: 100%;
+}
+
+img {
+    margin-left: 5%;
+}
+
+select, input, button {
+    width: 100%;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1em;
+    border-radius: 5px;
+    height: 2em;
+}
+
+select, input {
+    border: 2px solid rgb(0, 59, 135);
+}
+
+button {
+    border: 3px solid;
+    color: white;
+}
+
+button.btn-delete {
+    border-color: red;
+    background-color: red;
+}
+
+button.btn-save {
+    border-color: rgb(0, 59, 135);
+    background-color: rgb(0, 59, 135);
+}
+
+input:focus, select:focus {
+    outline: none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+    background-color: rgba(213, 245, 255, 0.521);
+}
+
+button.btn-save:hover {
+    border-color: rgba(85, 207, 255, 0.589);
+}
+
+button.btn-save:active {
+    background-color: rgb(0, 59, 135, 0.75);
+    border-color: rgb(0, 59, 135);
+}
+
+button.btn-delete:hover {
+    border-color: lightcoral;
+}
+
+button.btn-delete:active {
+    background-color: rgb(255, 0, 0, 0.75);
+    border-color: darkred;
+}

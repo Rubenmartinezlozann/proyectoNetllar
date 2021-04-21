@@ -11,12 +11,8 @@ header.jumbotron {
     max-height: 20%;
 }
 
-section, .row, div.list-group {
+section, .row {
     width: 100%;
-}
-
-h1 {
-    margin-bottom: 1em;
 }
 
 img {
@@ -24,7 +20,7 @@ img {
 }
 
 select, input, button {
-    width: 100%;
+    /* width: 100%; */
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     font-size: 1em;
     border-radius: 5px;
@@ -33,7 +29,6 @@ select, input, button {
 
 select, input {
     border: 2px solid rgb(0, 59, 135);
-    margin-bottom: 20px;
 }
 
 /* table {
@@ -57,6 +52,12 @@ select, input {
 button {
     border: 3px solid;
     color: white;
+}
+
+button.btnInf{
+    width: auto;
+    height: auto;
+    min-width: 4em;
 }
 
 button.btnClear {
@@ -118,6 +119,36 @@ button.btnClear:active {
     margin-bottom: 1.5em;
 }
 
-.usernameList {
-    min-width: 15em;
+.listDiv {
+    max-height: 20em;
+}
+
+.list-group {
+    width: 100%;
+}
+
+li {
+    /* width: 25%; */
+    text-align: center;
+    min-width: 6em;
+}
+
+@media(max-width:700px) {
+    .listDiv {
+        overflow-x: scroll;
+    }
+}
+
+li.liUsername {
+    /* width: 50%; */
+    text-align: start;
+}
+
+h1{
+    font-size: 3em;
+    text-align: center;
+}
+
+.find-section, .create-section{
+    display: none;
 }

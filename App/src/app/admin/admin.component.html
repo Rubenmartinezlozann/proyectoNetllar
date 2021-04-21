@@ -2,40 +2,43 @@
     <header class="jumbotron jumbotron-fluid">
         <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
     </header>
-    <section class="find-section">
-        <div class="row justify-content-center ">
-            <div class="col-sm-4 col-md-3 col-xl-2">
-                <button id="btnAddUser" class="btnConfirm">Añadir usuario</button>
+    <h1>Administración de usuarios</h1>
+    <br>
+    <section class="row justify-content-center">
+        <div class="col-sm-4 col-md-3">
+            <div class="d-flex flex-row justify-content-end">
+                <button id="btnFilter" class="btn btn-secondary btnInf">Filtrar <i class="bi bi-list"></i></button>
             </div>
-            <div class="col-sm-4 col-md-3 col-xl-2">
-                <input id="find-username" type="text" placeholder="Nombre de usuario" disabled>
+            <br>
+            <div id="find-section" class="find-section card">
+                <div class="card-body d-flex flex-column">
+                    <p class="text-center">Nombre de usuario</p>
+                    <input id="find-username" class="" type="text">
+                    <button id="btn-find" class="btnConfirm">Buscar</button>
+                    <br>
+                    <button id="btn-clear-filter" class="btnClear">Borrar</button>
+                </div>
             </div>
-            <div class="col-sm-4 col-md-3 col-xl-2">
-                <button id="btn-find" class="btnConfirm" disabled>Buscar usuario</button>
+        </div>
+        <div class="col-sm-4 col-md-6 listDiv overflow-auto list-group">
+            <li *ngFor="let elem of users" class="list-group-item fade {{elem.show}} liUsername" id="{{elem.username}}"
+                (click)=loadInfPage(elem.username)>{{elem.username}}</li>
+        </div>
+        <div class="col-sm-4 col-md-3">
+            <button id="btnAddUser" class="btn btn-success btnInf">Crear usuario <i class="bi bi-plus"></i></button>
+            <br>
+            <br>
+            <div id="create-section" class="card create-section">
+                <div class="card-body d-flex flex-column">
+                    <label>Nombre de usuario</label>
+                    <input id="txt-add-username" type="text">
+                    <br>
+                    <label>Contraseña</label>
+                    <input id="txt-add-password" type="password">
+                    <br>
+                    <button id="btn-create-user" class="btnConfirm">Crear</button>
+                </div>
             </div>
-        </div>
-    </section>
-    <section class="data-section row justify-content-center">
-        <div class="col-sm-4 col-md-3 col-xl-2">
-            <label id="lblUsername">Nombre de usuario</label>
-            <input type="text" id="data-username" />
-        </div>
-        <div class="col-sm-4 col-md-3 col-xl-2">
-            <label id="lblPassword">Contraseña</label>
-            <input type="password" id="data-password" />
-        </div>
-        <div class="col-sm-4 col-md-3 col-xl-2">
-            <button id="data-btn" class="btnConfirm data-btn">Confirmar</button>
-            <button id="data-goBack" class="btnConfirm data-btn">Volver</button>
-        </div>
-    </section>
-    <section>
-        <div class="list-group">
-            <ul *ngFor="let elem of users" class="list-group list-group-horizontal row justify-content-right">
-                <li class="list-group-item usernameList {{elem.username}}">{{elem.username}}</li>
-                <li class="list-group-item {{elem.username}}" (click)=clickBtnModify(elem.username)>Editar</li>
-                <li class="list-group-item {{elem.username}}" (click)=clickBtnDelete(elem.username)>Eliminar</li>
-            </ul>
         </div>
     </section>
     <footer>
