@@ -9,7 +9,7 @@
     <section class="row justify-content-center">
         <div class="col-sm-4 col-md-3">
             <div class="d-flex flex-row justify-content-end">
-                <button id="btnFilter" class="btn btn-secondary btnInf">Filtrar <i class="bi bi-list"></i></button>
+                <button id="btnFilter" class="btn btn-secondary btnInf">Filtrar  <i class="bi bi-list"></i></button>
             </div>
             <br>
             <div id="find-section" class="find-section card">
@@ -25,12 +25,13 @@
         <div class="col-sm-4 col-md-6">
             <div class="listDiv list-group">
                 <div *ngFor="let elem of users" class="list-group-item list-group-item-action" id="{{elem.username}}"
-                    (click)=loadInfPage(elem.username)>{{elem.username}}<i class="bi bi-pencil-square"
-                        style="float: right"></i></div>
+                    (click)=loadInfPage(elem.username)>{{elem.username}}<i class="bi bi-pencil-square"></i><i
+                        class="bi bi-info-circle"></i>
+                </div>
             </div>
         </div>
         <div class="col-sm-4 col-md-3">
-            <button id="btnAddUser" class="btn btn-success btnInf">Crear usuario <i class="bi bi-plus"></i></button>
+            <button id="btnAddUser" class="btn btn-success btnInf">Crear usuario<i class="bi bi-plus"></i></button>
             <br>
             <br>
             <div id="create-section" class="card create-section">

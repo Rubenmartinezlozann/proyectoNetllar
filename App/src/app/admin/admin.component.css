@@ -81,6 +81,7 @@ input:focus, select:focus {
 
 input:disabled {
     border-color: rgb(91, 125, 167);
+    background-color: transparent;
 }
 
 input:disabled, select:disabled {
@@ -132,4 +133,12 @@ h1 {
 
 .find-section, .create-section {
     display: none;
+}
+
+i {
+    float: right;
+}
+
+i+i {
+    margin-right: 1em;
 }

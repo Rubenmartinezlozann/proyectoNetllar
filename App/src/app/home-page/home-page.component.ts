@@ -19,6 +19,9 @@ export class HomePageComponent implements OnInit {
 	selectedTypeRoad: string = '';
 	selectedStreet: string = '';
 
+	count: number = 0;
+	count2: number = 0;
+
 	provinceElem: any;
 	cpElem: any;
 	townshipElem: any;
@@ -28,7 +31,7 @@ export class HomePageComponent implements OnInit {
 
 	constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute) { }
 
-	ngOnInit() {
+	ngOnInit() {//Falta comprobar que solo se escriben números en el cp y las comprobaciones del input para poner el número
 		this.http.get(`http://127.0.0.1:8000/getUserByToken/${this.activatedRoute.snapshot.params.token}`).subscribe((res: any) => {
 			if (res.role !== null) {
 				if (res.role.some((value: any) => value === 'ROLE_ADMIN')) {
@@ -45,9 +48,18 @@ export class HomePageComponent implements OnInit {
 
 				this.provinceElem.addEventListener('change', this.getTownshipData);
 
-				this.cpElem.addEventListener('change', this.getProvinceData);
+				this.cpElem.addEventListener('input', () => {
+					this.count2++;
+					const count = this.count2;
+					setTimeout(() => {
+						if (this.count === count) {
+							console.log('dentro')
+							this.getProvinceData();
+						}
+					}, 1000)
+				});
 				this.cpElem.addEventListener('input', this.hideCpAlert);
-				this.cpElem.addEventListener('change', this.showCpError);
+				this.cpElem.addEventListener('input', this.showCpError);
 
 				this.townshipElem.addEventListener('change', this.getTypeRoadData);
 
@@ -230,16 +242,19 @@ export class HomePageComponent implements OnInit {
 	}
 
 	showCpError = () => {
-		const text = this.cpElem.value.length;
-		if ((text < 4 || text > 5) && (text !== 0)) {
-			this.cpElem.style.border = '2px solid red';
-			const cpAlert = document.getElementById('cpAlert');
-			if (cpAlert !== null) {
-				cpAlert.textContent = 'El código postal debe tener una longitud de cinco carácteres.';
-				cpAlert.style.color = 'red';
-				// cpAlert.style.display = 'block';
+		this.count++
+		const count = this.count;
+		setTimeout(() => {
+			const text = this.cpElem.value.length;
+			if ((text < 4 || text > 5) && text !== 0 && this.count === count) {
+				this.cpElem.style.border = '2px solid red';
+				const cpAlert = document.getElementById('cpAlert');
+				if (cpAlert !== null) {
+					cpAlert.textContent = 'El código postal debe tener una longitud de cinco carácteres.';
+					cpAlert.style.color = 'red';
+				}
 			}
-		}
+		}, 1000)
 	}
 
 	showNotFoundCp = () => {
@@ -250,7 +265,6 @@ export class HomePageComponent implements OnInit {
 			if (cpAlert !== null) {
 				cpAlert.textContent = 'No hay servicio para este código postal';
 				cpAlert.style.color = 'darkorange';
-				// cpAlert.style.display = 'block';
 			}
 		}
 	}
@@ -258,7 +272,6 @@ export class HomePageComponent implements OnInit {
 	hideCpAlert = () => {
 		this.cpElem.style.border = '2px solid rgb(0, 59, 135)';
 		const cpAlert = document.getElementById('cpAlert');
-		// if (cpAlert !== null) cpAlert.style.display = 'none';
 		if (cpAlert !== null) cpAlert.textContent = '';
 	}
 
@@ -266,10 +279,8 @@ export class HomePageComponent implements OnInit {
 		const numAlert = document.getElementById('numAlert');
 		if (showAlert) {
 			if (numAlert !== null) numAlert.textContent = 'No hay servicio para este número';
-			// if (numAlert !== null) numAlert.style.display = 'block'
 		} else {
 			if (numAlert !== null) numAlert.textContent = '';
-			// if (numAlert !== null) numAlert.style.display = 'none'
 		}
 	}
 

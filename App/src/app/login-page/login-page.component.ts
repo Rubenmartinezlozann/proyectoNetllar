@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse, HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: 'app-login-page',
@@ -40,7 +41,7 @@ export class LoginPageComponent {
       if ((this.user !== '' && this.password !== '')) {
         this.http.post(this.urlLogin, { "username": this.user, "password": this.password }).subscribe((res: any) => {
           this.router.navigate(['/home/' + res.token]);
-        })
+        });
         ok = true;
       }
     } catch (error) {

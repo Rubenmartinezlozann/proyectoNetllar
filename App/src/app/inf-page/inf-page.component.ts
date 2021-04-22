@@ -99,6 +99,8 @@ export class InfPageComponent implements OnInit, AfterViewInit {
     document.getElementById('btn-toast-cancel')?.addEventListener('click', () => {
       if (this.action === 'back') {
         this.router.navigate(['/admin']);
+      } else {
+        toast.style.display = 'none';
       }
     })
 
