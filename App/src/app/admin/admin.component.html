@@ -1,8 +1,10 @@
 <div class="container-fluid">
     <header class="jumbotron jumbotron-fluid">
-        <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+        <div class="row justify-content-around">
+            <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+            <h1 class="text-light">Administración de usuarios</h1>
+        </div>
     </header>
-    <h1>Administración de usuarios</h1>
     <br>
     <section class="row justify-content-center">
         <div class="col-sm-4 col-md-3">
@@ -20,9 +22,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-4 col-md-6 listDiv overflow-auto list-group">
-            <li *ngFor="let elem of users" class="list-group-item fade {{elem.show}} liUsername" id="{{elem.username}}"
-                (click)=loadInfPage(elem.username)>{{elem.username}}</li>
+        <div class="col-sm-4 col-md-6">
+            <div class="listDiv list-group">
+                <div *ngFor="let elem of users" class="list-group-item list-group-item-action" id="{{elem.username}}"
+                    (click)=loadInfPage(elem.username)>{{elem.username}}<i class="bi bi-pencil-square"
+                        style="float: right"></i></div>
+            </div>
         </div>
         <div class="col-sm-4 col-md-3">
             <button id="btnAddUser" class="btn btn-success btnInf">Crear usuario <i class="bi bi-plus"></i></button>
@@ -41,7 +46,14 @@
             </div>
         </div>
     </section>
+    <div class="d-flex flex-row justify-content-center">
+        <div id="spinner" class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden"></span>
+        </div>
+    </div>
     <footer>
-        <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+        <div class="row justify-content-center">
+            <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+        </div>
     </footer>
 </div>

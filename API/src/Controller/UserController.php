@@ -91,6 +91,7 @@ class UserController extends AbstractController
         $user = $this->userRepository->findOneBy(['username' => $username]);
         if (!empty($user)) {
             $data[] = [
+                'id' => $user->getId(),
                 'username' => $user->getUsername(),
                 'password' => $user->getPassword(),
             ];
@@ -124,19 +125,23 @@ class UserController extends AbstractController
     public function editUser(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $user = $this->userRepository->findOneBy(['username' => $data['username']]);
+        if (empty($this->userRepository->findOneBy(['username' => $data['username']]))) {
+            $user = $this->userRepository->findOneBy(['id' => $data['id']]);
 
-        empty($data['username']) ? true : $user->setUsername($data['username']);
-        empty($data['password']) ? true : $user->setPassword($data['password']);
-        // empty($data['city']) ? true : $user->setCity($data['city']);
-        // empty($data['phone_contact']) ? true : $user->setPhoneContact($data['phone_contact']);
-        // empty($data['mail']) ? true : $user->setMail($data['mail']);
-        // empty($data['address']) ? true : $user->setAddress($data['address']);
-        // $user->setRoles(['ROLE_USER']);
+            empty($data['username']) ? true : $user->setUsername($data['username']);
+            empty($data['password']) ? true : $user->setPassword($data['password']);
+            // empty($data['city']) ? true : $user->setCity($data['city']);
+            // empty($data['phone_contact']) ? true : $user->setPhoneContact($data['phone_contact']);
+            // empty($data['mail']) ? true : $user->setMail($data['mail']);
+            // empty($data['address']) ? true : $user->setAddress($data['address']);
+            // $user->setRoles(['ROLE_USER']);
 
-        $updatedUser = $this->userRepository->updateUser($user);
+            $updatedUser = $this->userRepository->updateUser($user);
 
-        return new JsonResponse(['updated' => $updatedUser], Response::HTTP_OK);
+            return new JsonResponse(['updated' => $updatedUser], Response::HTTP_OK);
+        } else {
+            return new JsonResponse(['updated' => false], Response::HTTP_OK);
+        }
     }
 
     /**
@@ -148,7 +153,7 @@ class UserController extends AbstractController
 
         $this->userRepository->removeUser($user);
 
-        return new JsonResponse(['status' => 'user deleted!'], Response::HTTP_OK);
+        return new JsonResponse(['deleted' => true], Response::HTTP_OK);
     }
 
     /**

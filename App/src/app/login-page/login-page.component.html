@@ -1,25 +1,33 @@
 <div class="container-fluid">
+    <header class="jumbotron jumbotron-fluid">
+        <div class="row justify-content-around">
+            <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+            <h1 class="text-light">Inicio de sesión</h1>
+        </div>
+    </header>
     <div class="row justify-content-center">
-        <label class="col-md-4">Nombre de usuario</label>
+        <label class="col-md-3">Nombre de usuario</label>
     </div>
     <div class="row justify-content-center">
-        <input (input)="getUsername($event)" id="username" class="col-md-4 " type="text">
-    </div>
-
-    <div class="row justify-content-center">
-        <label class="col-md-4">Contraseña</label>
+        <input (input)="getUsername($event)" id="username" class="col-md-3 " type="text">
     </div>
     <div class="row justify-content-center">
-        <input (input)='getPassword($event)' id="password" class="col-md-4" type="password">
+        <label class="col-md-3">Contraseña</label>
     </div>
     <div class="row justify-content-center">
-        <label id="errorMensaje" class="col-md-4">Usuario o Contraseña incorrectos</label>
+        <input (input)='getPassword($event)' id="password" class="col-md-3" type="password">
+    </div>
+    <div class="row justify-content-center">
+        <label id="errorMensaje" class="col-md-3">Usuario o Contraseña incorrectos</label>
     </div>
     <br>
     <div class="row justify-content-center">
-        <a (click)="login()" id="btn-login" class="col-lg-1 col-md-2 btn btn-primary btn-login">Confirmar</a>
+        <button (click)="login()" id="btn-login" class="col-xl-1 col-lg-2 col-sm-3 btnConfirm">Confirmar</button>
     </div>
 </div>
+<br><br><br><br><br><br>
 <footer>
-
+    <div class="row justify-content-center">
+        <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+    </div>
 </footer>

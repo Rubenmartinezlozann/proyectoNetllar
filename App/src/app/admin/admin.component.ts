@@ -16,10 +16,10 @@ export class AdminComponent implements OnInit, AfterViewInit {
     action: string = '';
 
     ngAfterViewInit(): void {
-        this.getUsers();
     }
 
     ngOnInit(): void {
+        this.getUsers();
         const txtFindUsername = document.getElementById('find-username') as HTMLInputElement;
 
         document.getElementById('btnFilter')?.addEventListener('click', () => {
@@ -74,7 +74,11 @@ export class AdminComponent implements OnInit, AfterViewInit {
     }
 
     getUsers = () => {
+        const spiner = document.getElementById('spinner') as HTMLDivElement;
+        spiner.style.display = 'block';
         this.http.get('http://127.0.0.1:8000/getUsers').subscribe((res: any) => {
+            spiner.style.display = 'none';
+            console.log(spiner.style.display)
             this.users = [];
             res.filter((v: any) =>
                 !v.role.some((value: any) => value === 'ROLE_ADMIN'))

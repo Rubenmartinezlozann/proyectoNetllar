@@ -4,19 +4,19 @@ footer, header.jumbotron {
 }
 
 footer {
-    margin-top: 13%;
+    margin-top: 7em;
 }
 
 header.jumbotron {
-    max-height: 20%;
+    max-height: 15em;
 }
 
 section, .row {
     width: 100%;
 }
 
-img {
-    margin-left: 5%;
+header img {
+    margin-right: 5em;
 }
 
 select, input, button {
@@ -54,7 +54,7 @@ button {
     color: white;
 }
 
-button.btnInf{
+button.btnInf {
     width: auto;
     height: auto;
     min-width: 4em;
@@ -120,35 +120,16 @@ button.btnClear:active {
 }
 
 .listDiv {
-    max-height: 20em;
-}
-
-.list-group {
     width: 100%;
+    max-height: 20em;
+    overflow: auto;
 }
 
-li {
-    /* width: 25%; */
-    text-align: center;
-    min-width: 6em;
+h1 {
+    font-size: 2em;
+    float: right;
 }
 
-@media(max-width:700px) {
-    .listDiv {
-        overflow-x: scroll;
-    }
-}
-
-li.liUsername {
-    /* width: 50%; */
-    text-align: start;
-}
-
-h1{
-    font-size: 3em;
-    text-align: center;
-}
-
-.find-section, .create-section{
+.find-section, .create-section {
     display: none;
 }

@@ -1,6 +1,9 @@
 <div class="container-fluid">
     <header class="jumbotron jumbotron-fluid">
-        <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+        <div class="row justify-content-around">
+            <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+            <h1 class="text-light">Administración de usuarios</h1>
+        </div>
     </header>
     <h1 class="text-center">Información del usuario</h1>
     <br>
@@ -9,12 +12,12 @@
             <div class="col-sm-4 col-md-3 col-xl-2">
                 <label>Nombre de usuario</label>
                 <br>
-                <input id="username" type="text" value="{{username}}">
+                <input id="username" type="text" value="">
             </div>
             <div class="col-sm-4 col-md-3 col-xl-2">
                 <label>Contraseña</label>
                 <br>
-                <input type="password" id="password" placeholder="******" />
+                <input type="password" id="password" placeholder="******" value="******" />
             </div>
         </div>
         <br>
@@ -28,7 +31,7 @@
             </div>
             <br><br>
         </div>
-        <div class="row justify-content-center">
+        <!-- <div class="row justify-content-center">
             <br><br>
             <div class="col-sm-4 col-md-3 col-xl-2 ">
                 <button id="btn-save" class="btn-save">Guardar</button>
@@ -37,9 +40,26 @@
             <div class="col-sm-4 col-md-3 col-xl-2">
                 <button id="btn-discard" class="btn-save">Descartar</button>
             </div>
-        </div>
+        </div> -->
     </section>
+    <div class="row justify-content-center">
+        <div id="myToast" class="myToast">
+            <div class="toast-body d-flex flex-column">
+                <div class="d-flex flex-row justify-content-between">
+                    <p id="toastText">¿Guardar Cambios?</p>
+                    <i id="btn-close-myToast" class="close bi bi-x"></i>
+                </div>
+                <div class="border-top d-flex flex-row justify-content-center">
+                    <button id="btn-toast-ok" class="btn btn-primary">Guardar</button>
+                    <button id="btn-toast-cancel" class="btn btn-secondary">Descartar</button>
+                    <button id="btn-toast-3" class="btn btn-secondary" style="display: none;">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <footer>
-        <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+        <div class="row justify-content-center">
+            <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+        </div>
     </footer>
 </div>

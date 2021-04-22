@@ -4,19 +4,19 @@ footer, header.jumbotron {
 }
 
 footer {
-    margin-top: 13%;
+    margin-top: 7em;
 }
 
 header.jumbotron {
-    max-height: 20%;
+    max-height: 15em;
 }
 
 section, div {
     width: 100%;
 }
 
-img {
-    margin-left: 5%;
+header img {
+    margin-right: 5em;
 }
 
 select, input, button {
@@ -71,4 +71,40 @@ button.btn-delete:hover {
 button.btn-delete:active {
     background-color: rgb(255, 0, 0, 0.75);
     border-color: darkred;
+}
+
+.close {
+    width: auto;
+    height: auto;
+    background-color: transparent;
+    color: black;
+    border: none;
+}
+
+.myToast {
+    display: none;
+    position: absolute;
+    top: 20em;
+    width: auto;
+    min-width: 10em;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.myToast p {
+    color: black;
+}
+
+.myToast button {
+    height: 2.5em;
+    max-width: 7em;
+}
+
+.myToast button+button {
+    margin-left: 1em;
+}
+
+#btn-toast-3 {
+    margin-left: 0%;
 }
