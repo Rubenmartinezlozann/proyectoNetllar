@@ -19,6 +19,13 @@ export class HomePageComponent implements OnInit {
 	selectedTypeRoad: string = '';
 	selectedStreet: string = '';
 
+	cp: any;
+	province: any;
+	township: any;
+	typeRoad: any;
+	street: any;
+	number: any;
+
 	count: number = 0;
 	count2: number = 0;
 
@@ -31,7 +38,7 @@ export class HomePageComponent implements OnInit {
 
 	constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute) { }
 
-	ngOnInit() {//Falta comprobar que solo se escriben números en el cp y las comprobaciones del input para poner el número
+	ngOnInit() {
 		this.http.get(`http://127.0.0.1:8000/getUserByToken/${this.activatedRoute.snapshot.params.token}`).subscribe((res: any) => {
 			if (res.role !== null) {
 				if (res.role.some((value: any) => value === 'ROLE_ADMIN')) {
@@ -53,7 +60,6 @@ export class HomePageComponent implements OnInit {
 					const count = this.count2;
 					setTimeout(() => {
 						if (this.count === count) {
-							console.log('dentro')
 							this.getProvinceData();
 						}
 					}, 1000)
@@ -77,6 +83,9 @@ export class HomePageComponent implements OnInit {
 
 				document.getElementById("btnConfirm")?.addEventListener('click', this.findProducts);
 				document.getElementById("btnClear")?.addEventListener('click', this.clearData);
+
+				document.getElementById('cp-span')?.addEventListener('click', ()=>{
+				})
 			} else {
 				this.router.navigate(['/login']);
 			}
@@ -195,6 +204,12 @@ export class HomePageComponent implements OnInit {
 					console.log(res);
 				});
 		}
+		this.cp = this.getCp();
+		this.province = this.getSelectedProvince();
+		this.township = this.getSelectedTownship();
+		this.typeRoad = this.getSelectedTypeRoad();
+		this.street = this.getSelectedStreet();
+		this.number = this.numberElem.value;
 	}
 
 	hideDefaultOption = (id: string, hide: boolean = false) => {
@@ -236,13 +251,13 @@ export class HomePageComponent implements OnInit {
 		btnAdmin.classList.add('col-4');
 		btnAdmin.style.margin = `0px 20px 0px 0px`;
 		btnAdmin.addEventListener('click', () => {
-			this.router.navigate(['admin']);
+			this.router.navigate(['/admin']);
 		})
 		document.getElementsByTagName('header')[0].appendChild(btnAdmin);
 	}
 
 	showCpError = () => {
-		this.count++
+		this.count++;
 		const count = this.count;
 		setTimeout(() => {
 			const text = this.cpElem.value.length;

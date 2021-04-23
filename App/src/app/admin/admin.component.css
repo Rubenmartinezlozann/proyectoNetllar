@@ -54,10 +54,15 @@ button {
     color: white;
 }
 
-button.btnInf {
+button.btnInf, button.btn-back {
     width: auto;
     height: auto;
-    min-width: 4em;
+    min-width: 5em;
+}
+
+button.btn-back{
+    position: relative;
+    top: 5em;
 }
 
 button.btnClear {

@@ -71,6 +71,10 @@ export class AdminComponent implements OnInit, AfterViewInit {
                 });
             }
         })
+
+        document.getElementById('btn-back')?.addEventListener('click',()=>{
+            this.router.navigate(['/home'])
+        })
     }
 
     getUsers = () => {

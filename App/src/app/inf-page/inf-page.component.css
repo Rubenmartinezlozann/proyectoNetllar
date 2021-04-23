@@ -108,3 +108,11 @@ button.btn-delete:active {
 #btn-toast-3 {
     margin-left: 0%;
 }
+
+button.btn-back {
+    position: relative;
+    top: 5em;
+    width: auto;
+    height: auto;
+    min-width: 5em;
+}

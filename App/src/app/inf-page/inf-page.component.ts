@@ -40,16 +40,16 @@ export class InfPageComponent implements OnInit, AfterViewInit {
       }
     })
 
-    document.getElementById('btn-back')?.addEventListener('click', () => {
-      if (txtUsername.value !== this.username || txtPassword.value !== this.password) {
-        this.action = 'back';
-        pToast.textContent = '¿Guardar cambios?';
-        btnToastOk.textContent = 'Guardar';
-        btnToastCancel.textContent = 'Descartar';
-        toast.style.display = 'block';
-      } else {
-        this.router.navigate(['/admin']);
-      }
+    document.getElementById('btn-save')?.addEventListener('click', () => {
+      // if (txtUsername.value !== this.username || txtPassword.value !== this.password) {
+      this.action = 'back';
+      pToast.textContent = '¿Guardar cambios?';
+      btnToastOk.textContent = 'Guardar';
+      btnToastCancel.textContent = 'Descartar';
+      toast.style.display = 'block';
+      // } else {
+      // this.router.navigate(['/admin']);
+      // }
     })
 
     document.getElementById('btn-delete')?.addEventListener('click', () => {
@@ -67,7 +67,7 @@ export class InfPageComponent implements OnInit, AfterViewInit {
     document.getElementById('btn-toast-ok')?.addEventListener('click', () => {
       if (this.action === 'back') {
         this.http.put('http://127.0.0.1:8000/updateUser', {
-          id: this.id, username: txtUsername.value, 'password': txtPassword.value
+          'id': this.id, 'username': txtUsername.value, 'password': txtPassword.value
         }).subscribe((res: any) => {
           if (res.updated) {
             this.username = txtUsername.value;
@@ -97,11 +97,11 @@ export class InfPageComponent implements OnInit, AfterViewInit {
     })
 
     document.getElementById('btn-toast-cancel')?.addEventListener('click', () => {
-      if (this.action === 'back') {
-        this.router.navigate(['/admin']);
-      } else {
-        toast.style.display = 'none';
-      }
+      // if (this.action === 'back') {
+      //   this.router.navigate(['/admin']);
+      // } else {
+      toast.style.display = 'none';
+      // }
     })
 
     btnToast3.addEventListener('click', () => {
@@ -115,6 +115,12 @@ export class InfPageComponent implements OnInit, AfterViewInit {
       } else {
         this.router.navigate(['/admin']);
       }
+    })
+
+    document.getElementById('btn-back')?.addEventListener('click', () => {
+      if (txtUsername.value !== this.username || txtPassword.value !== this.password) {
+
+      } else this.router.navigate(['/home']);
     })
   }
 }
