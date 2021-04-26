@@ -181,6 +181,30 @@ class AddressRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    // public function getAddressByCp($cp)
+    // {
+    //     $address = $this->findBy(['cp' => $cp]);
+
+    //     if (count($address) === 1) {
+    //         $address = $this->findBy(['cp' => $cp, 'provincia' => $address[0]->getProvincia()]);
+    //         if (count($address) === 1) {
+    //             $address = $this->findBy(['cp' => $cp, 'provincia' => $address[0]->getProvincia(), 'municipio' => $address[0]->getMunicipio()]);
+    //             if (count($address) === 1) {
+    //                 $address = $this->findBy(['cp' => $cp, 'provincia' => $address[0]->getProvincia(), 'municipio' => $address[0]->getMunicipio(), 'tipovia' => $address[0]->getTipovia()]);
+    //             }
+    //         }
+    //     }
+
+    //     $data = [];
+    //     foreach ($address as $value) {
+    //         $data[] = [
+    //             'province' => $value->getProvincia(),
+    //             'township' => $value->getMunicipio()
+    //         ];
+    //     }
+    //     return $data;
+    // }
+
     /* public function suggestAddress($addressText, $cp = null)
     {
         $dbAddressData = $cp === null ? $this->findAll() : $this->findBy(['cp' => $cp]);

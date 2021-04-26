@@ -63,17 +63,19 @@ input:focus, select:focus {
 }
 
 input:disabled {
-    border-color: rgb(91, 125, 167);
+    border-color: rgba(91, 125, 167, 0.7);
+    background-color: rgb(228, 228, 228);
 }
 
-input:disabled, select:disabled {
+select:disabled {
     background-color: rgb(228, 228, 228);
+    border-color: rgb(91, 125, 167);
 }
 
 button[disabled], button[disabled]:hover {
     background-color: rgb(228, 228, 228);
     color: grey;
-    border: 2px solid rgb(91, 125, 167) !important;
+    border: 2px solid rgba(91, 125, 167, 0.7) !important;
 }
 
 button.btnConfirm:hover {
@@ -98,6 +100,81 @@ button.btnClear:active {
     /* display: none; */
     color: red;
     margin-bottom: -0.5em;
+}
+
+.products-section {
+    display: none;
+}
+
+.address-inf {
+    float: left;
+    transition: 0.5s;
+    width: 20cm;
+}
+
+.elem-left {
+    border-radius: 5px 0px 0px 5px;
+}
+
+.elem-right {
+    border-radius: 0px 5px 5px 0px;
+}
+
+span.elem-left, span.elem-right {
+    height: 2em;
+    width: 2em;
+    color: rgb(80, 80, 80);
+    background-color: lightgrey;
+    border: none;
+}
+
+span.elem-left#cp-span, span.elem-right#cp-span {
+    /* background-color: rgb(0, 191, 255); */
+    background-color: rgb(0, 59, 135);
+    color: white;
+}
+
+/* span.elem-left:hover, span.elem-right:hover {
+    background-color: rgba(0, 191, 255, 0.5);
+}
+
+span.elem-left:active, span.elem-right:active {
+    background-color: rgba(121, 221, 255, 0.5);
+} */
+
+span.elem-left.input-group-text i {
+    position: relative;
+    right: 0.25em;
+}
+
+span.elem-right.input-group-text i {
+    position: relative;
+    left: 0.25em;
+}
+
+span i {
+    position: relative;
+    bottom: 0.04em;
+}
+
+.spinner-inf-left {
+    display: none;
+    position: absolute;
+    top: 2.5em;
+    left: 1.4em;
+}
+
+.alert-title {
+    font-size: 1.2em;
+}
+
+.alert-body {
+    margin: 5px;
+    border-top: 1px solid lightgrey;
+}
+
+.clearBoth {
+    clear: both;
 }
 
 /* button.dropdown-toggle {
@@ -139,53 +216,3 @@ button.btnClear:active {
 /* option.defaultProvince, option.defaultTownship, option.defaultTypeRoad, option.defaultStreet {
     
 } */
-
-.products-section {
-    display: none;
-}
-
-.address-inf {
-    float: left;
-    transition: 0.5s;
-    width: 20cm;
-}
-
-input.input-left, span.span-left, select.select-right {
-    border-radius: 5px 0px 0px 5px;
-}
-
-input.input-right, span.span-right, select.select-left {
-    border-radius: 0px 5px 5px 0px;
-}
-
-.span-right, .span-left {
-    height: 2em;
-    width: 2em;
-}
-
-.span-left i {
-    position: relative;
-    right: 70%;
-}
-
-.span-right i {
-    position: relative;
-    left: 70%;
-}
-
-span i {
-    position: relative;
-    bottom: 0.04em;
-}
-
-.span-right:hover, .span-left:hover {
-    background-color: rgba(0, 191, 255, 0.5);
-}
-
-.span-right:active, .span-left:active {
-    background-color: rgba(121, 221, 255, 0.5);
-}
-
-.clearBoth {
-    clear: both;
-}

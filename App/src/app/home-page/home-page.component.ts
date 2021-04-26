@@ -49,7 +49,7 @@ export class HomePageComponent implements OnInit {
 				this.townshipElem = document.getElementById('township') as HTMLSelectElement;
 				this.typeRoadElem = document.getElementById('typeRoad') as HTMLSelectElement;
 				this.streetElem = document.getElementById('street') as HTMLSelectElement;
-				this.numberElem = document.getElementById('num') as HTMLElement;
+				this.numberElem = document.getElementById('number') as HTMLElement;
 
 				this.getProvinceData();
 
@@ -58,6 +58,7 @@ export class HomePageComponent implements OnInit {
 				this.cpElem.addEventListener('input', () => {
 					this.count2++;
 					const count = this.count2;
+					this.switchIcon('cp', 'loading');
 					setTimeout(() => {
 						if (this.count === count) {
 							this.getProvinceData();
@@ -84,7 +85,7 @@ export class HomePageComponent implements OnInit {
 				document.getElementById("btnConfirm")?.addEventListener('click', this.findProducts);
 				document.getElementById("btnClear")?.addEventListener('click', this.clearData);
 
-				document.getElementById('cp-span')?.addEventListener('click', ()=>{
+				document.getElementById('cp-span')?.addEventListener('click', () => {
 				})
 			} else {
 				this.router.navigate(['/login']);
@@ -96,9 +97,11 @@ export class HomePageComponent implements OnInit {
 
 	getProvinceData = () => {
 		this.clearProvince();
+		this.switchIcon('province', 'loading');
 		const cp = this.getCp();
 		this.http.get(`http://127.0.0.1:8000/getProvinces/${cp}`).subscribe((res: any) => {
 			this.provinceArray = [];
+			this.switchIcon('province', 'edit')
 			if (res.length !== 0) {
 				res.map((elem: any) => this.provinceArray.push(elem.provincia));
 				this.provinceElem?.removeAttribute('disabled');
@@ -116,11 +119,14 @@ export class HomePageComponent implements OnInit {
 
 	getTownshipData = () => {
 		this.clearTownship();
+		this.switchIcon('province', 'ok');
+		this.switchIcon('township', 'loading');
 		const province = this.getSelectedProvince();
 		const cp = this.getCp();
 		if (province !== '') {
 			this.http.get(`http://127.0.0.1:8000/getTownship/${province}/${cp}`).subscribe((res: any) => {
 				this.townshipArray = [];
+				this.switchIcon('township', 'edit');
 				res.map((elem: any) => this.townshipArray.push(elem.municipio));
 				if (this.hideDefaultOption('defaultTownship', res.length === 1)) {
 					this.selectedTownship = res[0].municipio;
@@ -130,57 +136,77 @@ export class HomePageComponent implements OnInit {
 				}
 				this.townshipElem.removeAttribute('disabled');
 			});
+		} else {
+			this.provinceElem.addEventListener('change', this.switchIcon('province', 'edit'));
 		}
 	}
 
 	getTypeRoadData = () => {
 		this.clearTypeRoad();
+		this.switchIcon('typeRoad', 'loading');
+		this.switchIcon('township', 'ok');
 		const province = this.getSelectedProvince();
 		const township = this.getSelectedTownship();
 		const cp = this.getCp();
-		this.http.get(`http://127.0.0.1:8000/getTypeRoad/${province}/${township}/ /${cp}`).subscribe((res: any) => {
-			this.typeRoadArray = [];
-			res.map((elem: any) => this.typeRoadArray.push(elem.tipovia));
-			this.typeRoadElem.removeAttribute('disabled');
-			if (this.hideDefaultOption('defaultTypeRoad', res.length === 1)) {
-				this.selectedTypeRoad = res[0].tipovia;
-				this.getStreetData();
-			} else {
-				this.selectedTypeRoad = '';
-			}
-		});
+		if (township !== '') {
+			this.http.get(`http://127.0.0.1:8000/getTypeRoad/${province}/${township}/ /${cp}`).subscribe((res: any) => {
+				this.typeRoadArray = [];
+				this.switchIcon('typeRoad', 'edit');
+				res.map((elem: any) => this.typeRoadArray.push(elem.tipovia));
+				this.typeRoadElem.removeAttribute('disabled');
+				if (this.hideDefaultOption('defaultTypeRoad', res.length === 1)) {
+					this.selectedTypeRoad = res[0].tipovia;
+					this.getStreetData();
+				} else {
+					this.selectedTypeRoad = '';
+				}
+			});
+		} else {
+			this.switchIcon('township', 'edit');
+		}
 	}
 
 	getStreetData = () => {
 		this.clearStreet();
+		this.switchIcon('typeRoad', 'ok');
+		this.switchIcon('street', 'loading');
 		const province = this.getSelectedProvince();
 		const township = this.getSelectedTownship();
 		const typeRoad = this.getSelectedTypeRoad();
 		const cp = this.getCp();
-		this.http.get(`http://127.0.0.1:8000/getStreet/${province}/${township}/${typeRoad === '' ? ' ' : typeRoad}/${cp}`).subscribe((res: any) => {
-			this.streetArray = [];
-			res.map((elem: any) => this.streetArray.push(elem.calle));
-			this.streetElem.removeAttribute('disabled');
-			if (this.hideDefaultOption('defaultStreet', res.length === 1)) {
-				this.selectedStreet = res[0].calle;
-				this.enableNum();
-			} else {
-				this.selectedStreet = '';
-			}
-		});
+		if (typeRoad !== '') {
+			this.http.get(`http://127.0.0.1:8000/getStreet/${province}/${township}/${typeRoad === '' ? ' ' : typeRoad}/${cp}`).subscribe((res: any) => {
+				this.streetArray = [];
+				this.switchIcon('street', 'edit');
+				res.map((elem: any) => this.streetArray.push(elem.calle));
+				this.streetElem.removeAttribute('disabled');
+				if (this.hideDefaultOption('defaultStreet', res.length === 1)) {
+					this.selectedStreet = res[0].calle;
+					this.enableNum();
+				} else {
+					this.selectedStreet = '';
+				}
+			});
+		} else {
+			this.switchIcon('typeRoad', 'edit');
+		}
 	}
 
 	enableNum = () => {
+		this.switchIcon('street', 'ok');
+		this.switchIcon('number', 'edit');
 		this.numberElem.removeAttribute('disabled');
 	}
 
 	enableButton = () => {
 		const button = document.getElementById('btnConfirm');
-		if (button !== null) {
+		if (button !== null && this.getSelectedStreet() !== '') {
 			if (this.numberElem.value !== '') {
 				button.removeAttribute('disabled');
+				this.switchIcon('number', 'ok');
 			} else {
 				button.setAttribute('disabled', '');
+				this.switchIcon('number', 'edit');
 			}
 		}
 	}
@@ -236,6 +262,67 @@ export class HomePageComponent implements OnInit {
 
 	getSelectedStreet = () => this.selectedStreet === '' ? this.streetElem.value : this.selectedStreet;
 
+	switchIcon = (elemdataName: string, action: string) => {
+		const span = document.getElementById(`${elemdataName}-span`) as HTMLSpanElement;
+		const icon = document.getElementById(`${elemdataName}-icon`) as HTMLDivElement;
+		const spinner = document.getElementById(`${elemdataName}-spinner`) as HTMLDivElement;
+		const control = document.getElementById(elemdataName) as HTMLSelectElement;
+		if (icon !== undefined && icon !== null) {
+			switch (action) {
+				case 'ok':
+					spinner.style.display = 'none';
+					icon.style.display = 'block';
+					icon.className = 'bi bi-check';
+					icon.style.color = 'white';
+					span.style.backgroundColor = 'darkgreen';
+					control.style.borderColor = 'darkgreen'
+					break;
+				case 'warning':
+					spinner.style.display = 'none';
+					icon.style.display = 'block';
+					icon.style.color = 'black';
+					icon.className = 'bi bi-exclamation-triangle';
+					span.style.backgroundColor = 'darkorange';
+					icon.style.color = 'white';
+					break;
+				case 'error':
+					spinner.style.display = 'none';
+					icon.style.display = 'block';
+					icon.style.color = 'black';
+					icon.className = 'bi bi-x-octagon';
+					span.style.backgroundColor = 'red';
+					icon.style.color = 'white';
+					break;
+				case 'edit':
+					spinner.style.display = 'none';
+					icon.style.display = 'block';
+					icon.style.color = 'black';
+					icon.className = 'bi bi-pencil-square';
+					icon.style.color = 'white';
+					control.style.borderColor = 'rgb(0, 59, 135)';
+					span.style.backgroundColor = 'rgb(0, 59, 135)';
+					break;
+				case 'loading':
+					spinner.style.display = 'block';
+					icon.style.display = 'none';
+					span.style.backgroundColor = 'lightgrey';
+					break;
+				case 'disabled':
+					spinner.style.display = 'none';
+					icon.style.display = 'block';
+					icon.style.color = 'rgb(80, 80, 80)';
+					span.style.backgroundColor = 'lightgrey';
+					if (elemdataName === 'cp' || elemdataName === 'number') {
+						control.style.borderColor = 'rgba(91, 125, 167, 0.7)';
+					} else {
+						control.style.borderColor = 'rgb(91, 125, 167)';
+					}
+					icon.className = 'bi bi-pencil-square';
+					break;
+			}
+		}
+	}
+
 	createBtnAdmin = () => {
 		const btnAdmin = document.createElement('button');
 		btnAdmin.type = 'button';
@@ -262,11 +349,12 @@ export class HomePageComponent implements OnInit {
 		setTimeout(() => {
 			const text = this.cpElem.value.length;
 			if ((text < 4 || text > 5) && text !== 0 && this.count === count) {
-				this.cpElem.style.border = '2px solid red';
+				this.cpElem.style.borderColor = 'red';
 				const cpAlert = document.getElementById('cpAlert');
 				if (cpAlert !== null) {
 					cpAlert.textContent = 'El código postal debe tener una longitud de cinco carácteres.';
 					cpAlert.style.color = 'red';
+					this.switchIcon('cp', 'error');
 				}
 			}
 		}, 1000)
@@ -275,19 +363,23 @@ export class HomePageComponent implements OnInit {
 	showNotFoundCp = () => {
 		const text = this.cpElem.value.length;
 		if (text >= 4 && text <= 5) {
-			this.cpElem.style.border = '2px solid darkorange';
+			this.cpElem.style.borderColor = 'darkorange';
 			const cpAlert = document.getElementById('cpAlert');
 			if (cpAlert !== null) {
 				cpAlert.textContent = 'No hay servicio para este código postal';
 				cpAlert.style.color = 'darkorange';
+				this.switchIcon('cp', 'warning');
 			}
 		}
 	}
 
 	hideCpAlert = () => {
-		this.cpElem.style.border = '2px solid rgb(0, 59, 135)';
+		this.cpElem.style.borderColor = 'rgb(0, 59, 135)';
 		const cpAlert = document.getElementById('cpAlert');
-		if (cpAlert !== null) cpAlert.textContent = '';
+		if (cpAlert !== null) {
+			cpAlert.textContent = '';
+			this.switchIcon('cp', 'edit');
+		}
 	}
 
 	numAlert = (showAlert: boolean) => {
@@ -307,6 +399,7 @@ export class HomePageComponent implements OnInit {
 
 	clearCp = () => {
 		this.cpElem.value = null;
+		this.switchIcon('cp', 'edit');
 		this.clearProvince();
 	}
 
@@ -314,6 +407,7 @@ export class HomePageComponent implements OnInit {
 		this.provinceArray = [];
 		this.selectedProvince = '';
 		this.hideDefaultOption('defaultProvince', false);
+		this.switchIcon('province', 'disabled');
 		this.clearTownship();
 	}
 
@@ -322,6 +416,7 @@ export class HomePageComponent implements OnInit {
 		this.selectedTownship = '';
 		this.townshipElem?.setAttribute('disabled', '');
 		this.hideDefaultOption('defaultTownship', false);
+		this.switchIcon('township', 'disabled');
 		this.clearTypeRoad();
 	}
 
@@ -330,6 +425,7 @@ export class HomePageComponent implements OnInit {
 		this.selectedTypeRoad = '';
 		this.typeRoadElem?.setAttribute('disabled', '');
 		this.hideDefaultOption('defaultTypeRoad', false);
+		this.switchIcon('typeRoad', 'disabled');
 		this.clearStreet();
 	}
 
@@ -338,12 +434,14 @@ export class HomePageComponent implements OnInit {
 		this.selectedStreet = '';
 		this.streetElem?.setAttribute('disabled', '');
 		this.hideDefaultOption('defaultStreet', false);
+		this.switchIcon('street', 'disabled');
 		this.clearNumber();
 	}
 
 	clearNumber = () => {
 		this.numberElem.value = null;
 		this.numberElem?.setAttribute('disabled', '');
+		this.switchIcon('number', 'disabled');
 		this.enableButton();
 	}
 }

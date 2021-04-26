@@ -1,5 +1,4 @@
 <div class="container-fluid">
-    <!-- <i class="bi bi-check"></i>  <i class="bi bi-exclamation-triangle"></i> <i class="bi bi-x-octagon"></i> -->
     <header class="jumbotron jumbotron-fluid">
         <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
     </header>
@@ -8,57 +7,103 @@
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <label>Código postal</label>
                 <br>
+                <div id="cp-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
                 <div class="d-flex flex-row">
-                    <span id="cp-span" class="input-group-text span-left"><i class="bi bi-info-circle"></i></span>
-                    <input type="number" id="cp" class="input-right" />
+                    <span id="cp-span" class="input-group-text elem-left">
+                        <i id="cp-icon" class="bi bi-pencil-square"></i>
+                    </span>
+                    <input type="number" id="cp" class="elem-right" />
                 </div>
                 <label class="" id="cpAlert"></label>
             </div>
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <label for="province">Provincia</label>
                 <br>
-                <select name="province" id="province" class="">
-                    <option id="defaultProvince" selected value="">Seleccionar</option>
-                    <option *ngFor='let elem of provinceArray;' class="text-capitalize" value="{{elem}}">{{elem}}
-                    </option>
-                </select>
+                <div id="province-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="d-flex flex-row">
+                    <span id="province-span" class="input-group-text elem-left">
+                        <i id="province-icon" class="bi bi-pencil-square"></i>
+                    </span>
+                    <select name="province" id="province" class="elem-right">
+                        <option id="defaultProvince" selected value="">Seleccionar</option>
+                        <option *ngFor='let elem of provinceArray;' class="text-capitalize" value="{{elem}}">{{elem}}
+                        </option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <label for="township">Municipio</label>
                 <br>
-                <select name="township" id="township" class="" disabled>
-                    <option selected disabled value="" id="defaultTownship">Seleccionar</option>
-                    <option *ngFor='let elem of townshipArray;' value="{{elem}}">{{elem}}
-                    </option>
-                </select>
+                <div id="township-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="d-flex flex-row">
+                    <span id="township-span" class="input-group-text elem-left">
+                        <i id="township-icon" class="bi bi-pencil-square"></i>
+                    </span>
+                    <select name="township" id="township" class="elem-right" disabled>
+                        <option selected disabled value="" id="defaultTownship">Seleccionar</option>
+                        <option *ngFor='let elem of townshipArray;' value="{{elem}}">{{elem}}
+                        </option>
+                    </select>
+                </div>
             </div>
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <label>Tipo de via</label>
                 <br>
-                <select name="typeRoad" id="typeRoad" class="" disabled>
-                    <option selected value="" id="defaultTypeRoad">Seleccionar</option>
-                    <option *ngFor='let elem of typeRoadArray;' value="{{elem}}">{{elem}}
-                    </option>
-                </select>
+                <div id="typeRoad-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="d-flex flex-row">
+                    <span id="typeRoad-span" class="input-group-text elem-left">
+                        <i id="typeRoad-icon" class="bi bi-pencil-square"></i>
+                    </span>
+                    <select name="typeRoad" id="typeRoad" class="elem-right" disabled>
+                        <option selected value="" id="defaultTypeRoad">Seleccionar</option>
+                        <option *ngFor='let elem of typeRoadArray;' value="{{elem}}">{{elem}}
+                        </option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <label for="street">Calle</label>
                 <br>
-                <select name="street" id="street" class="text-capitalize" disabled>
-                    <option selected value="" id="defaultStreet">Seleccionar</option>
-                    <option *ngFor='let elem of streetArray;' class="text-capitalize" value="{{elem}}">{{elem}}
-                    </option>
-                </select>
+                <div id="street-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="d-flex flex-row">
+                    <span id="street-span" class="input-group-text elem-left">
+                        <i id="street-icon" class="bi bi-pencil-square"></i>
+                    </span>
+                    <select name="street" id="street" class="elem-right" disabled>
+                        <option selected value="" id="defaultStreet">Seleccionar</option>
+                        <option *ngFor='let elem of streetArray;' class="text-capitalize" value="{{elem}}">{{elem}}
+                        </option>
+                    </select>
+                </div>
             </div>
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <label>Número</label>
                 <br>
-                <input type="number" id="num" disabled />
-                <label id="numAlert"></label>
+                <div id="number-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <div class="d-flex flex-row">
+                    <span id="number-span" class="input-group-text elem-left">
+                        <i id="number-icon" class="bi bi-pencil-square"></i>
+                    </span>
+                    <br>
+                    <input type="number" id="number" class="elem-right" disabled />
+                    <label id="numAlert"></label>
+                </div>
             </div>
         </div>
         <br>
