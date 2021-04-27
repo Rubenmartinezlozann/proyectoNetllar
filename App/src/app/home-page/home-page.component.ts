@@ -76,9 +76,6 @@ export class HomePageComponent implements OnInit {
 				this.streetElem.addEventListener('change', this.enableNum);
 
 				this.numberElem.addEventListener('input', this.enableButton);
-				// this.numberElem, addEventListener('input', () => {
-				// 	this.showAlert('')
-				// })
 
 				document.getElementById("btnConfirm")?.addEventListener('click', this.findProducts);
 				document.getElementById("btnClear")?.addEventListener('click', this.clearData);
@@ -109,7 +106,6 @@ export class HomePageComponent implements OnInit {
 		this.switchIcon('province', 'loading');
 		const cp = this.getCp();
 		let ok = true;
-		// this.provinceArray = [];
 
 		if (cp === '') {
 			this.data.map((elem: any) => {
@@ -396,6 +392,7 @@ export class HomePageComponent implements OnInit {
 					icon.style.color = 'black';
 					icon.className = 'bi bi-exclamation-triangle';
 					span.style.backgroundColor = 'darkorange';
+					control.style.borderColor = 'darkorange';
 					icon.style.color = 'white';
 					break;
 				case 'error':
@@ -404,6 +401,7 @@ export class HomePageComponent implements OnInit {
 					icon.style.color = 'black';
 					icon.className = 'bi bi-x-octagon';
 					span.style.backgroundColor = 'red';
+					control.style.borderColor = 'red';
 					icon.style.color = 'white';
 					break;
 				case 'edit':
@@ -462,7 +460,6 @@ export class HomePageComponent implements OnInit {
 		setTimeout(() => {
 			const text = this.cpElem.value.length;
 			if ((text < 4 || text > 5) && text !== 0 && this.count === count) {
-				this.cpElem.style.borderColor = 'red';
 				const cpAlert = document.getElementById('cpAlert');
 				if (cpAlert !== null) {
 					cpAlert.textContent = 'El código postal debe tener una longitud de cinco carácteres.';
@@ -477,7 +474,6 @@ export class HomePageComponent implements OnInit {
 	showNotFoundCp = () => {
 		const text = this.cpElem.value.length;
 		if (text >= 4 && text <= 5) {
-			this.cpElem.style.borderColor = 'darkorange';
 			const cpAlert = document.getElementById('cpAlert');
 			if (cpAlert !== null) {
 				cpAlert.textContent = 'No hay servicio para este código postal';
@@ -513,6 +509,7 @@ export class HomePageComponent implements OnInit {
 	clearProvince = () => {
 		this.provinceArray = [];
 		this.selectedProvince = '';
+		this.townshipElem?.setAttribute('disabled', '');
 		this.hideDefaultOption('defaultProvince', false);
 		this.switchIcon('province', 'disabled');
 		this.clearTownship();
@@ -572,5 +569,5 @@ export class HomePageComponent implements OnInit {
 			if (!alertContainer.classList.contains('alert-warning')) alertContainer.classList.add('alert-warning');
 		}
 		if (!alertContainer.classList.contains('show')) alertContainer.classList.add('show');
-	}
+	} 
 }
