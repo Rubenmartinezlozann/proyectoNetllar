@@ -30,6 +30,31 @@ class AddressController extends AbstractController
     }
 
     /**
+     * @Route("/getAllAddress/{cp}", defaults={"cp": null}, name="getAllAddress", methods={"GET"})
+     */
+    public function getAllAddress($cp): JsonResponse
+    {
+        if (!empty($cp)) {
+            $address = $this->addressRepository->findBy(['cp' => $cp]);
+        } else {
+            $address = $this->addressRepository->findAll();
+        }
+
+        $data = [];
+        foreach ($address as $value) {
+            $data[] = [
+                'cp' => $value->getCp(),
+                'provincia' => strtoupper(substr($value->getProvincia(), 0, 1)) . strtolower(substr($value->getProvincia(), 1)),
+                'municipio' => strtoupper(substr($value->getMunicipio(), 0, 1)) . strtolower(substr($value->getMunicipio(), 1)),
+                'tipovia' => strtoupper(substr($value->getTipovia(), 0, 1)) . strtolower(substr($value->getTipovia(), 1)),
+                'calle' => strtoupper(substr($value->getCalle(), 0, 1)) . strtolower(substr($value->getcalle(), 1)),
+            ];
+        }
+
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
+
+    /**
      * @Route("/getProvinces/{cp}", defaults={"cp": null}, name="getProvinces", methods={"GET"})
      */
     public function getProvinces($cp): JsonResponse

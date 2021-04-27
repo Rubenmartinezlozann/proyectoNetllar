@@ -8,6 +8,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 	styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements OnInit {
+	data: any[] = [];
 	provinceArray: any[] = [];
 	townshipArray: any[] = [];
 	typeRoadArray: any[] = [];
@@ -51,9 +52,7 @@ export class HomePageComponent implements OnInit {
 				this.streetElem = document.getElementById('street') as HTMLSelectElement;
 				this.numberElem = document.getElementById('number') as HTMLElement;
 
-				this.getProvinceData();
-
-				this.provinceElem.addEventListener('change', this.getTownshipData);
+				this.getData();
 
 				this.cpElem.addEventListener('input', () => {
 					this.count2++;
@@ -67,6 +66,8 @@ export class HomePageComponent implements OnInit {
 				});
 				this.cpElem.addEventListener('input', this.hideCpAlert);
 				this.cpElem.addEventListener('input', this.showCpError);
+
+				this.provinceElem.addEventListener('change', this.getTownshipData);
 
 				this.townshipElem.addEventListener('change', this.getTypeRoadData);
 
@@ -93,74 +94,159 @@ export class HomePageComponent implements OnInit {
 		})
 	}
 
+	getData = () => {
+		this.http.get(`http://127.0.0.1:8000/getAllAddress/${this.getCp()}`).subscribe((res: any) => {
+			this.data = res;
+			this.getProvinceData();
+		})
+	}
+
 	getCp = () => this.cpElem.value.length === 4 ? this.cpElem.value : (this.cpElem.value.substring(0, 1) == 0 ? this.cpElem.value.substring(1) : this.cpElem.value);
+
+	fillDataArray = () => {
+
+	}
 
 	getProvinceData = () => {
 		this.clearProvince();
 		this.switchIcon('province', 'loading');
 		const cp = this.getCp();
-		this.http.get(`http://127.0.0.1:8000/getProvinces/${cp}`).subscribe((res: any) => {
-			this.provinceArray = [];
-			this.switchIcon('province', 'edit')
-			if (res.length !== 0) {
-				res.map((elem: any) => this.provinceArray.push(elem.provincia));
-				this.provinceElem?.removeAttribute('disabled');
-				if (this.hideDefaultOption('defaultProvince', res.length === 1)) {
-					this.selectedProvince = res[0].provincia;
-					this.getTownshipData();
-				} else {
-					this.selectedProvince = '';
+		let ok = true;
+		// this.provinceArray = [];
+
+		if (cp === '') {
+			this.data.map((elem: any) => {
+				ok = true;
+				this.provinceArray.map((province: any) => {
+					if (elem.provincia === province) {
+						ok = false;
+					}
+				})
+				if (ok) this.provinceArray.push(elem.provincia);
+			});
+		} else {
+			this.data.map((elem: any) => {
+				if (elem.cp == cp) {
+					ok = true;
+					this.provinceArray.map((province: any) => {
+						if (elem.provincia === province) {
+							ok = false;
+						}
+					})
+					if (ok) this.provinceArray.push(elem.provincia);
 				}
+			});
+		}
+		if (this.provinceArray.length === 0) {
+			this.showNotFoundCp();
+			this.clearProvince()
+		} else {
+			this.switchIcon('province', 'edit');
+			this.provinceElem?.removeAttribute('disabled');
+			if (this.hideDefaultOption('defaultProvince', this.provinceArray.length === 1)) {
+				this.selectedProvince = this.provinceArray[0];
+				this.getTownshipData();
 			} else {
-				this.showNotFoundCp();
+				this.selectedProvince = '';
 			}
-		});
+		}
 	}
 
 	getTownshipData = () => {
 		this.clearTownship();
-		this.switchIcon('province', 'ok');
-		this.switchIcon('township', 'loading');
 		const province = this.getSelectedProvince();
-		const cp = this.getCp();
 		if (province !== '') {
-			this.http.get(`http://127.0.0.1:8000/getTownship/${province}/${cp}`).subscribe((res: any) => {
-				this.townshipArray = [];
-				this.switchIcon('township', 'edit');
-				res.map((elem: any) => this.townshipArray.push(elem.municipio));
-				if (this.hideDefaultOption('defaultTownship', res.length === 1)) {
-					this.selectedTownship = res[0].municipio;
-					this.getTypeRoadData();
-				} else {
-					this.selectedTownship = '';
-				}
-				this.townshipElem.removeAttribute('disabled');
-			});
+			this.switchIcon('province', 'ok');
+			this.switchIcon('township', 'loading');
+			const cp = this.getCp();
+			let ok = true;
+			if (cp === '') {
+				this.data.map((elem: any) => {
+					if (elem.provincia == province) {
+						ok = true;
+						this.townshipArray.map((township: any) => {
+							if (elem.municipio === township) {
+								ok = false;
+							}
+						})
+						if (ok) {
+							this.townshipArray.push(elem.municipio);
+						}
+					}
+				});
+			} else {
+				this.data.map((elem: any) => {
+					if (elem.cp == cp && elem.provincia == province) {
+						ok = true;
+						this.townshipArray.map((township: any) => {
+							if (elem.municipio === township) {
+								ok = false;
+							}
+						})
+						if (ok) this.townshipArray.push(elem.municipio);
+					}
+				});
+			}
+			this.switchIcon('township', 'edit');
+			this.townshipElem?.removeAttribute('disabled');
+			if (this.hideDefaultOption('defaultTownship', this.townshipArray.length === 1)) {
+				this.selectedTownship = this.townshipArray[0];
+				this.getTypeRoadData();
+			} else {
+				this.selectedTownship = '';
+			}
 		} else {
-			this.provinceElem.addEventListener('change', this.switchIcon('province', 'edit'));
+			this.switchIcon('province', 'edit');
 		}
 	}
 
 	getTypeRoadData = () => {
 		this.clearTypeRoad();
-		this.switchIcon('typeRoad', 'loading');
-		this.switchIcon('township', 'ok');
-		const province = this.getSelectedProvince();
 		const township = this.getSelectedTownship();
-		const cp = this.getCp();
 		if (township !== '') {
-			this.http.get(`http://127.0.0.1:8000/getTypeRoad/${province}/${township}/ /${cp}`).subscribe((res: any) => {
-				this.typeRoadArray = [];
-				this.switchIcon('typeRoad', 'edit');
-				res.map((elem: any) => this.typeRoadArray.push(elem.tipovia));
-				this.typeRoadElem.removeAttribute('disabled');
-				if (this.hideDefaultOption('defaultTypeRoad', res.length === 1)) {
-					this.selectedTypeRoad = res[0].tipovia;
-					this.getStreetData();
-				} else {
-					this.selectedTypeRoad = '';
-				}
-			});
+			this.switchIcon('township', 'ok');
+			this.switchIcon('typeRoad', 'loading');
+			const province = this.getSelectedProvince();
+			const cp = this.getCp();
+			let ok = true;
+			if (cp === '') {
+				this.data.map((elem: any) => {
+					if (elem.municipio == township && elem.provincia == province) {
+						ok = true;
+						this.typeRoadArray.map((typeRoad: any) => {
+							if (elem.tipovia === typeRoad) {
+								ok = false;
+							}
+						})
+						if (ok) {
+							this.typeRoadArray.push(elem.tipovia);
+						}
+					}
+				});
+			} else {
+				this.data.map((elem: any) => {
+					if (elem.cp == cp && elem.municipio == township && elem.provincia == province) {
+						ok = true;
+						this.typeRoadArray.map((typeRoad: any) => {
+							if (elem.tipovia === typeRoad) {
+								ok = false;
+							}
+						})
+						if (ok) {
+							this.typeRoadArray.push(elem.tipovia);
+						}
+					}
+				});
+			}
+
+			this.switchIcon('typeRoad', 'edit');
+			this.typeRoadElem.removeAttribute('disabled');
+			if (this.hideDefaultOption('defaultTypeRoad', this.typeRoadArray.length === 1)) {
+				this.selectedTypeRoad = this.typeRoadArray[0];
+				this.getStreetData();
+			} else {
+				this.selectedTypeRoad = '';
+			}
 		} else {
 			this.switchIcon('township', 'edit');
 		}
@@ -168,29 +254,57 @@ export class HomePageComponent implements OnInit {
 
 	getStreetData = () => {
 		this.clearStreet();
-		this.switchIcon('typeRoad', 'ok');
-		this.switchIcon('street', 'loading');
-		const province = this.getSelectedProvince();
-		const township = this.getSelectedTownship();
 		const typeRoad = this.getSelectedTypeRoad();
-		const cp = this.getCp();
 		if (typeRoad !== '') {
-			this.http.get(`http://127.0.0.1:8000/getStreet/${province}/${township}/${typeRoad === '' ? ' ' : typeRoad}/${cp}`).subscribe((res: any) => {
-				this.streetArray = [];
-				this.switchIcon('street', 'edit');
-				res.map((elem: any) => this.streetArray.push(elem.calle));
-				this.streetElem.removeAttribute('disabled');
-				if (this.hideDefaultOption('defaultStreet', res.length === 1)) {
-					this.selectedStreet = res[0].calle;
-					this.enableNum();
-				} else {
-					this.selectedStreet = '';
-				}
-			});
+			this.switchIcon('typeRoad', 'ok');
+			this.switchIcon('street', 'loading');
+			const province = this.getSelectedProvince();
+			const township = this.getSelectedTownship();
+			const cp = this.getCp();
+			let ok = true;
+			if (cp === '') {
+				this.data.map((elem: any) => {
+					if (elem.provincia == province && elem.municipio == township && elem.tipovia == typeRoad) {
+						ok = true;
+						this.streetArray.map((street: any) => {
+							if (elem.calle === street) {
+								ok = false;
+							}
+						})
+						if (ok) {
+							this.streetArray.push(elem.calle);
+						}
+					}
+				});
+			} else {
+				this.data.map((elem: any) => {
+					if (elem.cp == cp && elem.provincia == province) {
+						ok = true;
+						this.streetArray.map((street: any) => {
+							if (elem.calle === street) {
+								ok = false;
+							}
+						})
+						if (ok) {
+							this.streetArray.push(elem.calle);
+						}
+					}
+				});
+			}
+			this.switchIcon('street', 'edit');
+			this.streetElem.removeAttribute('disabled');
+			if (this.hideDefaultOption('defaultStreet', this.streetArray.length === 1)) {
+				this.selectedStreet = this.streetArray[0];
+				this.enableNum();
+			} else {
+				this.selectedStreet = '';
+			}
 		} else {
 			this.switchIcon('typeRoad', 'edit');
 		}
 	}
+
+
 
 	enableNum = () => {
 		this.switchIcon('street', 'ok');
