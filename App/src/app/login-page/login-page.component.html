@@ -6,26 +6,28 @@
         </div>
     </header>
     <div class="row justify-content-center">
-        <label class="col-md-3">Nombre de usuario</label>
+        <div class="d-flex flex-column col-sm-4 col-md-3 col-lg-2">
+            <label>Nombre de usuario</label>
+            <input (input)="getUsername($event)" id="username" type="text">
+        </div>
     </div>
     <div class="row justify-content-center">
-        <input (input)="getUsername($event)" id="username" class="col-md-3 " type="text">
-    </div>
-    <div class="row justify-content-center">
-        <label class="col-md-3">Contraseña</label>
-    </div>
-    <div class="row justify-content-center">
-        <input (input)='getPassword($event)' id="password" class="col-md-3" type="password">
-    </div>
-    <div class="row justify-content-center">
-        <label id="errorMensaje" class="col-md-3">Usuario o Contraseña incorrectos</label>
+        <div class="d-flex flex-column col-sm-4 col-md-3 col-lg-2">
+            <label>Contraseña</label>
+            <input (input)='getPassword($event)' id="password" type="password">
+        </div>
     </div>
     <br>
     <div class="row justify-content-center">
-        <button (click)="login()" id="btn-login" class="col-xl-1 col-lg-2 col-sm-3 btnConfirm">Confirmar</button>
+        <div class="d-flex flex-column col-sm-4 col-md-3 col-lg-2">
+            <br>
+            <button (click)="login()" id="btn-login" class="btnConfirm">Confirmar</button>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <label id="errorMensaje">Usuario o Contraseña incorrectos</label>
     </div>
 </div>
-<br><br><br><br><br><br>
 <footer>
     <div class="row justify-content-center">
         <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">

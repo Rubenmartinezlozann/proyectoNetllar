@@ -76,18 +76,14 @@ export class HomePageComponent implements OnInit {
 				this.streetElem.addEventListener('change', this.enableNum);
 
 				this.numberElem.addEventListener('input', this.enableButton);
-				this.numberElem, addEventListener('input', () => {
-					if (this.selectedStreet !== '') {
-						const numAlert = document.getElementById('numAlert');
-						if (numAlert !== null) numAlert.style.display = 'none';
-					}
-				})
+				// this.numberElem, addEventListener('input', () => {
+				// 	this.showAlert('')
+				// })
 
 				document.getElementById("btnConfirm")?.addEventListener('click', this.findProducts);
 				document.getElementById("btnClear")?.addEventListener('click', this.clearData);
 
-				document.getElementById('cp-span')?.addEventListener('click', () => {
-				})
+				document.getElementById('alert-button')?.addEventListener('click', this.hideAlert);
 			} else {
 				this.router.navigate(['/login']);
 			}
@@ -95,6 +91,7 @@ export class HomePageComponent implements OnInit {
 	}
 
 	getData = () => {
+		this.switchIcon('province', 'loading');
 		this.http.get(`http://127.0.0.1:8000/getAllAddress/${this.getCp()}`).subscribe((res: any) => {
 			this.data = res;
 			this.getProvinceData();
@@ -141,6 +138,7 @@ export class HomePageComponent implements OnInit {
 			this.showNotFoundCp();
 			this.clearProvince()
 		} else {
+			if (cp !== '') this.switchIcon('cp', 'ok');
 			this.switchIcon('province', 'edit');
 			this.provinceElem?.removeAttribute('disabled');
 			if (this.hideDefaultOption('defaultProvince', this.provinceArray.length === 1)) {
@@ -330,9 +328,10 @@ export class HomePageComponent implements OnInit {
 			this.http.get(`http://127.0.0.1:8000/getCp/${this.getSelectedProvince()}/${this.getSelectedTownship()}/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.numberElem.value}/${this.getCp()}`).subscribe((res: any) => {
 				if (res.length === 1) {
 					this.cpElem.value = res[0].cp.length === 4 ? `0${res[0].cp}` : res[0].cp;
+					this.switchIcon('cp', 'ok');
 					this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.numberElem.value}/${this.getCp()}`)
 						.subscribe((res: any) => {
-							this.numAlert(res.length > 0);
+							if (res.length > 0) { this.hideAlert(); this.switchIcon('number', 'ok') } else { this.showAlert('No hay servicio para este número', 'warning'); this.switchIcon('number', 'warning') }
 							console.log(res);
 						});
 				}
@@ -340,7 +339,7 @@ export class HomePageComponent implements OnInit {
 		} else {
 			this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.numberElem.value}/${this.getCp()}`)
 				.subscribe((res: any) => {
-					this.numAlert(res.length > 0);
+					if (res.length > 0) { this.hideAlert(); this.switchIcon('number', 'ok') } else { this.showAlert('No hay servicio para este número', 'warning'); this.switchIcon('number', 'warning') }
 					console.log(res);
 				});
 		}
@@ -468,8 +467,9 @@ export class HomePageComponent implements OnInit {
 				if (cpAlert !== null) {
 					cpAlert.textContent = 'El código postal debe tener una longitud de cinco carácteres.';
 					cpAlert.style.color = 'red';
-					this.switchIcon('cp', 'error');
 				}
+				this.switchIcon('cp', 'error');
+				this.showAlert('El código postal debe tener una longitud de 5 carácteres', 'error');
 			}
 		}, 1000)
 	}
@@ -482,8 +482,9 @@ export class HomePageComponent implements OnInit {
 			if (cpAlert !== null) {
 				cpAlert.textContent = 'No hay servicio para este código postal';
 				cpAlert.style.color = 'darkorange';
-				this.switchIcon('cp', 'warning');
 			}
+			this.switchIcon('cp', 'warning');
+			this.showAlert('No hay servicio para este código postal', 'warning');
 		}
 	}
 
@@ -492,17 +493,9 @@ export class HomePageComponent implements OnInit {
 		const cpAlert = document.getElementById('cpAlert');
 		if (cpAlert !== null) {
 			cpAlert.textContent = '';
-			this.switchIcon('cp', 'edit');
 		}
-	}
-
-	numAlert = (showAlert: boolean) => {
-		const numAlert = document.getElementById('numAlert');
-		if (showAlert) {
-			if (numAlert !== null) numAlert.textContent = 'No hay servicio para este número';
-		} else {
-			if (numAlert !== null) numAlert.textContent = '';
-		}
+		this.switchIcon('cp', 'edit');
+		this.hideAlert();
 	}
 
 	clearData = () => {
@@ -556,6 +549,28 @@ export class HomePageComponent implements OnInit {
 		this.numberElem.value = null;
 		this.numberElem?.setAttribute('disabled', '');
 		this.switchIcon('number', 'disabled');
-		this.enableButton();
+		const button = document.getElementById('btnConfirm');
+		button?.setAttribute('disabled', '');
+	}
+
+	hideAlert = () => {
+		const alertContainer = document.getElementById('alert-container') as HTMLDivElement;
+
+		if (alertContainer.classList.contains('show')) alertContainer.classList.remove('show');
+	}
+
+	showAlert = (text: string, type: string = 'error') => {
+		const alertText = document.getElementById('alert-text') as HTMLParagraphElement;
+		const alertContainer = document.getElementById('alert-container') as HTMLDivElement;
+
+		alertText.textContent = text;
+		if (type === 'error') {
+			if (!alertContainer.classList.contains('alert-danger')) alertContainer.classList.add('alert-danger');
+			if (alertContainer.classList.contains('alert-warning')) alertContainer.classList.remove('alert-warning');
+		} else {
+			if (alertContainer.classList.contains('alert-danger')) alertContainer.classList.remove('alert-danger');
+			if (!alertContainer.classList.contains('alert-warning')) alertContainer.classList.add('alert-warning');
+		}
+		if (!alertContainer.classList.contains('show')) alertContainer.classList.add('show');
 	}
 }

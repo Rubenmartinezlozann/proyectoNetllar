@@ -38,6 +38,10 @@ input {
     border: 2px solid rgb(0, 59, 135);
 }
 
+input, label, button{
+    width: 100%;
+}
+
 button {
     border: 3px solid;
     color: white;
@@ -68,5 +72,8 @@ button.btnConfirm:active {
 
 #errorMensaje {
     display: none;
+    position: relative;
+    bottom: 4.5em;
+    width: auto;
     color: red
 }

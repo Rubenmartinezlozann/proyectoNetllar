@@ -23,7 +23,7 @@ export class LoginPageComponent {
     const txtUser = document.getElementById("username");
     const txtPassword = document.getElementById("password");
     const lblError = document.getElementById("errorMensaje");
-
+    console.log('dentro')
     if (ok) {
       txtUser?.classList.contains('border-danger') ? (txtUser.classList.remove("border-danger")) : true;
       txtPassword?.classList.contains('border-danger') ? (txtPassword.classList.remove("border-danger")) : true;
@@ -36,18 +36,13 @@ export class LoginPageComponent {
   }
 
   login = () => {
-    let ok = true;
-    try {
-      if ((this.user !== '' && this.password !== '')) {
-        this.http.post(this.urlLogin, { "username": this.user, "password": this.password }).subscribe((res: any) => {
-          this.router.navigate(['/home/' + res.token]);
-        });
-        ok = true;
-      }
-    } catch (error) {
-      ok = false
-      console.log("aqui");
+    if ((this.user !== '' && this.password !== '')) {
+      this.setErrorStyles(true);
+      this.http.post(this.urlLogin, { "username": this.user, "password": this.password }).subscribe((res: any) => {
+        this.router.navigate(['/home/' + res.token]);
+      }, () => {
+        this.setErrorStyles(false);
+      });
     }
-    this.setErrorStyles(ok);
   }
 }

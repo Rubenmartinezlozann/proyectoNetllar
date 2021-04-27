@@ -2,6 +2,14 @@
     <header class="jumbotron jumbotron-fluid">
         <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
     </header>
+    <div style="min-height: 5em;">
+        <div id="alert-container" class="alert alert-warning alert-dismissible fade" role="alert">
+            <p id="alert-text"></p>
+            <button id="alert-button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    </div>
     <section id="address-find-container">
         <div class="row justify-content-center">
             <div class="col-sm-4 col-md-3 col-lg-2">
@@ -16,7 +24,7 @@
                     </span>
                     <input type="number" id="cp" class="elem-right" />
                 </div>
-                <label class="" id="cpAlert"></label>
+                <!-- <label class="" id="cpAlert"></label> -->
             </div>
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <label for="province">Provincia</label>
@@ -28,7 +36,7 @@
                     <span id="province-span" class="input-group-text elem-left">
                         <i id="province-icon" class="bi bi-pencil-square"></i>
                     </span>
-                    <select name="province" id="province" class="elem-right">
+                    <select name="province" id="province" class="elem-right" disabled>
                         <option id="defaultProvince" selected value="">Seleccionar</option>
                         <option *ngFor='let elem of provinceArray;' class="text-capitalize" value="{{elem}}">{{elem}}
                         </option>
@@ -110,6 +118,7 @@
         <div class="row justify-content-center">
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <button id="btnConfirm" class="btnConfirm" disabled>Confirmar</button>
+                <br><br>
             </div>
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <button id="btnClear" class="btnClear">Borrar</button>
