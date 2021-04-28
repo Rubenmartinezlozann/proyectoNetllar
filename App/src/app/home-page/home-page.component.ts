@@ -84,7 +84,7 @@ export class HomePageComponent implements OnInit {
 
 				document.getElementById('btn-logout')?.addEventListener('click', this.logout)
 			} else {
-				sessionStorage.removeItem('token');
+				sessionStorage.setItem('token', ' ');
 				this.router.navigate(['/login']);
 			}
 		})
@@ -92,17 +92,13 @@ export class HomePageComponent implements OnInit {
 
 	getData = () => {
 		this.switchIcon('province', 'loading');
-		this.http.get(`http://127.0.0.1:8000/getAllAddress/${this.getCp()}`).subscribe((res: any) => {
+		this.http.get(`http://127.0.0.1:8000/getAllAddress/${sessionStorage.getItem('token')}/${this.getCp()}`).subscribe((res: any) => {
 			this.data = res;
 			this.getProvinceData();
 		})
 	}
 
 	getCp = () => this.cpElem.value.length === 4 ? this.cpElem.value : (this.cpElem.value.substring(0, 1) == 0 ? this.cpElem.value.substring(1) : this.cpElem.value);
-
-	fillDataArray = () => {
-
-	}
 
 	getProvinceData = () => {
 		this.clearProvince();
@@ -301,8 +297,6 @@ export class HomePageComponent implements OnInit {
 		}
 	}
 
-
-
 	enableNum = () => {
 		this.switchIcon('street', 'ok');
 		this.switchIcon('number', 'edit');
@@ -352,7 +346,7 @@ export class HomePageComponent implements OnInit {
 
 	logout = () => {
 		this.http.post(`http://127.0.0.1:8000/logout`, { 'token': sessionStorage.getItem('token') }).subscribe(() => { });
-		sessionStorage.removeItem('token');
+		sessionStorage.setItem('token', '');
 		this.router.navigate(['/login']);
 	}
 

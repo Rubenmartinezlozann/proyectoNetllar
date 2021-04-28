@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\AddressRepository;
+use App\Repository\TokenRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,9 +16,11 @@ class AddressController extends AbstractController
 {
     private $addressRepository;
 
-    public function __construct(AddressRepository $addressRepository)
+    public function __construct(AddressRepository $addressRepository, TokenRepository $tokenRepository, UserRepository $userRepository)
     {
         $this->addressRepository = $addressRepository;
+        $this->tokenRepository = $tokenRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -30,28 +34,36 @@ class AddressController extends AbstractController
     }
 
     /**
-     * @Route("/getAllAddress/{cp}", defaults={"cp": null}, name="getAllAddress", methods={"GET"})
+     * @Route("/getAllAddress/{token}/{cp}", defaults={"cp": null}, name="getAllAddress", methods={"GET"})
      */
-    public function getAllAddress($cp): JsonResponse
+    public function getAllAddress($token, $cp): JsonResponse
     {
-        if (!empty($cp)) {
-            $address = $this->addressRepository->findBy(['cp' => $cp]);
-        } else {
-            $address = $this->addressRepository->findAll();
-        }
+        $u = $this->tokenRepository->findOneBy(['token' => $token]);
+        if (!empty($u)) {
+            $u = $u->getUser();
+            if ($this->userRepository->loginOk($u)) {
+                if (!empty($cp)) {
+                    $address = $this->addressRepository->findBy(['cp' => $cp]);
+                } else {
+                    $address = $this->addressRepository->findAll();
+                }
 
-        $data = [];
-        foreach ($address as $value) {
-            $data[] = [
-                'cp' => $value->getCp(),
-                'provincia' => strtoupper(substr($value->getProvincia(), 0, 1)) . strtolower(substr($value->getProvincia(), 1)),
-                'municipio' => strtoupper(substr($value->getMunicipio(), 0, 1)) . strtolower(substr($value->getMunicipio(), 1)),
-                'tipovia' => strtoupper(substr($value->getTipovia(), 0, 1)) . strtolower(substr($value->getTipovia(), 1)),
-                'calle' => strtoupper(substr($value->getCalle(), 0, 1)) . strtolower(substr($value->getcalle(), 1)),
-            ];
-        }
+                $data = [];
+                foreach ($address as $value) {
+                    $data[] = [
+                        'cp' => $value->getCp(),
+                        'provincia' => strtoupper(substr($value->getProvincia(), 0, 1)) . strtolower(substr($value->getProvincia(), 1)),
+                        'municipio' => strtoupper(substr($value->getMunicipio(), 0, 1)) . strtolower(substr($value->getMunicipio(), 1)),
+                        'tipovia' => strtoupper(substr($value->getTipovia(), 0, 1)) . strtolower(substr($value->getTipovia(), 1)),
+                        'calle' => strtoupper(substr($value->getCalle(), 0, 1)) . strtolower(substr($value->getcalle(), 1)),
+                    ];
+                }
 
-        return new JsonResponse($data, Response::HTTP_OK);
+                return new JsonResponse($data, Response::HTTP_OK);
+            }
+            return  new JsonResponse([], Response::HTTP_FORBIDDEN);
+        }
+        return new JsonResponse([], Response::HTTP_UNAUTHORIZED);
     }
 
     /**

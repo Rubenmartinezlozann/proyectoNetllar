@@ -21,7 +21,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.http.post(`http://127.0.0.1:8000/testLogin`, { 'token': sessionStorage.getItem('token') }).subscribe((res: any) => {
-            if (/* res.role !== null &&  */res.ok) {
+            if (res.ok) {
                 if (res.role.some((value: any) => value === 'ROLE_ADMIN')) {
                     this.getUsers();
 
@@ -68,7 +68,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
                         const txtUsername = document.getElementById('txt-add-username') as HTMLInputElement;
                         const txtPassword = document.getElementById('txt-add-password') as HTMLInputElement;
                         if (txtUsername.value.length > 0 && txtPassword.value.length > 0) {
-                            this.http.post('http://127.0.0.1:8000/addUser', { "username": txtUsername.value, "password": txtPassword.value }).subscribe((res: any) => {
+                            this.http.post('http://127.0.0.1:8000/addUser', { "username": txtUsername.value, "password": txtPassword.value, 'token': sessionStorage.getItem('token') }).subscribe((res: any) => {
                                 console.log(res);
                                 txtUsername.value = '';
                                 txtPassword.value = '';
@@ -82,6 +82,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
                     })
 
                     document.getElementById('btn-logout')?.addEventListener('click', this.logout)
+                } else {
+                    this.router.navigate(['/home']);
                 }
             } else {
                 this.router.navigate(['/home']);
@@ -92,9 +94,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
     getUsers = () => {
         const spiner = document.getElementById('spinner') as HTMLDivElement;
         spiner.style.display = 'block';
-        this.http.get('http://127.0.0.1:8000/getUsers').subscribe((res: any) => {
+        this.http.get(`http://127.0.0.1:8000/getUsers/${sessionStorage.getItem('token')}`).subscribe((res: any) => {
             spiner.style.display = 'none';
-            console.log(spiner.style.display)
             this.users = [];
             res.filter((v: any) =>
                 !v.role.some((value: any) => value === 'ROLE_ADMIN'))
@@ -112,7 +113,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
     }
 
     logout = () => {
-        this.http.post(`http://127.0.0.1:8000/logout`, { 'token': this.activatedRoute.snapshot.params.token }).subscribe(() => { });
+        this.http.post(`http://127.0.0.1:8000/logout`, { 'token': sessionStorage.getItem('token') }).subscribe(() => { });
         this.router.navigate(['/login']);
     }
 }

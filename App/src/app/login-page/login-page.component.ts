@@ -12,7 +12,6 @@ export class LoginPageComponent {
 
   user: any = '';
   password: any = '';
-  urlLogin = "http://127.0.0.1:8000/login";
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -23,7 +22,6 @@ export class LoginPageComponent {
     const txtUser = document.getElementById("username");
     const txtPassword = document.getElementById("password");
     const lblError = document.getElementById("errorMensaje");
-    console.log('dentro')
     if (ok) {
       txtUser?.classList.contains('border-danger') ? (txtUser.classList.remove("border-danger")) : true;
       txtPassword?.classList.contains('border-danger') ? (txtPassword.classList.remove("border-danger")) : true;
@@ -38,8 +36,8 @@ export class LoginPageComponent {
   login = () => {
     if ((this.user !== '' && this.password !== '')) {
       this.setErrorStyles(true);
-      this.http.post(this.urlLogin, { "username": this.user, "password": this.password }).subscribe((res: any) => {
-        sessionStorage.setItem('token', 'res.token');
+      this.http.post('http://127.0.0.1:8000/login', { "username": this.user, "password": this.password }).subscribe((res: any) => {
+        sessionStorage.setItem('token', res.token);
         this.router.navigate(['/home']);
       }, () => {
         this.setErrorStyles(false);

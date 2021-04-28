@@ -82,7 +82,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $user->getToken();
     }
 
-    public function loginOk(User $user): bool
+    public function loginOk($user): bool
     {
         return $user->getToken() !== null
             ? ($user->getToken()->getExpiationDate() > date('Y-m-d H:i:s')
