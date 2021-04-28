@@ -31,23 +31,33 @@ select, input {
     border: 2px solid rgb(0, 59, 135);
 }
 
-/* table {
-    width: 50%;
-    max-height: 7em;
+span.btn-logout {
+    display: block;
+    position: absolute;
+    right: 0.5em;
+    top: 1em;
+    height: 2em;
+    width: 2em;
+    background-color: rgb(230, 230, 230);
+    border: 0px solid;
+    border-radius: 15px;
+    margin-right: 2em;
 }
 
-@media(max-width:768px) {
-    table {
-        margin-left: 30px;
-        width: 100%;
-    }
+span.btn-logout i {
+    color: black;
+    position: relative;
+    top: 0.2em;
+    right: 0.5em;
 }
 
-@media(max-width:1199px) {
-    table {
-        width: 75%;
-    }
-} */
+span.btn-logout:hover {
+    background-color: white;
+}
+
+span.btn-logout:active {
+    background-color: rgb(230, 230, 230);
+}
 
 button {
     border: 3px solid;
@@ -60,7 +70,7 @@ button.btnInf, button.btn-back {
     min-width: 5em;
 }
 
-button.btn-back{
+button.btn-back {
     position: relative;
     top: 5em;
 }

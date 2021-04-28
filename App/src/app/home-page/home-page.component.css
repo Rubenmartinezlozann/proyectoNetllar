@@ -11,7 +11,8 @@ footer, header.jumbotron {
 
 footer {
     /* background-color: rgb(0, 59, 135); */
-    margin-top: 5cm;
+    position: relative;
+    top: 6em;
 }
 
 header.jumbotron {
@@ -36,6 +37,34 @@ select, input, button.btnClear, button.btnConfirm {
 
 select, input {
     border: 2px solid rgb(0, 59, 135);
+}
+
+span.btn-logout {
+    display: block;
+    position: absolute;
+    right: 0.5em;
+    top: 1em;
+    height: 2em;
+    width: 2em;
+    background-color: rgb(230, 230, 230);
+    border: 0px solid;
+    border-radius: 15px;
+    margin-right: 2em;
+}
+
+span.btn-logout i {
+    color: black;
+    position: relative;
+    top :0.2em;
+    left: 0.4em;
+}
+
+span.btn-logout:hover {
+    background-color: white;
+}
+
+span.btn-logout:active {
+    background-color: rgb(230, 230, 230);
 }
 
 button.btnClear, button.btnConfirm {
@@ -134,14 +163,6 @@ span.elem-left#cp-span, span.elem-right#cp-span {
     color: white;
 }
 
-/* span.elem-left:hover, span.elem-right:hover {
-    background-color: rgba(0, 191, 255, 0.5);
-}
-
-span.elem-left:active, span.elem-right:active {
-    background-color: rgba(121, 221, 255, 0.5);
-} */
-
 span.elem-left.input-group-text i {
     position: relative;
     right: 0.25em;
@@ -152,7 +173,7 @@ span.elem-right.input-group-text i {
     left: 0.25em;
 }
 
-span i {
+span.elem-left i {
     position: relative;
     bottom: 0.04em;
 }
@@ -164,13 +185,15 @@ span i {
     left: 1.4em;
 }
 
-.alert-title {
-    font-size: 1.2em;
+.alert-container {
+    max-height: 3em;
+    margin-top: -1em;
 }
 
-.alert-body {
-    margin: 5px;
-    border-top: 1px solid lightgrey;
+.alert-container>div {
+    height: 3em;
+    padding-top: 1.5em;
+    padding-bottom: -1.5em;
 }
 
 .clearBoth {

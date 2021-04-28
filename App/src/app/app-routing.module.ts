@@ -7,7 +7,7 @@ import { InfPageComponent } from './inf-page/inf-page.component'
 
 const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
-  { path: 'home/:token', component: HomePageComponent },
+  { path: 'home', component: HomePageComponent },
   { path: 'admin', component: AdminComponent },
   { path: 'admin/:username', component: InfPageComponent },
   { path: '', component: LoginPageComponent },

@@ -11,6 +11,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
     constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute) { }
 
+    allUsers: any[] = [];
     users: any[] = [];
 
     action: string = '';
@@ -19,61 +20,72 @@ export class AdminComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit(): void {
-        this.getUsers();
-        const txtFindUsername = document.getElementById('find-username') as HTMLInputElement;
-
-        document.getElementById('btnFilter')?.addEventListener('click', () => {
-            const elem = document.getElementById('find-section');
-            if (elem !== null) {
-                if (elem.style.display === 'none' || elem.style.display == '') {
-                    elem.style.display = 'block';
-                } else {
-                    elem.style.display = 'none';
-                }
-            }
-        })
-
-        document.getElementById('btn-find')?.addEventListener('click', () => {
-            if (txtFindUsername.value.length > 0) {
-                this.findUser(txtFindUsername.value);
-            } else {
-                //alert txtFindUsername vacio
-            }
-        });
-
-        document.getElementById('btn-clear-filter')?.addEventListener('click', () => {
-            txtFindUsername.value = '';
-            if (this.users.length <= 1) {
-                this.getUsers();
-            }
-        })
-
-        document.getElementById('btnAddUser')?.addEventListener('click', () => {
-            const elem = document.getElementById('create-section');
-            if (elem !== null) {
-                if (elem.style.display === 'none' || elem.style.display == '') {
-                    elem.style.display = 'block';
-                } else {
-                    elem.style.display = 'none';
-                }
-            }
-        });
-
-        document.getElementById('btn-create-user')?.addEventListener('click', () => {
-            const txtUsername = document.getElementById('txt-add-username') as HTMLInputElement;
-            const txtPassword = document.getElementById('txt-add-password') as HTMLInputElement;
-            if (txtUsername.value.length > 0 && txtPassword.value.length > 0) {
-                this.http.post('http://127.0.0.1:8000/addUser', { "username": txtUsername.value, "password": txtPassword.value }).subscribe((res: any) => {
-                    console.log(res);
-                    txtUsername.value = '';
-                    txtPassword.value = '';
+        this.http.post(`http://127.0.0.1:8000/testLogin`, { 'token': sessionStorage.getItem('token') }).subscribe((res: any) => {
+            if (/* res.role !== null &&  */res.ok) {
+                if (res.role.some((value: any) => value === 'ROLE_ADMIN')) {
                     this.getUsers();
-                });
-            }
-        })
 
-        document.getElementById('btn-back')?.addEventListener('click',()=>{
-            this.router.navigate(['/home'])
+                    const txtFindUsername = document.getElementById('find-username') as HTMLInputElement;
+
+                    document.getElementById('btnFilter')?.addEventListener('click', () => {
+                        const elem = document.getElementById('find-section');
+                        if (elem !== null) {
+                            if (elem.style.display === 'none' || elem.style.display == '') {
+                                elem.style.display = 'block';
+                            } else {
+                                elem.style.display = 'none';
+                            }
+                        }
+                    })
+
+                    document.getElementById('btn-find')?.addEventListener('click', () => {
+                        if (txtFindUsername.value.length > 0) {
+                            this.findUser(txtFindUsername.value);
+                        } else {
+                            //alert txtFindUsername vacio
+                        }
+                    });
+
+                    document.getElementById('btn-clear-filter')?.addEventListener('click', () => {
+                        txtFindUsername.value = '';
+                        if (this.users.length <= 1) {
+                            this.getUsers();
+                        }
+                    })
+
+                    document.getElementById('btnAddUser')?.addEventListener('click', () => {
+                        const elem = document.getElementById('create-section');
+                        if (elem !== null) {
+                            if (elem.style.display === 'none' || elem.style.display == '') {
+                                elem.style.display = 'block';
+                            } else {
+                                elem.style.display = 'none';
+                            }
+                        }
+                    });
+
+                    document.getElementById('btn-create-user')?.addEventListener('click', () => {
+                        const txtUsername = document.getElementById('txt-add-username') as HTMLInputElement;
+                        const txtPassword = document.getElementById('txt-add-password') as HTMLInputElement;
+                        if (txtUsername.value.length > 0 && txtPassword.value.length > 0) {
+                            this.http.post('http://127.0.0.1:8000/addUser', { "username": txtUsername.value, "password": txtPassword.value }).subscribe((res: any) => {
+                                console.log(res);
+                                txtUsername.value = '';
+                                txtPassword.value = '';
+                                this.getUsers();
+                            });
+                        }
+                    })
+
+                    document.getElementById('btn-back')?.addEventListener('click', () => {
+                        this.router.navigate(['/home'])
+                    })
+
+                    document.getElementById('btn-logout')?.addEventListener('click', this.logout)
+                }
+            } else {
+                this.router.navigate(['/home']);
+            }
         })
     }
 
@@ -97,5 +109,10 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
     loadInfPage = (username: any) => {
         this.router.navigate([`/admin/${username}`])
+    }
+
+    logout = () => {
+        this.http.post(`http://127.0.0.1:8000/logout`, { 'token': this.activatedRoute.snapshot.params.token }).subscribe(() => { });
+        this.router.navigate(['/login']);
     }
 }

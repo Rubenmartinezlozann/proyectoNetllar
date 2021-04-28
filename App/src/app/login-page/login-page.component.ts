@@ -39,7 +39,8 @@ export class LoginPageComponent {
     if ((this.user !== '' && this.password !== '')) {
       this.setErrorStyles(true);
       this.http.post(this.urlLogin, { "username": this.user, "password": this.password }).subscribe((res: any) => {
-        this.router.navigate(['/home/' + res.token]);
+        sessionStorage.setItem('token', 'res.token');
+        this.router.navigate(['/home']);
       }, () => {
         this.setErrorStyles(false);
       });

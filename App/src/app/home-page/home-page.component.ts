@@ -40,8 +40,8 @@ export class HomePageComponent implements OnInit {
 	constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute) { }
 
 	ngOnInit() {
-		this.http.get(`http://127.0.0.1:8000/getUserByToken/${this.activatedRoute.snapshot.params.token}`).subscribe((res: any) => {
-			if (res.role !== null) {
+		this.http.post(`http://127.0.0.1:8000/testLogin`, { 'token': sessionStorage.getItem('token') }).subscribe((res: any) => {
+			if (/* res.role !== null &&  */res.ok) {
 				if (res.role.some((value: any) => value === 'ROLE_ADMIN')) {
 					this.createBtnAdmin();
 				}
@@ -81,7 +81,10 @@ export class HomePageComponent implements OnInit {
 				document.getElementById("btnClear")?.addEventListener('click', this.clearData);
 
 				document.getElementById('alert-button')?.addEventListener('click', this.hideAlert);
+
+				document.getElementById('btn-logout')?.addEventListener('click', this.logout)
 			} else {
+				sessionStorage.removeItem('token');
 				this.router.navigate(['/login']);
 			}
 		})
@@ -347,6 +350,12 @@ export class HomePageComponent implements OnInit {
 		this.number = this.numberElem.value;
 	}
 
+	logout = () => {
+		this.http.post(`http://127.0.0.1:8000/logout`, { 'token': sessionStorage.getItem('token') }).subscribe(() => { });
+		sessionStorage.removeItem('token');
+		this.router.navigate(['/login']);
+	}
+
 	hideDefaultOption = (id: string, hide: boolean = false) => {
 		const elem = document.getElementById(id);
 		if (elem !== null) {
@@ -439,19 +448,25 @@ export class HomePageComponent implements OnInit {
 		btnAdmin.type = 'button';
 		btnAdmin.innerText = 'Admin';
 		btnAdmin.style.float = 'right';
+		btnAdmin.style.textAlign = 'center'
 		btnAdmin.style.height = '3em';
 		btnAdmin.style.background = 'white';
 		btnAdmin.style.fontFamily = 'Calibri';
 		btnAdmin.style.fontSize = '1em';
 		btnAdmin.style.borderRadius = '5px';
 		btnAdmin.style.border = '2px solid black';
-		btnAdmin.classList.add('col-md-2');
-		btnAdmin.classList.add('col-4');
-		btnAdmin.style.margin = `0px 20px 0px 0px`;
+		btnAdmin.classList.add('col-sm-2');
+		btnAdmin.style.margin = `-1em 0px 2em 0px`;
 		btnAdmin.addEventListener('click', () => {
 			this.router.navigate(['/admin']);
 		})
-		document.getElementsByTagName('header')[0].appendChild(btnAdmin);
+		const adminContainer = document.getElementById('btn-admin-container');
+		if (adminContainer !== null) {
+			adminContainer.appendChild(btnAdmin);
+			adminContainer.style.display = 'block';
+		}
+
+
 	}
 
 	showCpError = () => {
@@ -510,6 +525,7 @@ export class HomePageComponent implements OnInit {
 		this.provinceArray = [];
 		this.selectedProvince = '';
 		this.townshipElem?.setAttribute('disabled', '');
+		this.hideDefaultOption('defaultProvince', true);
 		this.hideDefaultOption('defaultProvince', false);
 		this.switchIcon('province', 'disabled');
 		this.clearTownship();
@@ -569,5 +585,5 @@ export class HomePageComponent implements OnInit {
 			if (!alertContainer.classList.contains('alert-warning')) alertContainer.classList.add('alert-warning');
 		}
 		if (!alertContainer.classList.contains('show')) alertContainer.classList.add('show');
-	} 
+	}
 }

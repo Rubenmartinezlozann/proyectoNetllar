@@ -1,9 +1,13 @@
-<div class="container-fluid">
-    <header class="jumbotron jumbotron-fluid">
+<div class="container-fluid d-flex flex-column">
+    <header class="jumbotron jumbotron-fluid d-flex flex-row justify-content-between">
         <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+        <span id="btn-logout" class="btn-logout"><i class="bi bi-box-arrow-left"></i></span>
     </header>
-    <div class="row justify-content-center" style="min-height: 7em;">
-        <div id="alert-container" class="col-sm-8 col-md-6 col-lg-4 d-flex flex-column justify-content-center alert alert-warning alert-dismissible fade" role="alert">
+    <div id="btn-admin-container" class="btn-admin-container"></div>
+    <div class="row justify-content-center alert-container">
+        <div id="alert-container"
+            class="col-sm-10 col-md-6 col-lg-4 d-flex flex-column justify-content-center alert alert-warning alert-dismissible fade"
+            role="alert">
             <p id="alert-text" class="text-center"></p>
             <button id="alert-button" class="close">
                 <span aria-hidden="true">&times;</span>
@@ -36,7 +40,7 @@
                         <i id="province-icon" class="bi bi-pencil-square"></i>
                     </span>
                     <select name="province" id="province" class="elem-right" disabled>
-                        <option id="defaultProvince" selected value="">Seleccionar</option>
+                        <option id="defaultProvince" value="" selected>Seleccionar</option>
                         <option *ngFor='let elem of provinceArray;' class="text-capitalize" value="{{elem}}">{{elem}}
                         </option>
                     </select>
