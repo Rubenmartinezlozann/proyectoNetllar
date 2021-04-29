@@ -58,16 +58,23 @@ class SecurityController extends AbstractController
     public function testLogin(Request $request)
     {
         $data = json_decode($request->getContent(), true);
-        if (!empty($data['username'])) {
-            $user = $this->userRepository->findOneBy(['username' => $data['username']]);
-        } else {
-            $user = $this->tokenRepository->findOneBy(['token' => $data['token']])->getUser();
+        if (!empty($data['username'])) $user = $this->userRepository->findOneBy(['username' => $data['username']]);
+        else {
+            $user = $this->tokenRepository->findOneBy(['token' => $data['token']]);
+            if (!empty($user)) $user = $user->getUser();
         }
-
-        return $this->json([
-            'ok' => !empty($user) ? $this->userRepository->loginOk($user) : false,
-            'token' => $user->getToken(),
-            'role' => $user->getRoles()
-        ]);
+        if (!empty($user)) {
+            return $this->json([
+                'ok' => $this->userRepository->loginOk($user),
+                'token' => $user->getToken(),
+                'role' => $user->getRoles()
+            ]);
+        } else {
+            return $this->json([
+                'ok' => false,
+                'token' => ' ',
+                'role' => ' '
+            ]);
+        }
     }
 }

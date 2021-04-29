@@ -1,10 +1,11 @@
-<div class="container-fluid">
-    <header class="jumbotron jumbotron-fluid">
-        <div class="row justify-content-around">
-            <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
-            <h1 class="text-light">Inicio de sesión</h1>
-        </div>
-    </header>
+<header class="jumbotron jumbotron-fluid">
+    <div class="row justify-content-around">
+        <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+        <h1 class="text-light">Inicio de sesión</h1>
+    </div>
+</header>
+<div class="container-fluid d-flex flex-column">
+    
     <div class="row justify-content-center">
         <div class="d-flex flex-column col-sm-4 col-md-3 col-lg-2">
             <label>Nombre de usuario</label>
@@ -25,7 +26,12 @@
         </div>
     </div>
     <div class="row justify-content-center">
-        <label id="errorMensaje">Usuario o Contraseña incorrectos</label>
+        <label id="errorMensaje"></label>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+        <div id="spinner" class="spinner-border text-primary spinner" style="width: 5rem; height: 5rem;" role="status">
+            <span class="visually-hidden"></span>
+        </div>
     </div>
 </div>
 <footer>

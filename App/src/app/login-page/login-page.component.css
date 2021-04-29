@@ -3,11 +3,23 @@ footer, header.jumbotron {
     width: 100%;
 }
 
-footer {
+/* footer {
     position: fixed;
     bottom: 0%;
     height: auto;
     max-height: 10%;
+} */
+
+footer {
+    position: fixed;
+    bottom: 0;
+}
+
+@media(max-height:40em) {
+    footer {
+        position: relative;
+        top: 7em;
+    }
 }
 
 header.jumbotron {
@@ -16,6 +28,10 @@ header.jumbotron {
 
 section, .row {
     width: 100%;
+}
+
+.row div, label {
+    margin-left: 2%;
 }
 
 img{
@@ -68,6 +84,12 @@ button.btnConfirm:hover {
 button.btnConfirm:active {
     background-color: rgb(0, 59, 135, 0.75);
     border-color: rgb(0, 59, 135);
+}
+
+.spinner{
+    display: none;
+    position: absolute;
+    top: 16.25em;
 }
 
 #errorMensaje {

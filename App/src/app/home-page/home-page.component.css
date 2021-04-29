@@ -6,13 +6,24 @@
 
 footer, header.jumbotron {
     background-color: rgb(98, 135, 179);
+}
+
+/* footer {
+    position: relative;
+    top: 6em;
+} */
+
+footer {
+    position: fixed;
+    bottom: 0;
     width: 100%;
 }
 
-footer {
-    /* background-color: rgb(0, 59, 135); */
-    position: relative;
-    top: 6em;
+@media(max-height:52em) {
+    footer {
+        position: relative;
+        top: 7em;
+    }
 }
 
 header.jumbotron {
@@ -55,7 +66,7 @@ span.btn-logout {
 span.btn-logout i {
     color: black;
     position: relative;
-    top :0.2em;
+    top: 0.2em;
     left: 0.4em;
 }
 

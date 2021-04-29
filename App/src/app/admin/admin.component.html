@@ -1,11 +1,11 @@
+<header class="jumbotron jumbotron-fluid">
+    <div class="row justify-content-around">
+        <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+        <span id="btn-logout" class="btn-logout"><i class="bi bi-box-arrow-left"></i></span>
+        <h1 class="text-light">Administración de usuarios</h1>
+    </div>
+</header>
 <div class="container-fluid">
-    <header class="jumbotron jumbotron-fluid">
-        <div class="row justify-content-around">
-            <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
-            <span id="btn-logout" class="btn-logout"><i class="bi bi-box-arrow-left"></i></span>
-            <h1 class="text-light">Administración de usuarios</h1>
-        </div>
-    </header>
     <br>
     <section class="row justify-content-center">
         <div class="col-sm-4 col-md-3">
@@ -25,25 +25,38 @@
         </div>
         <div class="col-sm-4 col-md-6">
             <div class="listDiv list-group">
-                <div *ngFor="let elem of users" class="list-group-item list-group-item-action" id="{{elem.username}}"
-                    (click)=loadInfPage(elem.username)>{{elem.username}}<i class="bi bi-pencil-square"></i><i
-                        class="bi bi-info-circle"></i>
+                <div *ngFor="let elem of users" class="list-group-item list-group-item-action user-item"
+                    id="{{elem.username}}" (click)=loadInfPage(elem.username)>{{elem.username}}<i
+                        class="bi bi-pencil-square"></i><i class="bi bi-info-circle"></i>
                 </div>
             </div>
+            <br>
         </div>
         <div class="col-sm-4 col-md-3">
             <button id="btnAddUser" class="btn btn-success btnInf">Crear usuario<i class="bi bi-plus"></i></button>
+            <div id="spinner-add-user" class="spinner-grow text-success spinner-add-user" role="status">
+                <span class="visually-hidden"></span>
+            </div>
             <br>
             <br>
             <div id="create-section" class="card create-section">
                 <div class="card-body d-flex flex-column">
                     <label>Nombre de usuario</label>
                     <input id="txt-add-username" type="text">
-                    <br>
                     <label>Contraseña</label>
                     <input id="txt-add-password" type="password">
+                    <label>Confirmar Contraseña</label>
+                    <input id="txt-confirm-password" type="password">
                     <br>
-                    <button id="btn-create-user" class="btnConfirm">Crear</button>
+                    <button id="btn-create-user" class="btnConfirm" disabled>Crear</button>
+                </div>
+                <div id="myToast-add-user" class="myToast-add-user">
+                    <div class="toast-body d-flex flex-column">
+                        <p id="toastText"></p>
+                        <div class="d-flex flex-row justify-content-center">
+                            <button id="btn-toast-create-user-ok" class="btn btn-secondary">Cerrar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,9 +67,9 @@
         </div>
     </div>
     <button id='btn-back' class="btn btn-secondary btn-back offset-sm-9">Volver</button>
-    <footer>
-        <div class="row justify-content-center">
-            <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
-        </div>
-    </footer>
 </div>
+<footer>
+    <div class="row justify-content-center">
+        <img src="../../assets/logoNetllarBlanco.png" alt="Logo de Netllar">
+    </div>
+</footer>

@@ -81,58 +81,58 @@ class UserController extends AbstractController
     /**
      * @Route("/getUser/{idUser}", name="getUser", methods={"GET"})
      */
-    // public function getUsr($idUser): JsonResponse
-    // {
-    //     $user = $this->userRepository->findOneBy(['id' => $idUser]);
+    public function getUsr($idUser)/* : JsonResponse */
+    {
+        // $user = $this->userRepository->findOneBy(['id' => $idUser]);
 
-    //     $data = [
-    //         'username' => $user->getUsername(),
-    //         'password' => $user->getPassword(),
-    //         'role' => $user->getRoles(),
-    //         'city' => $user->getCity(),
-    //         'phone_contact' => $user->getPhoneContact(),
-    //         'mail' => $user->getMail(),
-    //         'address' => $user->getAddress(),
-    //     ];
+        // $data = [
+        //     'username' => $user->getUsername(),
+        //     'password' => $user->getPassword(),
+        //     'role' => $user->getRoles(),
+        //     'city' => $user->getCity(),
+        //     'phone_contact' => $user->getPhoneContact(),
+        //     'mail' => $user->getMail(),
+        //     'address' => $user->getAddress(),
+        // ];
 
-    //     return new JsonResponse($data, Response::HTTP_OK);
-    // }
+        // return new JsonResponse($data, Response::HTTP_OK);
+    }
 
     /**
      * @Route("/getUserByUsername/{username}", name="getUserByUsername", methods={"GET"})
      */
-    // public function getUserByUsername($username): JsonResponse
-    // {
-    //     $user = $this->userRepository->findOneBy(['username' => $username]);
-    //     if (!empty($user)) {
-    //         $data[] = [
-    //             'id' => $user->getId(),
-    //             'username' => $user->getUsername(),
-    //             'password' => $user->getPassword(),
-    //         ];
-    //     } else {
-    //         $data = null;
-    //     }
+    public function getUserByUsername($username): JsonResponse
+    {
+        $user = $this->userRepository->findOneBy(['username' => $username]);
+        if (!empty($user)) {
+            $data[] = [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'password' => $user->getPassword(),
+            ];
+        } else {
+            $data = null;
+        }
 
-    //     return new JsonResponse($data, Response::HTTP_OK);
-    // }
+        return new JsonResponse($data, Response::HTTP_OK);
+    }
 
     /**
      * @Route("/getUserByToken/{token}", name="getUserByToken", methods={"GET"})
      */
-    // public function getUserByToken($token): JsonResponse
-    // {
-    //     $token = $this->tokenRepository->findOneBy(['token' => $token]);
-    //     if (!empty($token)) {
-    //         $data = [
-    //             'role' => $token->getUser()->getRoles(),
-    //         ];
-    //     } else {
-    //         $data = ['role' => null];
-    //     }
+    public function getUserByToken($token)/* : JsonResponse */
+    {
+        // $token = $this->tokenRepository->findOneBy(['token' => $token]);
+        // if (!empty($token)) {
+        //     $data = [
+        //         'role' => $token->getUser()->getRoles(),
+        //     ];
+        // } else {
+        //     $data = ['role' => null];
+        // }
 
-    //     return new JsonResponse($data, Response::HTTP_OK);
-    // }
+        // return new JsonResponse($data, Response::HTTP_OK);
+    }
 
     /**
      * @Route("/updateUser", name="updateUser", methods={"PUT"})
@@ -165,27 +165,27 @@ class UserController extends AbstractController
     /**
      * @Route("/updateUserByUsername", name="updateUserByUsername", methods={"PUT"})
      */
-    // public function updateUserByUsername(Request $request): JsonResponse
-    // {
-    // $data = json_decode($request->getContent(), true);
-    // if (empty($this->userRepository->findOneBy(['username' => $data['username']]))) {
-    //     $user = $this->userRepository->findOneBy(['id' => $data['id']]);
+    public function updateUserByUsername(Request $request)/* : JsonResponse */
+    {
+        // $data = json_decode($request->getContent(), true);
+        // if (empty($this->userRepository->findOneBy(['username' => $data['username']]))) {
+        //     $user = $this->userRepository->findOneBy(['id' => $data['id']]);
 
-    //     empty($data['username']) ? true : $user->setUsername($data['username']);
-    //     empty($data['password']) ? true : $user->setPassword($data['password']);
-    //     // empty($data['city']) ? true : $user->setCity($data['city']);
-    //     // empty($data['phone_contact']) ? true : $user->setPhoneContact($data['phone_contact']);
-    //     // empty($data['mail']) ? true : $user->setMail($data['mail']);
-    //     // empty($data['address']) ? true : $user->setAddress($data['address']);
-    //     // $user->setRoles(['ROLE_USER']);
+        //     empty($data['username']) ? true : $user->setUsername($data['username']);
+        //     empty($data['password']) ? true : $user->setPassword($data['password']);
+        //     // empty($data['city']) ? true : $user->setCity($data['city']);
+        //     // empty($data['phone_contact']) ? true : $user->setPhoneContact($data['phone_contact']);
+        //     // empty($data['mail']) ? true : $user->setMail($data['mail']);
+        //     // empty($data['address']) ? true : $user->setAddress($data['address']);
+        //     // $user->setRoles(['ROLE_USER']);
 
-    //     $updatedUser = $this->userRepository->updateUser($user);
+        //     $updatedUser = $this->userRepository->updateUser($user);
 
-    //     return new JsonResponse(['updated' => $updatedUser], Response::HTTP_OK);
-    // } else {
-    //     return new JsonResponse(['updated' => false], Response::HTTP_OK);
-    // }
-    // }
+        //     return new JsonResponse(['updated' => $updatedUser], Response::HTTP_OK);
+        // } else {
+        //     return new JsonResponse(['updated' => false], Response::HTTP_OK);
+        // }
+    }
 
     /**
      * @Route("/deleteUser/{idUser}/{token}", name="deleteUser", methods={"DELETE"})
@@ -210,15 +210,15 @@ class UserController extends AbstractController
     /**
      * @Route("/deleteUserByUsername/{username}", name="deleteUserByUsername", methods={"DELETE"})
      */
-    // public function deleteUserByUsername($username): JsonResponse
-    // {
-    //     $user = $this->userRepository->findOneBy(['username' => $username]);
+    public function deleteUserByUsername($username)/* : JsonResponse */
+    {
+        // $user = $this->userRepository->findOneBy(['username' => $username]);
 
-    //     if (!empty($user)) {
-    //         $this->userRepository->removeUser($user);
-    //         return new JsonResponse(['deleted' => true], Response::HTTP_OK);
-    //     } else {
-    //         return new JsonResponse(['deleted' => false], Response::HTTP_OK);
-    //     }
-    // }
+        // if (!empty($user)) {
+        //     $this->userRepository->removeUser($user);
+        //     return new JsonResponse(['deleted' => true], Response::HTTP_OK);
+        // } else {
+        //     return new JsonResponse(['deleted' => false], Response::HTTP_OK);
+        // }
+    }
 }

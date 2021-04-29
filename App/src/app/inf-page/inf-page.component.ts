@@ -120,7 +120,7 @@ export class InfPageComponent implements OnInit, AfterViewInit {
     document.getElementById('btn-back')?.addEventListener('click', () => {
       if (txtUsername.value !== this.username || txtPassword.value !== this.password) {
 
-      } else this.router.navigate(['/home']);
+      } else this.router.navigate(['/admin']);
     })
   }
 }

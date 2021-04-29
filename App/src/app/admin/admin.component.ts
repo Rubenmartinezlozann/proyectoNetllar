@@ -16,6 +16,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
     action: string = '';
 
+    countTxtUsername: number = 0;
+
     ngAfterViewInit(): void {
     }
 
@@ -49,7 +51,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
                     document.getElementById('btn-clear-filter')?.addEventListener('click', () => {
                         txtFindUsername.value = '';
                         if (this.users.length <= 1) {
-                            this.getUsers();
+                            this.users = this.allUsers;
                         }
                     })
 
@@ -64,17 +66,64 @@ export class AdminComponent implements OnInit, AfterViewInit {
                         }
                     });
 
+                    const txtUsername = document.getElementById('txt-add-username') as HTMLInputElement;
+
+                    txtUsername?.addEventListener('input', () => {
+                        this.countTxtUsername++;
+                        const num = this.countTxtUsername;
+                        const btnConfirm = document.getElementById('btn-create-user') as HTMLButtonElement;
+                        btnConfirm.setAttribute('disabled', '');
+                        setTimeout(() => {
+                            btnConfirm.setAttribute('disabled', '');
+                            if (num === this.countTxtUsername) {
+                                if (this.allUsers.some((elem: any) => elem.username == txtUsername.value)) {
+                                } else {
+                                    btnConfirm.removeAttribute('disabled');
+                                }
+                            }
+                        }, 500)
+                    })
+
                     document.getElementById('btn-create-user')?.addEventListener('click', () => {
-                        const txtUsername = document.getElementById('txt-add-username') as HTMLInputElement;
                         const txtPassword = document.getElementById('txt-add-password') as HTMLInputElement;
+                        const txtConfirm = document.getElementById('txt-confirm-password') as HTMLInputElement;
+                        const toast = document.getElementById('myToast-add-user') as HTMLDivElement;
+                        const toastText = document.getElementById('toastText') as HTMLParagraphElement;
                         if (txtUsername.value.length > 0 && txtPassword.value.length > 0) {
-                            this.http.post('http://127.0.0.1:8000/addUser', { "username": txtUsername.value, "password": txtPassword.value, 'token': sessionStorage.getItem('token') }).subscribe((res: any) => {
-                                console.log(res);
-                                txtUsername.value = '';
+                            if (txtConfirm.value === txtPassword.value) {
+                                const spiner = document.getElementById('spinner-add-user') as HTMLDivElement;
+                                spiner.style.display = 'block';
+                                this.http.post('http://127.0.0.1:8000/addUser', { "username": txtUsername.value, "password": txtPassword.value, 'token': sessionStorage.getItem('token') }).subscribe((res: any) => {
+                                    spiner.style.display = 'none';
+                                    if (res.created) {
+                                        txtUsername.value = '';
+                                        txtPassword.value = '';
+                                        txtConfirm.value = '';
+                                        toast.style.display = 'block';
+                                        toastText.textContent = 'Usuario creado';
+                                        txtUsername.value = '';
+                                        this.getUsers();
+                                    } else {
+                                        toast.style.display = 'block';
+                                        toastText.textContent = 'El usuario ya existe';
+                                        txtUsername.value = '';
+                                    }
+                                });
+                            } else {
+                                toast.style.display = 'block';
+                                toastText.textContent = 'Las contraseñas no coinciden';
                                 txtPassword.value = '';
-                                this.getUsers();
-                            });
+                                txtConfirm.value = '';
+                            }
+                        } else {
+                            toast.style.display = 'block';
+                            toastText.textContent = 'Usuario o contraseña incompletos';
                         }
+                    })
+
+                    document.getElementById('btn-toast-create-user-ok')?.addEventListener('click', () => {
+                        const toast = document.getElementById('myToast-add-user') as HTMLDivElement;
+                        toast.style.display = 'none';
                     })
 
                     document.getElementById('btn-back')?.addEventListener('click', () => {
@@ -86,21 +135,22 @@ export class AdminComponent implements OnInit, AfterViewInit {
                     this.router.navigate(['/home']);
                 }
             } else {
-                this.router.navigate(['/home']);
+                this.router.navigate(['/login']);
             }
         })
     }
 
     getUsers = () => {
-        const spiner = document.getElementById('spinner') as HTMLDivElement;
-        spiner.style.display = 'block';
+        const spinner = document.getElementById('spinner') as HTMLDivElement;
+        if (spinner.style.display !== 'block') spinner.style.display = 'block';
         this.http.get(`http://127.0.0.1:8000/getUsers/${sessionStorage.getItem('token')}`).subscribe((res: any) => {
-            spiner.style.display = 'none';
+            spinner.style.display = 'none';
             this.users = [];
             res.filter((v: any) =>
                 !v.role.some((value: any) => value === 'ROLE_ADMIN'))
                 .map((elem: any) =>
                     this.users.push({ 'username': elem.username, 'show': 'show' }))
+            this.allUsers = this.users;
         });
     }
 
