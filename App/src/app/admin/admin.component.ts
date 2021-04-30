@@ -108,6 +108,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
                                         toastText.textContent = 'El usuario ya existe';
                                         txtUsername.value = '';
                                     }
+                                }, () => {
+                                    this.router.navigate(['/login']);
                                 });
                             } else {
                                 toast.style.display = 'block';
@@ -137,6 +139,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
             } else {
                 this.router.navigate(['/login']);
             }
+        }, () => {
+            this.router.navigate(['/login']);
         })
     }
 
@@ -149,8 +153,13 @@ export class AdminComponent implements OnInit, AfterViewInit {
             res.filter((v: any) =>
                 !v.role.some((value: any) => value === 'ROLE_ADMIN'))
                 .map((elem: any) =>
-                    this.users.push({ 'username': elem.username, 'show': 'show' }))
+                    this.users.push({ 'username': elem.username }))
+
+            this.users = this.users.sort((a: any, b: any) => a.username.localeCompare(b.username)).map((elem: any) => elem);
+
             this.allUsers = this.users;
+        }, () => {
+            this.router.navigate(['/login']);
         });
     }
 

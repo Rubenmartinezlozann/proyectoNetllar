@@ -7,36 +7,38 @@
 <div class="container-fluid d-flex flex-column">
     <h1 class="text-center">Información del usuario {{username}}</h1>
     <br>
-    <section class="d-flex flex-column">
-        <div class="row justify-content-center">
-            <div class="col-sm-4 col-md-3 col-xl-2">
-                <label>Nombre de usuario</label>
-                <br>
-                <input id="username" type="text" value="" placeholder="Nombre de usuario">
-            </div>
-            <div class="col-sm-4 col-md-3 col-xl-2">
-                <label>Contraseña</label>
-                <br>
-                <input type="password" id="password" placeholder="Contraseña" value="******" />
-            </div>
+    <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-3 col-xl-2">
+            <label>Nombre de usuario</label>
+            <input id="username" type="text" value="" placeholder="Nombre de usuario">
         </div>
-        <br>
-        <div class="row justify-content-center">
-            <div class="col-sm-4 col-md-3 col-xl-2">
-                <button id="btn-save" class="btn-save">Guardar</button>
-            </div>
-            <br><br>
-            <div class="col-sm-4 col-md-3 col-xl-2">
-                <button id="btn-delete" class="btn-delete">Eliminar</button>
-            </div>
+        <div class="col-sm-4 col-md-3 col-xl-2">
+            <label>Nueva Contraseña</label>
+            <input type="password" id="password" placeholder="Contraseña" value="" />
+        </div>
+    </div>
+    <div class="d-flex flex-row justify-content-center">
+        <div id="confirm-password-container"
+            class="col-sm-4 offset-sm-4 col-md-3 offset-md-3 col-xl-2 offset-xl-2 confirm-password-container">
+            <label>Confirmar Contraseña</label>
+            <input type="password" id="confirm-password" placeholder="Contraseña" value="" />
+        </div>
+    </div>
+    <br>
+    <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-3 col-xl-2">
+            <button id="btn-save" class="btn-save">Guardar</button>
             <br><br>
         </div>
-    </section>
+        <div class="col-sm-4 col-md-3 col-xl-2">
+            <button id="btn-delete" class="btn-delete">Eliminar</button>
+        </div>
+    </div>
     <div class="row justify-content-center">
         <div id="myToast" class="myToast">
             <div class="toast-body d-flex flex-column">
                 <div class="d-flex flex-row justify-content-between">
-                    <p id="toastText">¿Guardar Cambios?</p>
+                    <p id="toastText"></p>
                     <i id="btn-close-myToast" class="close bi bi-x"></i>
                 </div>
                 <div class="border-top d-flex flex-row justify-content-center">
@@ -44,10 +46,21 @@
                     <button id="btn-toast-cancel" class="btn btn-secondary">Descartar</button>
                     <button id="btn-toast-3" class="btn btn-secondary" style="display: none;">Ok</button>
                 </div>
+                <div class="d-flex flex-row justify-content-center">
+                    <div id="toast-spinner" class="spinner-border text-primary toast-spinner"
+                        style="width: 3em; height: 3em;" role="status">
+                        <span class="visually-hidden"></span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <button id='btn-back' class="btn btn-secondary btn-back offset-sm-10 offset-lg-11">Volver</button>
+    <div class="d-flex flex-row justify-content-center">
+        <div id="spinner" class="spinner-grow text-primary spinner" role="status">
+            <span class="visually-hidden"></span>
+        </div>
+    </div>
 </div>
 <footer>
     <div class="row justify-content-center">

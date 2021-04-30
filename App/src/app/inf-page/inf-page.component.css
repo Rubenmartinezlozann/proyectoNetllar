@@ -2,6 +2,7 @@ footer, header.jumbotron {
     background-color: rgb(98, 135, 179);
     width: 100%;
 }
+
 /* 
 footer {
     margin-top: 7em;
@@ -23,7 +24,11 @@ header.jumbotron {
     max-height: 15em;
 }
 
-section, div {
+.row {
+    margin: 0px
+}
+
+div {
     width: 100%;
 }
 
@@ -127,4 +132,20 @@ button.btn-back {
     width: auto;
     height: auto;
     min-width: 5em;
+}
+
+.spinner {
+    position: absolute;
+    top: 13em;
+    right: 1.25em;
+    width: 2em;
+    height: 2em;
+}
+
+.toast-spinner {
+    display: none;
+}
+
+.confirm-password-container{
+    display: none;
 }

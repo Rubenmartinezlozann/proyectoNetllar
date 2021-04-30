@@ -30,6 +30,10 @@ header.jumbotron {
     max-height: 20%;
 }
 
+.row{
+    margin: 0px
+}
+
 section {
     width: 100%;
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -7,36 +7,39 @@ import { Router } from '@angular/router';
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })
-export class LoginPageComponent {
+export class LoginPageComponent implements OnInit {
 
   user: any = '';
   password: any = '';
 
   constructor(private http: HttpClient, private router: Router) { }
 
+  ngOnInit() {
+    document.getElementById('conn-alert-button')?.addEventListener('click', () => {
+      const alertContainer = document.getElementById('conn-alert-container') as HTMLDivElement;
+      alertContainer.classList.remove('show');
+    })
+  }
+
   getUsername = (value: any) => this.user = value.currentTarget.value;
   getPassword = (value: any) => this.password = value.currentTarget.value;
 
-  private setErrorStyles = (ok: boolean, text = '') => {
+  private setErrorStyles = (ok: boolean/* , text = '' */) => {
     const txtUser = document.getElementById("username");
     const txtPassword = document.getElementById("password");
-    const lblError = document.getElementById("errorMensaje");
     if (ok) {
       txtUser?.classList.contains('border-danger') ? (txtUser.classList.remove("border-danger")) : true;
       txtPassword?.classList.contains('border-danger') ? (txtPassword.classList.remove("border-danger")) : true;
-      if (lblError !== null) lblError.style.display = 'none';
     } else {
       txtUser?.classList.contains('border-danger') ? true : txtUser?.classList.add("border-danger");
       txtPassword?.classList.contains('border-danger') ? true : txtPassword?.classList.add("border-danger");
-      if (lblError !== null) {
-        lblError.style.display = 'block';
-        lblError.textContent = text;
-      }
     }
   }
 
   login = () => {
     this.setErrorStyles(true);
+    const alertContainer = document.getElementById('conn-alert-container') as HTMLDivElement;
+    if (alertContainer.classList.contains('show')) alertContainer.classList.remove('show');
     if ((this.user !== '' && this.password !== '')) {
       const spinner = document.getElementById('spinner') as HTMLDivElement;
       spinner.style.display = 'block'
@@ -46,24 +49,27 @@ export class LoginPageComponent {
         this.router.navigate(['/home']);
       }, (err) => {
         spinner.style.display = 'none';
+        const alertText = document.getElementById('conn-alert-text') as HTMLParagraphElement;
         switch (err.status) {
           case 0:
-            console.log('no se ha podido conectar con el servidor');
+            alertText.textContent = 'no se ha podido conectar con el servidor';
             break;
           case 401:
-            this.setErrorStyles(false, 'Usuario o Contraseña incorrectos');
+            alertText.textContent = 'Usuario o contraseña incorrectos';
+            this.setErrorStyles(false);
             break;
           case 500:
-            console.log('error en el servidor');
+            alertText.textContent = 'error en el servidor';
             break;
           default:
-            console.log('ha ocurrido un error');
+            alertText.textContent = 'ha ocurrido un error';
             break;
         }
-
+        alertContainer.style.minWidth = alertText.textContent.length / 1.7 + 'em';
+        if (!alertContainer.classList.contains('show')) alertContainer.classList.add('show');
       });
     } else {
-      this.setErrorStyles(false, 'Los campos usuario o contraseña están vacios');
+      this.setErrorStyles(false);
     }
   }
 }

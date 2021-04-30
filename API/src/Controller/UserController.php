@@ -99,22 +99,29 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Route("/getUserByUsername/{username}", name="getUserByUsername", methods={"GET"})
+     * @Route("/getUserByUsername/{username}/{token}", name="getUserByUsername", methods={"GET"})
      */
-    public function getUserByUsername($username): JsonResponse
+    public function getUserByUsername($username, $token): JsonResponse
     {
-        $user = $this->userRepository->findOneBy(['username' => $username]);
-        if (!empty($user)) {
-            $data[] = [
-                'id' => $user->getId(),
-                'username' => $user->getUsername(),
-                'password' => $user->getPassword(),
-            ];
-        } else {
-            $data = null;
+        $u = $this->tokenRepository->findOneBy(['token' => $token]);
+        if (!empty($u)) {
+            $u = $u->getUser();
+            if ($this->userRepository->loginOk($u) && $u->getRoles()[0] === 'ROLE_ADMIN') {
+                $user = $this->userRepository->findOneBy(['username' => $username]);
+                if (!empty($user)) {
+                    $data[] = [
+                        'id' => $user->getId(),
+                        'username' => $user->getUsername(),
+                        'password' => $user->getPassword(),
+                    ];
+                } else {
+                    $data = null;
+                }
+                return new JsonResponse($data, Response::HTTP_OK);
+            }
+            return new JsonResponse([], Response::HTTP_FORBIDDEN);
         }
-
-        return new JsonResponse($data, Response::HTTP_OK);
+        return new JsonResponse([], Response::HTTP_UNAUTHORIZED);
     }
 
     /**

@@ -10,7 +10,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class InfPageComponent implements OnInit, AfterViewInit {
   id: any;
-  password: any;
   username: any;
   action: any;
 
@@ -23,38 +22,51 @@ export class InfPageComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
     const txtUsername = document.getElementById('username') as HTMLInputElement;
     const txtPassword = document.getElementById('password') as HTMLInputElement;
+    const txtConfirmPassword = document.getElementById('confirm-password') as HTMLInputElement;
     const toast = document.getElementById('myToast') as HTMLDivElement;
     const pToast = document.getElementById('toastText') as HTMLParagraphElement;
     const btnToastOk = document.getElementById('btn-toast-ok') as HTMLButtonElement;
     const btnToastCancel = document.getElementById('btn-toast-cancel') as HTMLButtonElement;
     const btnToast3 = document.getElementById('btn-toast-3') as HTMLButtonElement;
     const btnCloseToast = document.getElementById('btn-close-myToast') as HTMLButtonElement;
-    this.http.get(`http://127.0.0.1:8000/getUserByUsername/${this.activatedRoute.snapshot.params.username}`).subscribe((res: any) => {
+    this.http.get(`http://127.0.0.1:8000/getUserByUsername/${this.activatedRoute.snapshot.params.username}/${sessionStorage.getItem('token')}`).subscribe((res: any) => {
+      const spinner = document.getElementById('spinner') as HTMLDivElement;
+      spinner.style.display = 'none';
       if (res.length > 0) {
         this.id = res[0].id;
         this.username = res[0].username;
         txtUsername.value = res[0].username;
-        this.password = '******';
       } else {
         this.router.navigate(['/admin']);
       }
-    })
+    }, () => {
+			this.router.navigate(['/login']);
+		})
 
     document.getElementById('btn-save')?.addEventListener('click', () => {
-      // if (txtUsername.value !== this.username || txtPassword.value !== this.password) {
+      if (txtConfirmPassword.value === txtPassword.value) {
+        pToast.textContent = '¿Guardar cambios?';
+        btnToastOk.style.display = 'block';
+        btnToastCancel.style.display = 'block';
+        btnToast3.style.display = 'none';
+        btnToastOk.textContent = 'Guardar';
+        btnToastCancel.textContent = 'Descartar';
+      } else {
+        pToast.textContent = 'las contraseñas no coinciden';
+        btnToast3.style.display = 'block';
+        btnToastOk.style.display = 'none';
+        btnToastCancel.style.display = 'none';
+      }
       this.action = 'back';
-      pToast.textContent = '¿Guardar cambios?';
-      btnToastOk.textContent = 'Guardar';
-      btnToastCancel.textContent = 'Descartar';
       toast.style.display = 'block';
-      // } else {
-      // this.router.navigate(['/admin']);
-      // }
     })
 
     document.getElementById('btn-delete')?.addEventListener('click', () => {
       this.action = 'delete';
       pToast.textContent = '¿Eliminar usuario?';
+      btnToastOk.style.display = 'block';
+      btnToastCancel.style.display = 'block';
+      btnToast3.style.display = 'none';
       btnToastOk.textContent = 'Eliminar';
       btnToastCancel.textContent = 'Cancelar';
       toast.style.display = 'block';
@@ -65,43 +77,44 @@ export class InfPageComponent implements OnInit, AfterViewInit {
     })
 
     document.getElementById('btn-toast-ok')?.addEventListener('click', () => {
+      btnToastOk.style.display = 'none';
+      btnToastCancel.style.display = 'none';
+      btnCloseToast.style.display = 'none';
+      pToast.textContent = 'Cargando...';
+      const spinner = document.getElementById('toast-spinner') as HTMLDivElement;
+      spinner.style.display = 'block';
       if (this.action === 'back') {
         this.http.put('http://127.0.0.1:8000/updateUser', {
-          'id': this.id, 'username': txtUsername.value, 'password': txtPassword.value
+          'id': this.id, 'username': txtUsername.value, 'password': txtPassword.value, 'token': sessionStorage.getItem('token')
         }).subscribe((res: any) => {
+          spinner.style.display = 'none';
           if (res.updated) {
-            this.username = txtUsername.value;
-            this.password = txtPassword.value;
             pToast.textContent = 'Usuario modificado';
+            this.username = txtUsername.value;
           } else {
             pToast.textContent = 'No se ha podido modificar el usuario';
           }
-          btnToastOk.style.display = 'none';
-          btnToastCancel.style.display = 'none';
           btnToast3.style.display = 'block';
-          btnCloseToast.style.display = 'none';
           btnToast3.textContent = 'Ok';
+        }, () => {
+          this.router.navigate(['/login']);
         })
       } else {
-        this.http.delete(`http://127.0.0.1:8000/deleteUser/${this.id}`).subscribe((res: any) => {
+        this.http.delete(`http://127.0.0.1:8000/deleteUser/${this.id}/${sessionStorage.getItem('token')}`).subscribe((res: any) => {
+          spinner.style.display = 'none';
           if (res.deleted) {
             pToast.textContent = 'Usuario Eliminado';
-            btnToastOk.style.display = 'none';
-            btnToastCancel.style.display = 'none';
             btnToast3.style.display = 'block';
-            btnCloseToast.style.display = 'none';
             btnToast3.textContent = 'Volver';
           }
-        })
+        }), () => {
+          this.router.navigate(['/login']);
+        }
       }
     })
 
     document.getElementById('btn-toast-cancel')?.addEventListener('click', () => {
-      // if (this.action === 'back') {
-      //   this.router.navigate(['/admin']);
-      // } else {
       toast.style.display = 'none';
-      // }
     })
 
     btnToast3.addEventListener('click', () => {
@@ -118,9 +131,18 @@ export class InfPageComponent implements OnInit, AfterViewInit {
     })
 
     document.getElementById('btn-back')?.addEventListener('click', () => {
-      if (txtUsername.value !== this.username || txtPassword.value !== this.password) {
+      if (txtUsername.value !== this.username || txtPassword.value !== '') {
 
       } else this.router.navigate(['/admin']);
+    })
+
+    document.getElementById('password')?.addEventListener('input', () => {
+      const confirmPasswordContainer = document.getElementById('confirm-password-container') as HTMLDivElement;
+      if (txtPassword.value.length > 0) {
+        if (confirmPasswordContainer.style.display !== 'block') confirmPasswordContainer.style.display = 'block';
+      } else {
+        if (confirmPasswordContainer.style.display !== 'none') confirmPasswordContainer.style.display = 'none';
+      }
     })
   }
 }

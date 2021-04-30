@@ -30,11 +30,11 @@ section, .row {
     width: 100%;
 }
 
-.row div, label {
-    margin-left: 2%;
+.row {
+    margin: 0px
 }
 
-img{
+img {
     height: 10%;
 }
 
@@ -54,16 +54,13 @@ input {
     border: 2px solid rgb(0, 59, 135);
 }
 
-input, label, button{
+input, label, button {
     width: 100%;
 }
 
-button {
+button.btnConfirm {
     border: 3px solid;
     color: white;
-}
-
-button.btnConfirm {
     border-color: rgb(0, 59, 135);
     background-color: rgb(0, 59, 135);
 }
@@ -86,10 +83,13 @@ button.btnConfirm:active {
     border-color: rgb(0, 59, 135);
 }
 
-.spinner{
+.spinner {
     display: none;
     position: absolute;
-    top: 16.25em;
+    top: 12.25em;
+    right: 0.75em;
+    width: 2em;
+    height: 2em;
 }
 
 #errorMensaje {
@@ -98,4 +98,42 @@ button.btnConfirm:active {
     bottom: 4.5em;
     width: auto;
     color: red
+}
+
+.conn-alert-container {
+    max-height: 3em;
+    margin-top: -1em;
+}
+
+.conn-alert-container>div {
+    height: 3em;
+    padding-top: 1.5em;
+    padding-bottom: -1.5em;
+}
+
+.conn-alert-container p {
+    position: relative;
+    bottom: 0.75em;
+}
+
+.conn-alert-button {
+    position: absolute;
+    top: 0;
+    right: -0.5em;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
+}
+
+.conn-alert-button span {
+    padding: 1em;
+    font-size: 1.25em;
+    color: grey;
+}
+
+.conn-alert-button span:hover {
+    color: black;
 }

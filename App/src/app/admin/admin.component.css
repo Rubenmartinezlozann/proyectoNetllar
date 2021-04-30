@@ -23,6 +23,10 @@ section, .row {
     width: 100%;
 }
 
+.row{
+    margin: 0px
+}
+
 header img {
     margin-right: 5em;
 }

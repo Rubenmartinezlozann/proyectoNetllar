@@ -84,9 +84,10 @@ export class HomePageComponent implements OnInit {
 
 				document.getElementById('btn-logout')?.addEventListener('click', this.logout)
 			} else {
-				sessionStorage.setItem('token', ' ');
 				this.router.navigate(['/login']);
 			}
+		}, () => {
+			this.router.navigate(['/login']);
 		})
 	}
 
@@ -326,14 +327,20 @@ export class HomePageComponent implements OnInit {
 						.subscribe((res: any) => {
 							if (res.length > 0) { this.hideAlert(); this.switchIcon('number', 'ok') } else { this.showAlert('No hay servicio para este número', 'warning'); this.switchIcon('number', 'warning') }
 							console.log(res);
+						}, () => {
+							this.router.navigate(['/login']);
 						});
 				}
+			}, () => {
+				this.router.navigate(['/login']);
 			});
 		} else {
 			this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.numberElem.value}/${this.getCp()}`)
 				.subscribe((res: any) => {
 					if (res.length > 0) { this.hideAlert(); this.switchIcon('number', 'ok') } else { this.showAlert('No hay servicio para este número', 'warning'); this.switchIcon('number', 'warning') }
 					console.log(res);
+				}, () => {
+					this.router.navigate(['/login']);
 				});
 		}
 		this.cp = this.getCp();
@@ -345,8 +352,9 @@ export class HomePageComponent implements OnInit {
 	}
 
 	logout = () => {
-		this.http.post(`http://127.0.0.1:8000/logout`, { 'token': sessionStorage.getItem('token') }).subscribe(() => { });
-		sessionStorage.setItem('token', '');
+		this.http.post(`http://127.0.0.1:8000/logout`, { 'token': sessionStorage.getItem('token') }).subscribe(() => { }, () => {
+			this.router.navigate(['/login']);
+		});
 		this.router.navigate(['/login']);
 	}
 
