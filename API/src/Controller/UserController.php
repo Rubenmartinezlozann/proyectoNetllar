@@ -228,4 +228,37 @@ class UserController extends AbstractController
         //     return new JsonResponse(['deleted' => false], Response::HTTP_OK);
         // }
     }
+
+    /**
+     * @Route("/sendMail", name="sendMail", methods={"POST"})
+     */
+    public function sendMail(Request $request): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $destinatario = !empty($data['destinatario']) ? ' ' : $data['destinatario'];
+        $asunto = !empty($data['asunto']) ? ' ' : $data['asunto'];
+        $cuerpo = !empty($data['cuerpo']) ? ' ' : $data['cuerpo'];
+
+        $headers = "MIME-Version: 1.0\r\n";
+        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+
+        //dirección del remitente 
+        $headers .= "From: Ruben <rubenmartinezlozann@gmail.com>\r\n";
+
+        //dirección de respuesta, si queremos que sea distinta que la del remitente 
+        $headers .= "Reply-To: rubenmartinezlozann@gmail.com\r\n";
+
+        //ruta del mensaje desde origen a destino 
+        $headers .= "Return-path: rubenmartinezlozann@gmail.com\r\n";
+
+        //direcciones que recibián copia 
+        $headers .= "Cc: rubenmartinezlozano@gmail.com\r\n";
+
+        //direcciones que recibirán copia oculta 
+        $headers .= "Bcc: rubenmartinezlozano@gmail.com\r\n";
+
+
+        return new JsonResponse([mail($destinatario, $asunto, $cuerpo, $headers)], Response::HTTP_OK);
+    }
 }

@@ -23,7 +23,7 @@ section, .row {
     width: 100%;
 }
 
-.row{
+.row {
     margin: 0px
 }
 
@@ -201,4 +201,18 @@ i+i {
 
 .user-item:hover {
     cursor: pointer;
+}
+
+.find-checkbox {
+    width: 1.1em;
+    height: 1.1em;
+    min-width: 1.1em;
+    min-height: 1.1em;
+    margin-right: 0.5em;
+    border: 2px solid rgb(0, 59, 135);
+    border-radius: 5px;
+}
+
+.find-checkbox+label{
+    margin-top: -0.2em;
 }

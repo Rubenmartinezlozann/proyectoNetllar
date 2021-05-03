@@ -41,8 +41,10 @@ export class AdminComponent implements OnInit, AfterViewInit {
                     })
 
                     document.getElementById('btn-find')?.addEventListener('click', () => {
+                        const check = document.getElementById('find-checkbox') as HTMLInputElement;
                         if (txtFindUsername.value.length > 0) {
-                            this.findUser(txtFindUsername.value);
+                            if (check.checked) this.users = this.allUsers.filter((elem: any) => elem.username === txtFindUsername.value);
+                            else this.users = this.allUsers.filter((elem: any) => elem.username.includes(txtFindUsername.value));
                         } else {
                             //alert txtFindUsername vacio
                         }
@@ -161,10 +163,6 @@ export class AdminComponent implements OnInit, AfterViewInit {
         }, () => {
             this.router.navigate(['/login']);
         });
-    }
-
-    findUser = (user: any) => {
-        this.users = this.users.filter((elem: any) => elem.username === user);
     }
 
     loadInfPage = (username: any) => {
