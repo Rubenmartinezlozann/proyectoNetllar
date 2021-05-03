@@ -106,11 +106,11 @@ export class HomePageComponent implements OnInit {
 		this.clearProvince();
 		this.switchIcon('province', 'loading');
 		const cp = this.getCp();
-		let ok = true;
 
 		if (cp === '') {
 			this.provinceArray = this.data.sort((a: any, b: any) => a.provincia.localeCompare(b.provincia)).filter((dataElem: any, index: number) => index > 0 ? dataElem.provincia !== this.data[index - 1].provincia : true)
 		} else {
+			// let ok = true;
 			// this.data.map((elem: any) => {
 			// 	if (elem.cp == cp) {
 			// 		ok = true;
@@ -122,7 +122,7 @@ export class HomePageComponent implements OnInit {
 			// 		if (ok) this.provinceArray.push(elem.provincia);
 			// 	}
 			// });
-			this.provinceArray = this.data.sort((a: any, b: any) => a.provincia.localeCompare(b.provincia)).filter((dataElem: any, index: number) => index > 0 ? (dataElem.provincia !== this.data[index - 1].provincia && dataElem.cp == cp) : true)
+			this.provinceArray = this.data.sort((a: any, b: any) => a.provincia.localeCompare(b.provincia)).filter((dataElem: any, index: number) => index > 0 ? (dataElem.provincia !== this.data[index - 1].provincia && dataElem.cp == cp) : dataElem.cp == cp)
 		}
 		if (this.provinceArray.length === 0) {
 			this.showNotFoundCp();
