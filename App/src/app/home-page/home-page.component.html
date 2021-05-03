@@ -41,7 +41,8 @@
                     </span>
                     <select name="province" id="province" class="elem-right" disabled>
                         <option id="defaultProvince" value="" selected>Seleccionar</option>
-                        <option *ngFor='let elem of provinceArray;' class="text-capitalize" value="{{elem}}">{{elem}}
+                        <option *ngFor='let elem of provinceArray;' class="text-capitalize" value="{{elem.provincia}}">
+                            {{elem.provincia}}
                         </option>
                     </select>
                 </div>
@@ -60,7 +61,7 @@
                     </span>
                     <select name="township" id="township" class="elem-right" disabled>
                         <option selected disabled value="" id="defaultTownship">Seleccionar</option>
-                        <option *ngFor='let elem of townshipArray;' value="{{elem}}">{{elem}}
+                        <option *ngFor='let elem of townshipArray;' value="{{elem.municipio}}">{{elem.municipio}}
                         </option>
                     </select>
                 </div>
@@ -77,7 +78,7 @@
                     </span>
                     <select name="typeRoad" id="typeRoad" class="elem-right" disabled>
                         <option selected value="" id="defaultTypeRoad">Seleccionar</option>
-                        <option *ngFor='let elem of typeRoadArray;' value="{{elem}}">{{elem}}
+                        <option *ngFor='let elem of typeRoadArray;' value="{{elem.tipovia}}">{{elem.tipovia}}
                         </option>
                     </select>
                 </div>
@@ -96,7 +97,7 @@
                     </span>
                     <select name="street" id="street" class="elem-right" disabled>
                         <option selected value="" id="defaultStreet">Seleccionar</option>
-                        <option *ngFor='let elem of streetArray;' class="text-capitalize" value="{{elem}}">{{elem}}
+                        <option *ngFor='let elem of streetArray;' class="text-capitalize" value="{{elem.calle}}">{{elem.calle}}
                         </option>
                     </select>
                 </div>
