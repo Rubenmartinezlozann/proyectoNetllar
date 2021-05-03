@@ -54,6 +54,7 @@ span.btn-logout {
     border: 0px solid;
     border-radius: 15px;
     margin-right: 2em;
+    cursor: pointer;
 }
 
 span.btn-logout i {
