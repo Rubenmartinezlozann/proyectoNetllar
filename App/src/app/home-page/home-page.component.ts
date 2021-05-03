@@ -534,7 +534,7 @@ export class HomePageComponent implements OnInit {
 	clearProvince = () => {
 		this.provinceArray = [];
 		this.selectedProvince = '';
-		this.townshipElem?.setAttribute('disabled', '');
+		this.provinceElem?.setAttribute('disabled', '');
 		this.hideDefaultOption('defaultProvince', true);
 		this.hideDefaultOption('defaultProvince', false);
 		this.switchIcon('province', 'disabled');
