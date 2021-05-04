@@ -52,7 +52,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
                     document.getElementById('btn-clear-filter')?.addEventListener('click', () => {
                         txtFindUsername.value = '';
-                        if (this.users.length <= 1) {
+                        if (this.users !== this.allUsers) {
                             this.users = this.allUsers;
                         }
                     })

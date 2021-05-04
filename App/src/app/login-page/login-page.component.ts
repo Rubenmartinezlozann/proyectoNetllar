@@ -37,14 +37,20 @@ export class LoginPageComponent implements OnInit {
   }
 
   login = () => {
+    const txtUser = document.getElementById("username") as HTMLInputElement;
+    const txtPassword = document.getElementById("password") as HTMLInputElement;
     this.setErrorStyles(true);
     const alertContainer = document.getElementById('conn-alert-container') as HTMLDivElement;
     if (alertContainer.classList.contains('show')) alertContainer.classList.remove('show');
     if ((this.user !== '' && this.password !== '')) {
       const spinner = document.getElementById('spinner') as HTMLDivElement;
-      spinner.style.display = 'block'
-      this.http.post('http://127.0.0.1:8000/login', { "username": this.user, "password": this.password }).subscribe((res: any) => {
-        spinner.style.display = 'none'
+      spinner.style.display = 'block';
+      const pass = this.provisional();
+      this.http.post('http://127.0.0.1:8000/login', { "username": this.user, "password": pass }).subscribe((res: any) => {
+        spinner.style.display = 'none';
+        txtUser.value='';
+        txtPassword.value='';
+        txtPassword.setAttribute('type','password');
         sessionStorage.setItem('token', res.token);
         this.router.navigate(['/home']);
       }, (err) => {
@@ -71,5 +77,16 @@ export class LoginPageComponent implements OnInit {
     } else {
       this.setErrorStyles(false);
     }
+  }
+
+  provisional = () => {
+    const txtPassword = document.getElementById('password') as HTMLInputElement;
+    const password = txtPassword.value;
+    txtPassword.value = '';
+    for (let i = 0; i < password.length; i++) {
+      txtPassword.value += '•';
+    }
+    txtPassword.setAttribute('type','text');
+    return password;
   }
 }
