@@ -108,21 +108,19 @@ export class HomePageComponent implements OnInit {
 		const cp = this.getCp();
 
 		if (cp === '') {
-			this.provinceArray = this.data.sort((a: any, b: any) => a.provincia.localeCompare(b.provincia)).filter((dataElem: any, index: number) => index > 0 ? dataElem.provincia !== this.data[index - 1].provincia : true)
+			this.data.forEach((dataElem: any) => {
+				if (this.provinceArray.every((value: any) => dataElem.provincia !== value.provincia)) {
+					this.provinceArray.push(dataElem);
+				}
+			});
 		} else {
-			// let ok = true;
-			// this.data.map((elem: any) => {
-			// 	if (elem.cp == cp) {
-			// 		ok = true;
-			// 		this.provinceArray.map((province: any) => {
-			// 			if (elem.provincia === province) {
-			// 				ok = false;
-			// 			}
-			// 		})
-			// 		if (ok) this.provinceArray.push(elem.provincia);
-			// 	}
-			// });
-			this.provinceArray = this.data.sort((a: any, b: any) => a.provincia.localeCompare(b.provincia)).filter((dataElem: any, index: number) => index > 0 ? (dataElem.provincia !== this.data[index - 1].provincia && dataElem.cp == cp) : dataElem.cp == cp)
+			this.data.forEach((dataElem: any) => {
+				if (cp == dataElem.cp) {
+					if (this.provinceArray.every((value: any) => dataElem.provincia !== value.provincia)) {
+						this.provinceArray.push(dataElem);
+					}
+				}
+			});
 		}
 		if (this.provinceArray.length === 0) {
 			this.showNotFoundCp();
@@ -147,38 +145,22 @@ export class HomePageComponent implements OnInit {
 			this.switchIcon('province', 'ok');
 			this.switchIcon('township', 'loading');
 			const cp = this.getCp();
-			// let ok = true;
-			// if (cp === '') {
-			// 	this.data.map((elem: any) => {
-			// 		if (elem.provincia == province) {
-			// 			ok = true;
-			// 			this.townshipArray.map((township: any) => {
-			// 				if (elem.municipio === township) {
-			// 					ok = false;
-			// 				}
-			// 			})
-			// 			if (ok) {
-			// 				this.townshipArray.push(elem.municipio);
-			// 			}
-			// 		}
-			// 	});
-			// } else {
-			// 	this.data.map((elem: any) => {
-			// 		if (elem.cp == cp && elem.provincia == province) {
-			// 			ok = true;
-			// 			this.townshipArray.map((township: any) => {
-			// 				if (elem.municipio === township) {
-			// 					ok = false;
-			// 				}
-			// 			})
-			// 			if (ok) this.townshipArray.push(elem.municipio);
-			// 		}
-			// 	});
-			// }
 			if (cp === '') {
-				this.townshipArray = this.data.sort((a: any, b: any) => a.municipio.localeCompare(b.municipio)).filter((dataElem: any, index: number) => index > 0 ? (dataElem.municipio !== this.data[index - 1].municipio && dataElem.provincia == province) : dataElem.provincia == province)
+				this.data.forEach((dataElem: any) => {
+					if (province == dataElem.provincia) {
+						if (this.townshipArray.every((value: any) => dataElem.municipio !== value.municipio)) {
+							this.townshipArray.push(dataElem);
+						}
+					}
+				});
 			} else {
-				this.townshipArray = this.data.sort((a: any, b: any) => a.municipio.localeCompare(b.municipio)).filter((dataElem: any, index: number) => index > 0 ? (dataElem.municipio !== this.data[index - 1].municipio && dataElem.cp == cp && dataElem.provincia == province) : dataElem.cp == cp && dataElem.provincia == province)
+				this.data.forEach((dataElem: any) => {
+					if (cp == dataElem.cp && province == dataElem.provincia) {
+						if (this.townshipArray.every((value: any) => dataElem.municipio !== value.municipio)) {
+							this.townshipArray.push(dataElem);
+						}
+					}
+				});
 			}
 			this.switchIcon('township', 'edit');
 			this.townshipElem?.removeAttribute('disabled');
@@ -201,40 +183,22 @@ export class HomePageComponent implements OnInit {
 			this.switchIcon('typeRoad', 'loading');
 			const province = this.getSelectedProvince();
 			const cp = this.getCp();
-			let ok = true;
-			// if (cp === '') {
-			// 	this.data.map((elem: any) => {
-			// 		if (elem.municipio == township && elem.provincia == province) {
-			// 			ok = true;
-			// 			this.typeRoadArray.map((typeRoad: any) => {
-			// 				if (elem.tipovia === typeRoad) {
-			// 					ok = false;
-			// 				}
-			// 			})
-			// 			if (ok) {
-			// 				this.typeRoadArray.push(elem.tipovia);
-			// 			}
-			// 		}
-			// 	});
-			// } else {
-			// 	this.data.map((elem: any) => {
-			// 		if (elem.cp == cp && elem.municipio == township && elem.provincia == province) {
-			// 			ok = true;
-			// 			this.typeRoadArray.map((typeRoad: any) => {
-			// 				if (elem.tipovia === typeRoad) {
-			// 					ok = false;
-			// 				}
-			// 			})
-			// 			if (ok) {
-			// 				this.typeRoadArray.push(elem.tipovia);
-			// 			}
-			// 		}
-			// 	});
-			// }
 			if (cp === '') {
-				this.typeRoadArray = this.data.sort((a: any, b: any) => a.tipovia.localeCompare(b.tipovia)).filter((dataElem: any, index: number) => index > 0 ? (dataElem.tipovia !== this.data[index - 1].tipovia && dataElem.provincia == province) && dataElem.municipio == township : dataElem.provincia == province && dataElem.municipio == township)
+				this.data.forEach((dataElem: any) => {
+					if (province == dataElem.provincia && township == dataElem.municipio) {
+						if (this.typeRoadArray.every((value: any) => dataElem.tipovia !== value.tipovia)) {
+							this.typeRoadArray.push(dataElem);
+						}
+					}
+				});
 			} else {
-				this.typeRoadArray = this.data.sort((a: any, b: any) => a.tipovia.localeCompare(b.tipovia)).filter((dataElem: any, index: number) => index > 0 ? dataElem.tipovia != this.data[index - 1].tipovia && dataElem.cp == cp && dataElem.provincia == province && dataElem.municipio == township : dataElem.cp == cp && dataElem.provincia == province && dataElem.municipio == township)
+				this.data.forEach((dataElem: any) => {
+					if (cp == dataElem.cp && province == dataElem.provincia && township == dataElem.municipio) {
+						if (this.typeRoadArray.every((value: any) => dataElem.tipovia !== value.tipovia)) {
+							this.typeRoadArray.push(dataElem);
+						}
+					}
+				});
 			}
 			this.switchIcon('typeRoad', 'edit');
 			this.typeRoadElem.removeAttribute('disabled');
@@ -258,40 +222,22 @@ export class HomePageComponent implements OnInit {
 			const province = this.getSelectedProvince();
 			const township = this.getSelectedTownship();
 			const cp = this.getCp();
-			// let ok = true;
-			// if (cp === '') {
-			// 	this.data.map((elem: any) => {
-			// 		if (elem.provincia == province && elem.municipio == township && elem.tipovia == typeRoad) {
-			// 			ok = true;
-			// 			this.streetArray.map((street: any) => {
-			// 				if (elem.calle === street) {
-			// 					ok = false;
-			// 				}
-			// 			})
-			// 			if (ok) {
-			// 				this.streetArray.push(elem.calle);
-			// 			}
-			// 		}
-			// 	});
-			// } else {
-			// 	this.data.map((elem: any) => {
-			// 		if (elem.cp == cp && elem.provincia == province) {
-			// 			ok = true;
-			// 			this.streetArray.map((street: any) => {
-			// 				if (elem.calle === street) {
-			// 					ok = false;
-			// 				}
-			// 			})
-			// 			if (ok) {
-			// 				this.streetArray.push(elem.calle);
-			// 			}
-			// 		}
-			// 	});
-			// }
 			if (cp === '') {
-				this.streetArray = this.data.sort((a: any, b: any) => a.calle.localeCompare(b.calle)).filter((dataElem: any, index: number) => index > 0 ? dataElem.calle !== this.data[index - 1].calle && dataElem.provincia == province && dataElem.municipio == township && dataElem.tipovia == typeRoad : dataElem.provincia == province && dataElem.municipio == township && dataElem.tipovia == typeRoad)
+				this.data.forEach((dataElem: any) => {
+					if (province == dataElem.provincia && township == dataElem.municipio && typeRoad == dataElem.tipovia) {
+						if (this.streetArray.every((value: any) => dataElem.calle !== value.calle)) {
+							this.streetArray.push(dataElem);
+						}
+					}
+				});
 			} else {
-				this.streetArray = this.data.sort((a: any, b: any) => a.calle.localeCompare(b.calle)).filter((dataElem: any, index: number) => index > 0 ? dataElem.calle !== this.data[index - 1].calle && dataElem.cp == cp && dataElem.provincia == province && dataElem.municipio == township && dataElem.tipovia == typeRoad : dataElem.cp == cp && dataElem.provincia == province && dataElem.municipio == township && dataElem.tipovia == typeRoad)
+				this.data.forEach((dataElem: any) => {
+					if (cp == dataElem.cp && province == dataElem.provincia && township == dataElem.municipio && typeRoad == dataElem.tipovia) {
+						if (this.streetArray.every((value: any) => dataElem.calle !== value.calle)) {
+							this.streetArray.push(dataElem);
+						}
+					}
+				});
 			}
 			this.switchIcon('street', 'edit');
 			this.streetElem.removeAttribute('disabled');
