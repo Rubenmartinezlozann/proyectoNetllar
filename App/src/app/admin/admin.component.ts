@@ -136,12 +136,15 @@ export class AdminComponent implements OnInit, AfterViewInit {
 
                     document.getElementById('btn-logout')?.addEventListener('click', this.logout)
                 } else {
+                    sessionStorage.setItem('error', '403');
                     this.router.navigate(['/home']);
                 }
             } else {
+                sessionStorage.setItem('error', '401');
                 this.router.navigate(['/login']);
             }
-        }, () => {
+        }, (err) => {
+            sessionStorage.setItem('error', err.status);
             this.router.navigate(['/login']);
         })
     }
@@ -160,7 +163,8 @@ export class AdminComponent implements OnInit, AfterViewInit {
             this.users = this.users.sort((a: any, b: any) => a.username.localeCompare(b.username)).map((elem: any) => elem);
 
             this.allUsers = this.users;
-        }, () => {
+        }, (err) => {
+            sessionStorage.setItem('error', err.status);
             this.router.navigate(['/login']);
         });
     }

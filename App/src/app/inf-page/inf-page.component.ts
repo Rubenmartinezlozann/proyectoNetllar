@@ -40,8 +40,8 @@ export class InfPageComponent implements OnInit, AfterViewInit {
         this.router.navigate(['/admin']);
       }
     }, () => {
-			this.router.navigate(['/login']);
-		})
+      this.router.navigate(['/login']);
+    })
 
     document.getElementById('btn-save')?.addEventListener('click', () => {
       if (txtConfirmPassword.value === txtPassword.value) {
@@ -96,7 +96,8 @@ export class InfPageComponent implements OnInit, AfterViewInit {
           }
           btnToast3.style.display = 'block';
           btnToast3.textContent = 'Ok';
-        }, () => {
+        }, (err) => {
+          sessionStorage.setItem('error', err.status);
           this.router.navigate(['/login']);
         })
       } else {
@@ -107,9 +108,10 @@ export class InfPageComponent implements OnInit, AfterViewInit {
             btnToast3.style.display = 'block';
             btnToast3.textContent = 'Volver';
           }
-        }), () => {
+        }, (err) => {
+          sessionStorage.setItem('error', err.status);
           this.router.navigate(['/login']);
-        }
+        })
       }
     })
 
@@ -131,9 +133,9 @@ export class InfPageComponent implements OnInit, AfterViewInit {
     })
 
     document.getElementById('btn-back')?.addEventListener('click', () => {
-      if (txtUsername.value !== this.username || txtPassword.value !== '') {
-
-      } else this.router.navigate(['/admin']);
+      // if (txtUsername.value !== this.username || txtPassword.value !== '') {
+      this.router.navigate(['/admin']);
+      // } else 
     })
 
     document.getElementById('password')?.addEventListener('input', () => {

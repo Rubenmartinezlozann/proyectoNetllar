@@ -9,6 +9,8 @@ use App\Repository\TokenRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class SecurityController extends AbstractController
 {
@@ -64,17 +66,27 @@ class SecurityController extends AbstractController
             if (!empty($user)) $user = $user->getUser();
         }
         if (!empty($user)) {
-            return $this->json([
-                'ok' => $this->userRepository->loginOk($user),
-                'token' => $user->getToken(),
-                'role' => $user->getRoles()
-            ]);
+            if ($this->userRepository->loginOk($user)) {
+                return $this->json([
+                    'ok' => $this->userRepository->loginOk($user),
+                    'token' => $user->getToken(),
+                    'role' => $user->getRoles()
+                ]);
+            } else {
+                return new JsonResponse(Response::HTTP_FORBIDDEN);
+            }
+            // return $this->json([
+            //     'ok' => $this->userRepository->loginOk($user),
+            //     'token' => $user->getToken(),
+            //     'role' => $user->getRoles()
+            // ]);
         } else {
-            return $this->json([
-                'ok' => false,
-                'token' => ' ',
-                'role' => ' '
-            ]);
+            // return $this->json([
+            //     'ok' => false,
+            //     'token' => ' ',
+            //     'role' => ' ',
+            // ]);
+            return new JsonResponse(Response::HTTP_UNAUTHORIZED);
         }
     }
 }

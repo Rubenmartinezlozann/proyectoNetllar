@@ -42,7 +42,7 @@ export class HomePageComponent implements OnInit {
 
 	ngOnInit() {
 		this.http.post(`http://127.0.0.1:8000/testLogin`, { 'token': sessionStorage.getItem('token') }).subscribe((res: any) => {
-			if (/* res.role !== null &&  */res.ok) {
+			if (res.ok) {
 				if (res.role.some((value: any) => value === 'ROLE_ADMIN')) {
 					this.createBtnAdmin();
 				}
@@ -85,9 +85,11 @@ export class HomePageComponent implements OnInit {
 
 				document.getElementById('btn-logout')?.addEventListener('click', this.logout)
 			} else {
+				sessionStorage.setItem('error', '401');
 				this.router.navigate(['/login']);
 			}
-		}, () => {
+		}, (err) => {
+			sessionStorage.setItem('error', err.status);
 			this.router.navigate(['/login']);
 		})
 	}
@@ -281,11 +283,13 @@ export class HomePageComponent implements OnInit {
 						.subscribe((res: any) => {
 							if (res.length > 0) { this.hideAlert(); this.switchIcon('number', 'ok') } else { this.showAlert('No hay servicio para este número', 'warning'); this.switchIcon('number', 'warning') }
 							console.log(res);
-						}, () => {
+						}, (err) => {
+							sessionStorage.setItem('error', err.status);
 							this.router.navigate(['/login']);
 						});
 				}
-			}, () => {
+			}, (err) => {
+				sessionStorage.setItem('error', err.status);
 				this.router.navigate(['/login']);
 			});
 		} else {
@@ -293,7 +297,8 @@ export class HomePageComponent implements OnInit {
 				.subscribe((res: any) => {
 					if (res.length > 0) { this.hideAlert(); this.switchIcon('number', 'ok') } else { this.showAlert('No hay servicio para este número', 'warning'); this.switchIcon('number', 'warning') }
 					console.log(res);
-				}, () => {
+				}, (err) => {
+					sessionStorage.setItem('error', err.status);
 					this.router.navigate(['/login']);
 				});
 		}
