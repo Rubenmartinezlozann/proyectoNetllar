@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
 	selector: 'app-home-page',
@@ -53,6 +52,24 @@ export class HomePageComponent implements OnInit {
 				this.streetElem = document.getElementById('street') as HTMLSelectElement;
 				this.numberElem = document.getElementById('number') as HTMLElement;
 
+				const addressRadioWrite = document.getElementById('address-radio-write') as HTMLInputElement;
+				addressRadioWrite.addEventListener('change', () => {
+					const addresWriteContainer = document.getElementById('address-write-container') as HTMLDivElement;
+					const addresSelectContainer = document.getElementById('address-select-container') as HTMLDivElement;
+
+					addresWriteContainer.style.display = 'block';
+					addresSelectContainer.style.display = 'none';
+				});
+
+				const addressRadioSelect = document.getElementById('address-radio-select') as HTMLInputElement;
+				addressRadioSelect.addEventListener('change', () => {
+					const addresWriteContainer = document.getElementById('address-write-container') as HTMLDivElement;
+					const addresSelectContainer = document.getElementById('address-select-container') as HTMLDivElement;
+
+					addresWriteContainer.style.display = 'none';
+					addresSelectContainer.style.display = 'block';
+				});
+
 				this.getData();
 
 				this.cpElem.addEventListener('input', () => {
@@ -97,7 +114,16 @@ export class HomePageComponent implements OnInit {
 	getData = () => {
 		this.switchIcon('province', 'loading');
 		this.http.get(`http://127.0.0.1:8000/getAllAddress/${sessionStorage.getItem('token')}/${this.getCp()}`).subscribe((res: any) => {
-			this.data = res;
+
+			res.forEach((dataElem: any, index: any) => {
+				if (index > 0) {
+					if (dataElem.calle !== res[index - 1].calle) {
+						this.data.push(dataElem);
+					}
+				} else {
+					this.data.push(dataElem);
+				}
+			});
 			this.getProvinceData();
 		})
 	}

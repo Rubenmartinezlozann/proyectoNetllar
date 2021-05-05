@@ -14,7 +14,34 @@
             </button>
         </div>
     </div>
-    <section id="address-find-container">
+    <div class="d-flex flex-row justify-content-center address-radio-container">
+        <input type="radio" name="address-radio" id="address-radio-write" value="write" checked>
+        <label>Escribir dirección</label>
+        <input type="radio" name="address-radio" id="address-radio-select" value="select">
+        <label>Buscar por selección</label>
+    </div>
+    <section id="address-write-container" class="address-write-container">
+        <div class="row justify-content-center">
+            <div class="col-sm-4 col-md-3 col-lg-2">
+                <label>Código postal</label>
+                <br>
+                <div id="cp-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <input type="number" id="address-write-cp" />
+            </div>
+            <div class="col-sm-6 col-md-4 col-lg-3">
+                <label for="">Dirección</label>
+                <input list="datalistOptions" id="address-write-address"
+                    placeholder="Escribe para buscar...">
+                <datalist id="datalistOptions">
+                    <option *ngFor='let elem of data;'
+                        value="{{elem.tipovia}} {{elem.calle}} {{elem.municipio}} {{elem.provincia}}">
+                </datalist>
+            </div>
+        </div>
+    </section>
+    <section id="address-select-container" class="address-select-container">
         <div class="row justify-content-center">
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <label>Código postal</label>
@@ -97,7 +124,8 @@
                     </span>
                     <select name="street" id="street" class="elem-right" disabled>
                         <option selected value="" id="defaultStreet">Seleccionar</option>
-                        <option *ngFor='let elem of streetArray;' class="text-capitalize" value="{{elem.calle}}">{{elem.calle}}
+                        <option *ngFor='let elem of streetArray;' class="text-capitalize" value="{{elem.calle}}">
+                            {{elem.calle}}
                         </option>
                     </select>
                 </div>

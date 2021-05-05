@@ -15,14 +15,12 @@ export class LoginPageComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit() {
-    console.log('onInit')
     document.getElementById('conn-alert-button')?.addEventListener('click', () => {
       const alertContainer = document.getElementById('conn-alert-container') as HTMLDivElement;
       alertContainer.classList.remove('show');
     })
 
     if (sessionStorage.getItem('error') !== null) {
-      console.log('si')
       this.showError(sessionStorage.getItem('error'));
       sessionStorage.removeItem('error');
     }
@@ -99,7 +97,6 @@ export class LoginPageComponent implements OnInit {
     }
     alertContainer.style.minWidth = alertText.textContent.length / 1.7 + 'em';
     if (!alertContainer.classList.contains('show')) alertContainer.classList.add('show');
-    console.log('dentro error')
   }
 
   hideError = () => {

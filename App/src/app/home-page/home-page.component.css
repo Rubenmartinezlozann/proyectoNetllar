@@ -1,17 +1,6 @@
-/* @media (max-width: 767px) {
-    .suggestedAddressItem, .card-text {
-        font-size: 0.8em;
-    }
-} */
-
 footer, header.jumbotron {
     background-color: rgb(98, 135, 179);
 }
-
-/* footer {
-    position: relative;
-    top: 6em;
-} */
 
 footer {
     position: fixed;
@@ -30,12 +19,8 @@ header.jumbotron {
     max-height: 20%;
 }
 
-.row{
-    margin: 0px
-}
-
-section {
-    width: 100%;
+.row {
+    margin: 0px;
 }
 
 img {
@@ -52,6 +37,23 @@ select, input, button.btnClear, button.btnConfirm {
 
 select, input {
     border: 2px solid rgb(0, 59, 135);
+}
+
+input[type=radio] {
+    width: 1.25em;
+    height: 1.25em;
+    min-width: 1.25em;
+    min-height: 1.25em;
+    margin: 0px 0.2em;
+}
+
+input[type=radio]+label {
+    margin-top: -0.15em;
+    margin-right: 2em;
+}
+
+.address-select-container {
+    display: none;
 }
 
 span.btn-logout {
@@ -210,6 +212,10 @@ span.elem-left i {
     height: 3em;
     padding-top: 1.5em;
     padding-bottom: -1.5em;
+}
+
+.address-radio-container {
+    margin-top: 1em;
 }
 
 .clearBoth {
