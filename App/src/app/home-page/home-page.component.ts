@@ -115,15 +115,18 @@ export class HomePageComponent implements OnInit {
 		this.switchIcon('province', 'loading');
 		this.http.get(`http://127.0.0.1:8000/getAllAddress/${sessionStorage.getItem('token')}/${this.getCp()}`).subscribe((res: any) => {
 
-			res.forEach((dataElem: any, index: any) => {
-				if (index > 0) {
-					if (dataElem.calle !== res[index - 1].calle) {
-						this.data.push(dataElem);
-					}
-				} else {
-					this.data.push(dataElem);
-				}
-			});
+			// res.forEach((dataElem: any, index: any) => {
+			// 	if (index > 0) {
+			// 		if (dataElem.calle !== res[index - 1].calle) {
+			// 			this.data.push(dataElem);
+			// 		}
+			// 	} else {
+			// 		this.data.push(dataElem);
+			// 	}
+			// });
+
+			this.data = res;
+
 			this.getProvinceData();
 		})
 	}

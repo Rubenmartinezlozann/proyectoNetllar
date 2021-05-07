@@ -32,8 +32,7 @@
             </div>
             <div class="col-sm-6 col-md-4 col-lg-3">
                 <label for="">Dirección</label>
-                <input list="datalistOptions" id="address-write-address"
-                    placeholder="Escribe para buscar...">
+                <input list="datalistOptions" id="address-write-address" placeholder="Escribe para buscar...">
                 <datalist id="datalistOptions">
                     <option *ngFor='let elem of data;'
                         value="{{elem.tipovia}} {{elem.calle}} {{elem.municipio}} {{elem.provincia}}">
@@ -145,17 +144,17 @@
                 </div>
             </div>
         </div>
-        <br>
-        <div class="row justify-content-center">
-            <div class="col-sm-4 col-md-3 col-lg-2">
-                <button id="btnConfirm" class="btnConfirm" disabled>Confirmar</button>
-                <br><br>
-            </div>
-            <div class="col-sm-4 col-md-3 col-lg-2">
-                <button id="btnClear" class="btnClear">Borrar</button>
-            </div>
-        </div>
     </section>
+    <div class="row justify-content-center">
+        <div class="col-sm-4 col-md-3 col-lg-2">
+            <br>
+            <button id="btnConfirm" class="btnConfirm" disabled>Confirmar</button>
+        </div>
+        <div class="col-sm-4 col-md-3 col-lg-2">
+            <br>
+            <button id="btnClear" class="btnClear">Borrar</button>
+        </div>
+    </div>
     <section id="products-section" class="products-section">
         <div id="address-inf" class="d-flex flex-column col-4 address-inf">
             <h5>Dirección buscada</h5>
