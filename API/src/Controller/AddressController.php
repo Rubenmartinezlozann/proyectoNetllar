@@ -34,23 +34,22 @@ class AddressController extends AbstractController
     }
 
     /**
-     * @Route("/getAllAddress/{token}/{cp}", defaults={"cp": null}, name="getAllAddress", methods={"GET"})
+     * @Route("/getAllAddress/{token}", defaults={"cp": null}, name="getAllAddress", methods={"GET"})
      */
-    public function getAllAddress($token, $cp): JsonResponse
+    public function getAllAddress($token): JsonResponse
     {
         $u = $this->tokenRepository->findOneBy(['token' => $token]);
         if (!empty($u)) {
             $u = $u->getUser();
             if ($this->userRepository->loginOk($u)) {
-                if (!empty($cp)) {
-                    $address = $this->addressRepository->findBy(['cp' => $cp]);
-                } else {
-                    $address = $this->addressRepository->findAll();
-                }
-
+                // if (!empty($cp)) {
+                //     $address = $this->addressRepository->findBy(['cp' => $cp]);
+                // } else {
+                //     $address = $this->addressRepository->findAll();
+                // }
                 $data = [];
+                $address = $this->addressRepository->getAllAddress();
                 foreach ($address as $value) {
-
                     $bdValue = [
                         'cp' => $value->getCp(),
                         'provincia' => strtoupper(substr($value->getProvincia(), 0, 1)) . strtolower(substr($value->getProvincia(), 1)),

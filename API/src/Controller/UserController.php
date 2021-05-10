@@ -12,14 +12,33 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+use Symfony\Bridge\Twig\Mime\NotificationEmail;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mailer\MailerInterface;
+
+use Symfony\Component\Notifier\Notification\Notification;
+use Symfony\Component\Notifier\NotifierInterface;
+
+use Symfony\Component\Mime\Email;
+
 class UserController extends AbstractController
 {
     private $tokenRepository;
     private $userRepository;
-    public function __construct(UserRepository $userRepository, TokenRepository $tokenRepository)
+
+    private $mailer;
+    private $adminEmail;
+
+    private $notifier;
+
+    private $swift_Mailer;
+    public function __construct(UserRepository $userRepository, TokenRepository $tokenRepository, MailerInterface $mailer, NotifierInterface $notifier, \Swift_Mailer $swift_Mailer)
     {
         $this->userRepository = $userRepository;
         $this->tokenRepository = $tokenRepository;
+        $this->mailer = $mailer;
+        $this->notifier = $notifier;
+        $this->swift_Mailer = $swift_Mailer;
     }
 
     /**
@@ -236,29 +255,49 @@ class UserController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        $destinatario = !empty($data['destinatario']) ? ' ' : $data['destinatario'];
-        $asunto = !empty($data['asunto']) ? ' ' : $data['asunto'];
-        $cuerpo = !empty($data['cuerpo']) ? ' ' : $data['cuerpo'];
+        $asunto = empty($data['asunto']) ? ' ' : $data['asunto'];
+        $cuerpo = empty($data['cuerpo']) ? ' ' : $data['cuerpo'];
+        // $correo = !empty($data['correo']) ? ' ' : $data['correo'];
 
-        $headers = "MIME-Version: 1.0\r\n";
-        $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+        // $headers = "MIME-Version: 1.0\r\n";
+        // $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
 
-        //dirección del remitente 
-        $headers .= "From: Ruben <rubenmartinezlozann@gmail.com>\r\n";
+        // //dirección del remitente 
+        // $headers .= "From: Ruben <rubenmartinezlozann@gmail.com>\r\n";
 
-        //dirección de respuesta, si queremos que sea distinta que la del remitente 
-        $headers .= "Reply-To: rubenmartinezlozann@gmail.com\r\n";
+        // //dirección de respuesta, si queremos que sea distinta que la del remitente 
+        // $headers .= "Reply-To: rubenmartinezlozann@gmail.com\r\n";
 
-        //ruta del mensaje desde origen a destino 
-        $headers .= "Return-path: rubenmartinezlozann@gmail.com\r\n";
+        // //ruta del mensaje desde origen a destino 
+        // $headers .= "Return-path: rubenmartinezlozann@gmail.com\r\n";
 
-        //direcciones que recibián copia 
-        $headers .= "Cc: rubenmartinezlozano@gmail.com\r\n";
+        // //direcciones que recibián copia 
+        // $headers .= "Cc: rubenmartinezlozano@gmail.com\r\n";
 
-        //direcciones que recibirán copia oculta 
-        $headers .= "Bcc: rubenmartinezlozano@gmail.com\r\n";
+        // //direcciones que recibirán copia oculta 
+        // $headers .= "Bcc: rubenmartinezlozano@gmail.com\r\n";
 
 
-        return new JsonResponse([mail($destinatario, $asunto, $cuerpo, $headers)], Response::HTTP_OK);
+        // $email = ((new NotificationEmail())
+        //     ->subject($asunto)
+        //     ->from('rubenmartinezlozano@gmail.com')
+        //     ->to('rubenmartinezlozano@gmail.com')
+        //     ->context(['comment' => $cuerpo]));
+
+        // $this->mailer->send($email);
+
+        // $message = (new \Swift_Message('Hello Email'))
+        //     ->setFrom('mitseo6@gmail.com') // FIXME: this needs to change ?!
+        //     ->setTo('mohamedbaza16@gmail.com') // admin email here
+        //     ->setBody(
+        //         $this->renderView(
+        //             // templates/emails/registration.html.twig
+        //             'emails/event.html.twig',
+        //             ['event' => '']
+        //         ),
+        //         'text/html'
+        //     );
+
+        return new JsonResponse([mail('rubenmartinezlozano@gmail.com', $asunto, $cuerpo)], Response::HTTP_OK);
     }
 }

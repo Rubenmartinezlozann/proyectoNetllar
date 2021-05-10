@@ -24,19 +24,21 @@
         <div class="row justify-content-center">
             <div class="col-sm-4 col-md-3 col-lg-2">
                 <label>Código postal</label>
-                <br>
-                <div id="cp-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
                 <input type="number" id="address-write-cp" />
             </div>
             <div class="col-sm-6 col-md-4 col-lg-3">
-                <label for="">Dirección</label>
+                <label>Dirección</label>
                 <input list="datalistOptions" id="address-write-address" placeholder="Escribe para buscar...">
                 <datalist id="datalistOptions">
                     <option *ngFor='let elem of data;'
-                        value="{{elem.tipovia}} {{elem.calle}} {{elem.municipio}} {{elem.provincia}}">
+                        value="{{elem.tipovia}} {{elem.calle}} {{elem.municipio}} {{elem.provincia}}"
+                        (click)=setAddressByTextSelection(elem.tipovia,elem.calle,elem.municipio,elem.provincia)>
                 </datalist>
+            </div>
+            <div class="col-sm-4 col-md-3 col-lg-2">
+                <label>Número</label>
+                <br>
+                <input type="number" id="address-write-number" />
             </div>
         </div>
     </section>

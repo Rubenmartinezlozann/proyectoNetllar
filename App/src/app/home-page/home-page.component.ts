@@ -20,6 +20,10 @@ export class HomePageComponent implements OnInit {
 	selectedTypeRoad: string = '';
 	selectedStreet: string = '';
 
+	addressWirteCpElem: any;
+	addressWirteAddressElem: any;
+	addressWriteNumberElem: any;
+
 	cp: any;
 	province: any;
 	township: any;
@@ -300,6 +304,22 @@ export class HomePageComponent implements OnInit {
 				this.switchIcon('number', 'edit');
 			}
 		}
+	}
+
+	findProductsByText = (text: number) => {
+		this.http.get(`http://127.0.0.1:8000/getProductsBytext/${text}`).subscribe((res: any) => {
+			console.log(res);
+		}, (err) => {
+			sessionStorage.setItem('error', err.status);
+			this.router.navigate(['/login']);
+		});
+	}
+
+	setAddressByTextSelection = (typeRoad: any, street: any, township: any, province: any) => {
+		this.selectedTypeRoad = typeRoad;
+		this.selectedStreet = street;
+		this.selectedTownship = township;
+		this.selectedProvince = province;
 	}
 
 	findProducts = () => {
