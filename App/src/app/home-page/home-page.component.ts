@@ -15,14 +15,16 @@ export class HomePageComponent implements OnInit {
 	streetArray: any[] = [];
 	products: any;
 
+	bdData: any[] = [];
+
+	selectedCp: any = '';
 	selectedProvince: string = '';
 	selectedTownship: string = '';
 	selectedTypeRoad: string = '';
 	selectedStreet: string = '';
+	selectedNumber: any;
 
-	addressWirteCpElem: any;
-	addressWirteAddressElem: any;
-	addressWriteNumberElem: any;
+
 
 	cp: any;
 	province: any;
@@ -41,6 +43,13 @@ export class HomePageComponent implements OnInit {
 	streetElem: any;
 	numberElem: any;
 
+	addressWirteCpElem: any;
+	addressWirteAddressElem: any;
+	addressWriteNumberElem: any;
+
+	addressRadioWrite: any;
+	addressRadioSelect: any;
+
 	constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute) { }
 
 	ngOnInit() {
@@ -56,8 +65,12 @@ export class HomePageComponent implements OnInit {
 				this.streetElem = document.getElementById('street') as HTMLSelectElement;
 				this.numberElem = document.getElementById('number') as HTMLElement;
 
-				const addressRadioWrite = document.getElementById('address-radio-write') as HTMLInputElement;
-				addressRadioWrite.addEventListener('change', () => {
+				this.addressWirteCpElem = document.getElementById('address-write-cp') as HTMLInputElement;
+				this.addressWirteAddressElem = document.getElementById('address-write-address') as HTMLInputElement;
+				this.addressWriteNumberElem = document.getElementById('address-write-number') as HTMLInputElement;
+
+				this.addressRadioWrite = document.getElementById('address-radio-write') as HTMLInputElement;
+				this.addressRadioWrite.addEventListener('change', () => {
 					const addresWriteContainer = document.getElementById('address-write-container') as HTMLDivElement;
 					const addresSelectContainer = document.getElementById('address-select-container') as HTMLDivElement;
 
@@ -65,8 +78,8 @@ export class HomePageComponent implements OnInit {
 					addresSelectContainer.style.display = 'none';
 				});
 
-				const addressRadioSelect = document.getElementById('address-radio-select') as HTMLInputElement;
-				addressRadioSelect.addEventListener('change', () => {
+				this.addressRadioSelect = document.getElementById('address-radio-select') as HTMLInputElement;
+				this.addressRadioSelect.addEventListener('change', () => {
 					const addresWriteContainer = document.getElementById('address-write-container') as HTMLDivElement;
 					const addresSelectContainer = document.getElementById('address-select-container') as HTMLDivElement;
 
@@ -86,6 +99,9 @@ export class HomePageComponent implements OnInit {
 						}
 					}, 1000)
 				});
+				this.cpElem.addEventListener('input', () => {
+					this.selectedCp = this.cpElem.value;
+				});
 				this.cpElem.addEventListener('input', this.hideCpAlert);
 				this.cpElem.addEventListener('input', this.showCpError);
 
@@ -97,7 +113,19 @@ export class HomePageComponent implements OnInit {
 
 				this.streetElem.addEventListener('change', this.enableNum);
 
-				this.numberElem.addEventListener('input', this.enableButton);
+				this.numberElem.addEventListener('input', () => {
+					this.selectedNumber = this.numberElem.value;
+					this.enableButton();
+				});
+
+				this.addressWriteNumberElem.addEventListener('input', () => {
+					this.selectedNumber = this.addressWriteNumberElem.value;
+					this.enableButton();
+				});
+
+				this.addressWirteCpElem.addEventListener('input', () => {
+					this.selectedCp = this.addressWirteCpElem.value;
+				});
 
 				document.getElementById("btnConfirm")?.addEventListener('click', this.findProducts);
 				document.getElementById("btnClear")?.addEventListener('click', this.clearData);
@@ -106,7 +134,7 @@ export class HomePageComponent implements OnInit {
 
 				document.getElementById('btn-logout')?.addEventListener('click', this.logout)
 			} else {
-				sessionStorage.setItem('error', '401');
+				sessionStorage.setItem('error', '403');
 				this.router.navigate(['/login']);
 			}
 		}, (err) => {
@@ -118,26 +146,28 @@ export class HomePageComponent implements OnInit {
 	getData = () => {
 		this.switchIcon('province', 'loading');
 		this.http.get(`http://127.0.0.1:8000/getAllAddress/${sessionStorage.getItem('token')}/${this.getCp()}`).subscribe((res: any) => {
-
-			// res.forEach((dataElem: any, index: any) => {
-			// 	if (index > 0) {
-			// 		if (dataElem.calle !== res[index - 1].calle) {
-			// 			this.data.push(dataElem);
-			// 		}
-			// 	} else {
-			// 		this.data.push(dataElem);
-			// 	}
-			// });
-
-			this.data = res;
-
+			this.data = this.bdData;
+			console.log(res.length)
+			// this.getDataByCp();
 			this.getProvinceData();
-		})
+		});
 	}
 
-	getCp = () => this.cpElem.value.length === 4 ? this.cpElem.value : (this.cpElem.value.substring(0, 1) == 0 ? this.cpElem.value.substring(1) : this.cpElem.value);
+	getCp = () => this.selectedCp.length === 4 ? this.selectedCp : (this.selectedCp.substring(0, 1) == 0 ? this.selectedCp.substring(1) : this.selectedCp);
+
+	// getDataByCp = () => {
+	// 	console.log('inicio getDataByCp')
+	// 	if (this.selectedCp !== '') {
+	// 		console.log('hay cp')
+	// 		this.data = this.bdData.filter((elem: any) => elem.cp == this.selectedCp)
+	// 	} else {
+	// 		console.log('no hay cp')
+	// 		this.data = this.bdData;
+	// 	}
+	// }
 
 	getProvinceData = () => {
+		console.log('inicio getProvinceData')
 		this.clearProvince();
 		this.switchIcon('province', 'loading');
 		const cp = this.getCp();
@@ -157,9 +187,10 @@ export class HomePageComponent implements OnInit {
 				}
 			});
 		}
+		console.log('fin')
 		if (this.provinceArray.length === 0) {
 			this.showNotFoundCp();
-			this.clearProvince()
+			this.clearProvince();
 		} else {
 			if (cp !== '') this.switchIcon('cp', 'ok');
 			this.switchIcon('province', 'edit');
@@ -294,16 +325,16 @@ export class HomePageComponent implements OnInit {
 	}
 
 	enableButton = () => {
-		const button = document.getElementById('btnConfirm');
-		if (button !== null && this.getSelectedStreet() !== '') {
-			if (this.numberElem.value !== '') {
-				button.removeAttribute('disabled');
-				this.switchIcon('number', 'ok');
-			} else {
-				button.setAttribute('disabled', '');
-				this.switchIcon('number', 'edit');
-			}
+		const button = document.getElementById('btnConfirm') as HTMLButtonElement;
+		// if (this.getSelectedStreet() !== '') {
+		if (this.selectedNumber !== '') {
+			button.removeAttribute('disabled');
+			// this.switchIcon('number', 'ok');
+		} else {
+			button.setAttribute('disabled', '');
+			// this.switchIcon('number', 'edit');
 		}
+		// }
 	}
 
 	findProductsByText = (text: number) => {
@@ -324,11 +355,13 @@ export class HomePageComponent implements OnInit {
 
 	findProducts = () => {
 		if (this.getCp() === '') {
-			this.http.get(`http://127.0.0.1:8000/getCp/${this.getSelectedProvince()}/${this.getSelectedTownship()}/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.numberElem.value}/${this.getCp()}`).subscribe((res: any) => {
+			this.http.get(`http://127.0.0.1:8000/getCp/${this.getSelectedProvince()}/${this.getSelectedTownship()}/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.selectedNumber}/${this.getCp()}`).subscribe((res: any) => {
 				if (res.length === 1) {
-					this.cpElem.value = res[0].cp.length === 4 ? `0${res[0].cp}` : res[0].cp;
+					this.selectedCp = res[0].cp.length === 4 ? `0${res[0].cp}` : res[0].cp;
+					this.cpElem.value = this.selectedCp;
+					this.addressWirteCpElem.value = this.selectedCp;
 					this.switchIcon('cp', 'ok');
-					this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.numberElem.value}/${this.getCp()}`)
+					this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.selectedNumber}/${this.getCp()}`)
 						.subscribe((res: any) => {
 							if (res.length > 0) { this.hideAlert(); this.switchIcon('number', 'ok') } else { this.showAlert('No hay servicio para este número', 'warning'); this.switchIcon('number', 'warning') }
 							console.log(res);
@@ -342,7 +375,7 @@ export class HomePageComponent implements OnInit {
 				this.router.navigate(['/login']);
 			});
 		} else {
-			this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.numberElem.value}/${this.getCp()}`)
+			this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.selectedNumber}/${this.getCp()}`)
 				.subscribe((res: any) => {
 					if (res.length > 0) { this.hideAlert(); this.switchIcon('number', 'ok') } else { this.showAlert('No hay servicio para este número', 'warning'); this.switchIcon('number', 'warning') }
 					console.log(res);
@@ -375,7 +408,7 @@ export class HomePageComponent implements OnInit {
 				elem.removeAttribute('selected');
 			} else {
 				elem.style.display = 'block';
-				elem.removeAttribute('disabled')
+				elem.removeAttribute('disabled');
 				elem.setAttribute('selected', '');
 			}
 		}
@@ -395,62 +428,71 @@ export class HomePageComponent implements OnInit {
 		const icon = document.getElementById(`${elemdataName}-icon`) as HTMLDivElement;
 		const spinner = document.getElementById(`${elemdataName}-spinner`) as HTMLDivElement;
 		const control = document.getElementById(elemdataName) as HTMLSelectElement;
-		if (icon !== undefined && icon !== null) {
-			switch (action) {
-				case 'ok':
-					spinner.style.display = 'none';
+
+		switch (action) {
+			case 'ok':
+				if (spinner !== undefined && spinner !== null) spinner.style.display = 'none';
+				if (icon !== undefined && icon !== null) {
 					icon.style.display = 'block';
 					icon.className = 'bi bi-check';
 					icon.style.color = 'white';
-					span.style.backgroundColor = 'darkgreen';
-					control.style.borderColor = 'darkgreen'
-					break;
-				case 'warning':
-					spinner.style.display = 'none';
+				}
+				if (span !== undefined && span !== null) span.style.backgroundColor = 'darkgreen';
+				if (control !== undefined && control !== null) control.style.borderColor = 'darkgreen';
+				break;
+			case 'warning':
+				if (spinner !== undefined && spinner !== null) spinner.style.display = 'none';
+				if (icon !== undefined && icon !== null) {
 					icon.style.display = 'block';
-					icon.style.color = 'black';
 					icon.className = 'bi bi-exclamation-triangle';
-					span.style.backgroundColor = 'darkorange';
-					control.style.borderColor = 'darkorange';
 					icon.style.color = 'white';
-					break;
-				case 'error':
-					spinner.style.display = 'none';
+				}
+				if (span !== undefined && span !== null) span.style.backgroundColor = 'darkorange';
+				if (control !== undefined && control !== null) control.style.borderColor = 'darkorange';
+				break;
+			case 'error':
+				if (spinner !== undefined && spinner !== null) spinner.style.display = 'none';
+				if (icon !== undefined && icon !== null) {
 					icon.style.display = 'block';
-					icon.style.color = 'black';
 					icon.className = 'bi bi-x-octagon';
-					span.style.backgroundColor = 'red';
-					control.style.borderColor = 'red';
 					icon.style.color = 'white';
-					break;
-				case 'edit':
-					spinner.style.display = 'none';
+				}
+				if (span !== undefined && span !== null) span.style.backgroundColor = 'red';
+				if (control !== undefined && control !== null) control.style.borderColor = 'red';
+				break;
+			case 'edit':
+				if (spinner !== undefined && spinner !== null) spinner.style.display = 'none';
+				if (icon !== undefined && icon !== null) {
 					icon.style.display = 'block';
-					icon.style.color = 'black';
 					icon.className = 'bi bi-pencil-square';
 					icon.style.color = 'white';
-					control.style.borderColor = 'rgb(0, 59, 135)';
-					span.style.backgroundColor = 'rgb(0, 59, 135)';
-					break;
-				case 'loading':
-					spinner.style.display = 'block';
-					icon.style.display = 'none';
-					span.style.backgroundColor = 'lightgrey';
-					break;
-				case 'disabled':
-					spinner.style.display = 'none';
+				}
+				if (span !== undefined && span !== null) span.style.backgroundColor = 'rgb(0, 59, 135)';
+				if (control !== undefined && control !== null) control.style.borderColor = 'rgb(0, 59, 135)';
+				break;
+			case 'loading':
+				if (spinner !== undefined && spinner !== null) spinner.style.display = 'block';
+				if (icon !== undefined && icon !== null) icon.style.display = 'none';
+				if (span !== undefined && span !== null) span.style.backgroundColor = 'lightgrey';
+				break;
+			case 'disabled':
+				if (spinner !== undefined && spinner !== null) spinner.style.display = 'none';
+				if (icon !== undefined && icon !== null) {
 					icon.style.display = 'block';
 					icon.style.color = 'rgb(80, 80, 80)';
-					span.style.backgroundColor = 'lightgrey';
-					if (elemdataName === 'cp' || elemdataName === 'number') {
+					icon.className = 'bi bi-pencil-square';
+				}
+				if (span !== undefined && span !== null) span.style.backgroundColor = 'lightgrey';
+				if (control !== undefined && control !== null) {
+					if (control.getAttribute('type') !== 'select') {
 						control.style.borderColor = 'rgba(91, 125, 167, 0.7)';
 					} else {
 						control.style.borderColor = 'rgb(91, 125, 167)';
 					}
-					icon.className = 'bi bi-pencil-square';
-					break;
-			}
+				}
+				break;
 		}
+
 	}
 
 	createBtnAdmin = () => {
@@ -483,13 +525,8 @@ export class HomePageComponent implements OnInit {
 		this.count++;
 		const count = this.count;
 		setTimeout(() => {
-			const text = this.cpElem.value.length;
+			const text = this.selectedCp.length;
 			if ((text < 4 || text > 5) && text !== 0 && this.count === count) {
-				const cpAlert = document.getElementById('cpAlert');
-				if (cpAlert !== null) {
-					cpAlert.textContent = 'El código postal debe tener una longitud de cinco carácteres.';
-					cpAlert.style.color = 'red';
-				}
 				this.switchIcon('cp', 'error');
 				this.showAlert('El código postal debe tener una longitud de 5 carácteres', 'error');
 			}
@@ -499,11 +536,6 @@ export class HomePageComponent implements OnInit {
 	showNotFoundCp = () => {
 		const text = this.cpElem.value.length;
 		if (text >= 4 && text <= 5) {
-			const cpAlert = document.getElementById('cpAlert');
-			if (cpAlert !== null) {
-				cpAlert.textContent = 'No hay servicio para este código postal';
-				cpAlert.style.color = 'darkorange';
-			}
 			this.switchIcon('cp', 'warning');
 			this.showAlert('No hay servicio para este código postal', 'warning');
 		}
@@ -511,10 +543,6 @@ export class HomePageComponent implements OnInit {
 
 	hideCpAlert = () => {
 		this.cpElem.style.borderColor = 'rgb(0, 59, 135)';
-		const cpAlert = document.getElementById('cpAlert');
-		if (cpAlert !== null) {
-			cpAlert.textContent = '';
-		}
 		this.switchIcon('cp', 'edit');
 		this.hideAlert();
 	}

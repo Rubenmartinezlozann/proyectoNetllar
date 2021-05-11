@@ -6,7 +6,7 @@ use App\Entity\Address;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\OrderBy;
+use Doctrine\ORM\Query\Expr\GroupBy;
 
 /**
  * @method Address|null find($id, $lockMode = null, $lockVersion = null)
@@ -26,14 +26,17 @@ class AddressRepository extends ServiceEntityRepository
 
     public function getAllAddress()
     {
-        return $this->manager->createQueryBuilder('a')
-            ->select('a')
+        $qb = $this->manager->createQueryBuilder('a')
+            ->select('a.cp', 'a.provincia', 'a.municipio', 'a.tipovia', 'a.calle')
             ->from(Address::class, 'a')
-            ->distinct('a.calle')
-            ->orderBy('a.provincia')
-            // ->setMaxResults(500000)
-            ->getQuery()
-            ->getResult();
+            ->groupBy('a.calle')
+            ->addOrderBy('a.provincia', 'ASC')
+            ->addOrderBy('a.municipio', 'ASC')
+            ->addOrderBy('a.tipovia', 'ASC')
+            ->addOrderBy('a.calle', 'ASC')
+            ->getQuery();
+
+        return $qb->getResult();
     }
 
     public function getProvinces($cp)
