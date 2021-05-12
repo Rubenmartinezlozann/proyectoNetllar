@@ -34,16 +34,15 @@ class AddressController extends AbstractController
     }
 
     /**
-     * @Route("/getAllAddress/{token}", defaults={"cp": null}, name="getAllAddress", methods={"GET"})
+     * @Route("/getAllAddress/{token}/{cp}", name="getAllAddress", methods={"GET"})
      */
-    public function getAllAddress($token): JsonResponse
+    public function getAllAddress($token, $cp): JsonResponse
     {
         $u = $this->tokenRepository->findOneBy(['token' => $token]);
         if (!empty($u)) {
             $u = $u->getUser();
             if ($this->userRepository->loginOk($u)) {
-                $data = $this->addressRepository->getAllAddress();
-                echo(count($data));
+                $data = $this->addressRepository->getAllAddress($cp);
                 return new JsonResponse($data, Response::HTTP_OK);
             }
             return  new JsonResponse([], Response::HTTP_FORBIDDEN);

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { enableProdMode } from '@angular/core';
+
+enableProdMode();
 
 @Component({
 	selector: 'app-home-page',
@@ -15,16 +18,12 @@ export class HomePageComponent implements OnInit {
 	streetArray: any[] = [];
 	products: any;
 
-	bdData: any[] = [];
-
 	selectedCp: any = '';
 	selectedProvince: string = '';
 	selectedTownship: string = '';
 	selectedTypeRoad: string = '';
 	selectedStreet: string = '';
 	selectedNumber: any;
-
-
 
 	cp: any;
 	province: any;
@@ -49,6 +48,8 @@ export class HomePageComponent implements OnInit {
 
 	addressRadioWrite: any;
 	addressRadioSelect: any;
+
+	loadingIcon: any;
 
 	constructor(private http: HttpClient, private router: Router, private activatedRoute: ActivatedRoute) { }
 
@@ -76,6 +77,9 @@ export class HomePageComponent implements OnInit {
 
 					addresWriteContainer.style.display = 'block';
 					addresSelectContainer.style.display = 'none';
+
+					this.addressRadioWrite.setAttribute('checked', '');
+					this.addressRadioSelect.removeAttribute('checked');
 				});
 
 				this.addressRadioSelect = document.getElementById('address-radio-select') as HTMLInputElement;
@@ -85,7 +89,12 @@ export class HomePageComponent implements OnInit {
 
 					addresWriteContainer.style.display = 'none';
 					addresSelectContainer.style.display = 'block';
+
+					this.addressRadioWrite.removeAttribute('checked');
+					this.addressRadioSelect.setAttribute('checked', '');
 				});
+
+				this.loadingIcon = document.getElementById('loading-page-icon') as HTMLDivElement;
 
 				this.getData();
 
@@ -94,16 +103,18 @@ export class HomePageComponent implements OnInit {
 					const count = this.count2;
 					this.switchIcon('cp', 'loading');
 					setTimeout(() => {
-						if (this.count === count) {
-							this.getProvinceData();
+						if (this.count2 === count) {
+							this.selectedCp = this.cpElem.value;
+							this.hideCpAlert('cp');
+							this.showCpError('cp');
+							this.getData();
+							// this.getDataByCp();
+							// this.getProvinceData();
 						}
-					}, 1000)
+					}, 1000);
 				});
-				this.cpElem.addEventListener('input', () => {
-					this.selectedCp = this.cpElem.value;
-				});
-				this.cpElem.addEventListener('input', this.hideCpAlert);
-				this.cpElem.addEventListener('input', this.showCpError);
+				// this.cpElem.addEventListener('input', this.hideCpAlert);
+				// this.cpElem.addEventListener('input', this.showCpError);
 
 				this.provinceElem.addEventListener('change', this.getTownshipData);
 
@@ -124,7 +135,18 @@ export class HomePageComponent implements OnInit {
 				});
 
 				this.addressWirteCpElem.addEventListener('input', () => {
-					this.selectedCp = this.addressWirteCpElem.value;
+					this.count2++;
+					const count = this.count2;
+					this.switchIcon('address-write-cp', 'loading');
+					setTimeout(() => {
+						if (this.count2 === count) {
+							this.selectedCp = this.cpElem.value;
+							this.hideCpAlert('address-write-cp');
+							this.showCpError('address-write-cp');
+							// this.getDataByCp();
+							this.getData();
+						}
+					}, 1000);
 				});
 
 				document.getElementById("btnConfirm")?.addEventListener('click', this.findProducts);
@@ -144,11 +166,14 @@ export class HomePageComponent implements OnInit {
 	}
 
 	getData = () => {
-		this.switchIcon('province', 'loading');
+		this.loadingIcon.style.display = 'block';
 		this.http.get(`http://127.0.0.1:8000/getAllAddress/${sessionStorage.getItem('token')}/${this.getCp()}`).subscribe((res: any) => {
-			this.data = this.bdData;
-			console.log(res.length)
-			// this.getDataByCp();
+			if (res.length === 0) {
+				if (this.addressRadioSelect.hasAttribute('checked')) this.showNotFoundCp('cp')
+				else this.showNotFoundCp('address-write-cp')
+			}
+			this.data = res;
+			this.loadingIcon.style.display = 'none';
 			this.getProvinceData();
 		});
 	}
@@ -158,12 +183,12 @@ export class HomePageComponent implements OnInit {
 	// getDataByCp = () => {
 	// 	console.log('inicio getDataByCp')
 	// 	if (this.selectedCp !== '') {
-	// 		console.log('hay cp')
-	// 		this.data = this.bdData.filter((elem: any) => elem.cp == this.selectedCp)
-	// 	} else {
-	// 		console.log('no hay cp')
-	// 		this.data = this.bdData;
-	// 	}
+	// 		this.data = this.data.filter((elem: any) => elem.cp == this.selectedCp)
+	// 		if (this.data.length === 0) {
+	// 			if (this.addressRadioSelect.hasAttribute('checked')) this.showNotFoundCp('cp')
+	// 			else this.showNotFoundCp('address-write-cp')
+	// 		}
+	// 	} else this.getData();
 	// }
 
 	getProvinceData = () => {
@@ -174,22 +199,15 @@ export class HomePageComponent implements OnInit {
 
 		if (cp === '') {
 			this.data.forEach((dataElem: any) => {
-				if (this.provinceArray.every((value: any) => dataElem.provincia !== value.provincia)) {
-					this.provinceArray.push(dataElem);
-				}
+				if (this.provinceArray.every((value: any) => dataElem.provincia !== value.provincia)) this.provinceArray.push(dataElem);
 			});
 		} else {
 			this.data.forEach((dataElem: any) => {
-				if (cp == dataElem.cp) {
-					if (this.provinceArray.every((value: any) => dataElem.provincia !== value.provincia)) {
-						this.provinceArray.push(dataElem);
-					}
-				}
+				if (cp == dataElem.cp) if (this.provinceArray.every((value: any) => dataElem.provincia !== value.provincia)) this.provinceArray.push(dataElem);
 			});
 		}
-		console.log('fin')
 		if (this.provinceArray.length === 0) {
-			this.showNotFoundCp();
+			this.showNotFoundCp('cp');
 			this.clearProvince();
 		} else {
 			if (cp !== '') this.switchIcon('cp', 'ok');
@@ -521,41 +539,57 @@ export class HomePageComponent implements OnInit {
 
 	}
 
-	showCpError = () => {
-		this.count++;
-		const count = this.count;
-		setTimeout(() => {
-			const text = this.selectedCp.length;
-			if ((text < 4 || text > 5) && text !== 0 && this.count === count) {
-				this.switchIcon('cp', 'error');
-				this.showAlert('El código postal debe tener una longitud de 5 carácteres', 'error');
-			}
-		}, 1000)
+	showCpError = (idElem: any) => {
+		// this.count++;
+		// const count = this.count;
+		// setTimeout(() => {
+		const text = this.selectedCp.length;
+		console.log(text)
+		if ((text < 4 || text > 5) && text !== 0 /* && this.count === count */) {
+			// this.switchIcon('cp', 'error');
+			this.switchIcon(idElem, 'error');
+			// this.switchIcon('address-write-cp', 'error');
+			this.showAlert('El código postal debe tener una longitud de 5 carácteres', 'error');
+		}
+		// }, 1000)
 	}
 
-	showNotFoundCp = () => {
-		const text = this.cpElem.value.length;
+	showNotFoundCp = (idElem: any) => {
+		const text = this.selectedCp.length;
 		if (text >= 4 && text <= 5) {
-			this.switchIcon('cp', 'warning');
+			// this.switchIcon('cp', 'warning');
+			// this.switchIcon('address-write-cp', 'warning');
+			this.switchIcon(idElem, 'warning');
 			this.showAlert('No hay servicio para este código postal', 'warning');
 		}
 	}
 
-	hideCpAlert = () => {
+	hideCpAlert = (idElem: any) => {
 		this.cpElem.style.borderColor = 'rgb(0, 59, 135)';
-		this.switchIcon('cp', 'edit');
+		// this.switchIcon('cp', 'edit');
+		// this.switchIcon('address-write-cp', 'edit');
+		this.switchIcon(idElem, 'edit');
 		this.hideAlert();
 	}
 
 	clearData = () => {
 		this.clearCp();
-		this.hideCpAlert();
 		this.getProvinceData();
+		this.clearAddressWriteSection();
+		this.selectedCp = '';
+		this.selectedNumber = '';
+	}
+
+	clearAddressWriteSection = () => {
+		this.addressWirteAddressElem.value = '';
+		this.addressWirteCpElem.value = '';
+		this.addressWriteNumberElem.value = '';
 	}
 
 	clearCp = () => {
 		this.cpElem.value = null;
-		this.switchIcon('cp', 'edit');
+		this.hideCpAlert('cp');
+		// this.switchIcon('cp', 'edit');
 		this.clearProvince();
 	}
 

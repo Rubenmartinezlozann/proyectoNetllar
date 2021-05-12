@@ -149,6 +149,15 @@ button.btnClear:active {
     margin-bottom: -0.5em;
 }
 
+.loading-page-icon {
+    display: block;
+    position: relative;
+    left: 49.5%;
+    bottom: 1.5em;
+    width: 2em;
+    height: 2em;
+}
+
 .products-section {
     display: none;
 }

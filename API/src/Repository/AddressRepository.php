@@ -24,12 +24,18 @@ class AddressRepository extends ServiceEntityRepository
         $this->manager = $manager;
     }
 
-    public function getAllAddress()
+    public function getAllAddress($cp)
     {
         $qb = $this->manager->createQueryBuilder('a')
             ->select('a.cp', 'a.provincia', 'a.municipio', 'a.tipovia', 'a.calle')
-            ->from(Address::class, 'a')
-            ->groupBy('a.calle')
+            ->from(Address::class, 'a');
+
+        if (!empty($cp)) {
+            $qb = $qb->where('a.cp = :cp')
+                ->setParameter('cp', $cp);
+        }
+
+        $qb = $qb->groupBy('a.calle')
             ->addOrderBy('a.provincia', 'ASC')
             ->addOrderBy('a.municipio', 'ASC')
             ->addOrderBy('a.tipovia', 'ASC')
