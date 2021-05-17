@@ -12,6 +12,8 @@ enableProdMode();
 })
 export class HomePageComponent implements OnInit {
 	data: any[] = [];
+	dataByCp: any[] = [];
+
 	provinceArray: any[] = [];
 	townshipArray: any[] = [];
 	typeRoadArray: any[] = [];
@@ -45,6 +47,7 @@ export class HomePageComponent implements OnInit {
 	addressWirteCpElem: any;
 	addressWirteAddressElem: any;
 	addressWriteNumberElem: any;
+	addressWriteAddressByCp: any
 
 	addressRadioWrite: any;
 	addressRadioSelect: any;
@@ -69,6 +72,8 @@ export class HomePageComponent implements OnInit {
 				this.addressWirteCpElem = document.getElementById('address-write-cp') as HTMLInputElement;
 				this.addressWirteAddressElem = document.getElementById('address-write-address') as HTMLInputElement;
 				this.addressWriteNumberElem = document.getElementById('address-write-number') as HTMLInputElement;
+
+				this.addressWriteAddressByCp = document.getElementById('address-write-addressByCp') as HTMLInputElement;
 
 				this.addressRadioWrite = document.getElementById('address-radio-write') as HTMLInputElement;
 				this.addressRadioWrite.addEventListener('change', () => {
@@ -107,14 +112,11 @@ export class HomePageComponent implements OnInit {
 							this.selectedCp = this.cpElem.value;
 							this.hideCpAlert('cp');
 							this.showCpError('cp');
-							this.getData();
-							// this.getDataByCp();
-							// this.getProvinceData();
+							this.getDataByCp();
+							this.getProvinceData();
 						}
 					}, 1000);
 				});
-				// this.cpElem.addEventListener('input', this.hideCpAlert);
-				// this.cpElem.addEventListener('input', this.showCpError);
 
 				this.provinceElem.addEventListener('change', this.getTownshipData);
 
@@ -137,24 +139,35 @@ export class HomePageComponent implements OnInit {
 				this.addressWirteCpElem.addEventListener('input', () => {
 					this.count2++;
 					const count = this.count2;
-					this.switchIcon('address-write-cp', 'loading');
+					this.switchIcon('address-write-cp', 'edit');
 					setTimeout(() => {
 						if (this.count2 === count) {
-							this.selectedCp = this.cpElem.value;
+							this.selectedCp = this.addressWirteCpElem.value;
 							this.hideCpAlert('address-write-cp');
 							this.showCpError('address-write-cp');
-							// this.getDataByCp();
-							this.getData();
+							this.getDataByCp();
+							if (this.selectedCp !== '') {
+								this.addressWriteAddressByCp.style.display = 'block';
+								this.addressWirteAddressElem.style.display = 'none';
+							}
+							else {
+								this.addressWriteAddressByCp.style.display = 'none';
+								this.addressWirteAddressElem.style.display = 'block';
+							}
 						}
 					}, 1000);
 				});
 
-				document.getElementById("btnConfirm")?.addEventListener('click', this.findProducts);
+				document.getElementById("btnConfirm")?.addEventListener('click', () => {
+					if (this.addressRadioWrite.checked) this.findProductsByText();
+					else this.findProducts();
+
+				});
 				document.getElementById("btnClear")?.addEventListener('click', this.clearData);
 
 				document.getElementById('alert-button')?.addEventListener('click', this.hideAlert);
 
-				document.getElementById('btn-logout')?.addEventListener('click', this.logout)
+				document.getElementById('btn-logout')?.addEventListener('click', this.logout);
 			} else {
 				sessionStorage.setItem('error', '403');
 				this.router.navigate(['/login']);
@@ -167,29 +180,43 @@ export class HomePageComponent implements OnInit {
 
 	getData = () => {
 		this.loadingIcon.style.display = 'block';
+		const progressBar = document.getElementById('progress-bar') as HTMLDivElement;
 		this.http.get(`http://127.0.0.1:8000/getAllAddress/${sessionStorage.getItem('token')}/${this.getCp()}`).subscribe((res: any) => {
-			if (res.length === 0) {
-				if (this.addressRadioSelect.hasAttribute('checked')) this.showNotFoundCp('cp')
-				else this.showNotFoundCp('address-write-cp')
-			}
-			this.data = res;
+			// if (res.length === 0) {
+			// 	if (this.addressRadioSelect.hasAttribute('checked')) this.showNotFoundCp('cp')
+			// 	else this.showNotFoundCp('address-write-cp')
+			// }
 			this.loadingIcon.style.display = 'none';
-			this.getProvinceData();
+			progressBar.setAttribute('aria-valuemax', `${res.length}`)
+			res.forEach((elem: any) => {
+				setTimeout(() => {
+					progressBar.style.width = `${this.data.length * 100 / res.length}%`;
+					this.data.push(elem);
+					if (this.data.length === res.length) {
+						const progressBarContainer = document.getElementById('loading-bar') as HTMLDivElement;
+						progressBarContainer.style.display = 'none';
+						this.getProvinceData();
+					}
+				}, 0.000000001)
+			});
 		});
 	}
 
 	getCp = () => this.selectedCp.length === 4 ? this.selectedCp : (this.selectedCp.substring(0, 1) == 0 ? this.selectedCp.substring(1) : this.selectedCp);
 
-	// getDataByCp = () => {
-	// 	console.log('inicio getDataByCp')
-	// 	if (this.selectedCp !== '') {
-	// 		this.data = this.data.filter((elem: any) => elem.cp == this.selectedCp)
-	// 		if (this.data.length === 0) {
-	// 			if (this.addressRadioSelect.hasAttribute('checked')) this.showNotFoundCp('cp')
-	// 			else this.showNotFoundCp('address-write-cp')
-	// 		}
-	// 	} else this.getData();
-	// }
+	getDataByCp = () => {
+		console.log('inicio getDataByCp')
+		if (this.selectedCp !== '') {
+			this.dataByCp = this.data.filter((elem: any) => elem.cp == this.selectedCp)
+			if (this.dataByCp.length === 0) {
+				if (this.addressRadioSelect.hasAttribute('checked')) this.showNotFoundCp('cp')
+				else this.showNotFoundCp('address-write-cp')
+			} else {
+				this.switchIcon('address-write-cp', 'ok');
+				this.switchIcon('cp', 'ok');
+			}
+		}
+	}
 
 	getProvinceData = () => {
 		console.log('inicio getProvinceData')
@@ -202,15 +229,14 @@ export class HomePageComponent implements OnInit {
 				if (this.provinceArray.every((value: any) => dataElem.provincia !== value.provincia)) this.provinceArray.push(dataElem);
 			});
 		} else {
-			this.data.forEach((dataElem: any) => {
-				if (cp == dataElem.cp) if (this.provinceArray.every((value: any) => dataElem.provincia !== value.provincia)) this.provinceArray.push(dataElem);
+			this.dataByCp.forEach((dataElem: any) => {
+				/* if (cp == dataElem.cp) */ if (this.provinceArray.every((value: any) => dataElem.provincia !== value.provincia)) this.provinceArray.push(dataElem);
 			});
 		}
 		if (this.provinceArray.length === 0) {
 			this.showNotFoundCp('cp');
 			this.clearProvince();
 		} else {
-			if (cp !== '') this.switchIcon('cp', 'ok');
 			this.switchIcon('province', 'edit');
 			this.provinceElem?.removeAttribute('disabled');
 			if (this.hideDefaultOption('defaultProvince', this.provinceArray.length === 1)) {
@@ -238,8 +264,8 @@ export class HomePageComponent implements OnInit {
 					}
 				});
 			} else {
-				this.data.forEach((dataElem: any) => {
-					if (cp == dataElem.cp && province == dataElem.provincia) {
+				this.dataByCp.forEach((dataElem: any) => {
+					if (/* cp == dataElem.cp && */ province == dataElem.provincia) {
 						if (this.townshipArray.every((value: any) => dataElem.municipio !== value.municipio)) {
 							this.townshipArray.push(dataElem);
 						}
@@ -276,8 +302,8 @@ export class HomePageComponent implements OnInit {
 					}
 				});
 			} else {
-				this.data.forEach((dataElem: any) => {
-					if (cp == dataElem.cp && province == dataElem.provincia && township == dataElem.municipio) {
+				this.dataByCp.forEach((dataElem: any) => {
+					if (/* cp == dataElem.cp && */ province == dataElem.provincia && township == dataElem.municipio) {
 						if (this.typeRoadArray.every((value: any) => dataElem.tipovia !== value.tipovia)) {
 							this.typeRoadArray.push(dataElem);
 						}
@@ -315,8 +341,8 @@ export class HomePageComponent implements OnInit {
 					}
 				});
 			} else {
-				this.data.forEach((dataElem: any) => {
-					if (cp == dataElem.cp && province == dataElem.provincia && township == dataElem.municipio && typeRoad == dataElem.tipovia) {
+				this.dataByCp.forEach((dataElem: any) => {
+					if (/* cp == dataElem.cp &&  */province == dataElem.provincia && township == dataElem.municipio && typeRoad == dataElem.tipovia) {
 						if (this.streetArray.every((value: any) => dataElem.calle !== value.calle)) {
 							this.streetArray.push(dataElem);
 						}
@@ -355,31 +381,52 @@ export class HomePageComponent implements OnInit {
 		// }
 	}
 
-	findProductsByText = (text: number) => {
-		this.http.get(`http://127.0.0.1:8000/getProductsBytext/${text}`).subscribe((res: any) => {
-			console.log(res);
-		}, (err) => {
-			sessionStorage.setItem('error', err.status);
-			this.router.navigate(['/login']);
-		});
-	}
+	findProductsByText = () => {
+		this.http.get(`http://127.0.0.1:8000/getOneAddressByText/${this.getCp() === '' ? this.addressWirteAddressElem.value : this.addressWriteAddressByCp.value}/${this.selectedNumber}/${this.getCp()}`)
+			.subscribe((res: any) => {
+				if (res.length === 1) {
+					console.log(res);
+					this.selectedProvince = res[0][0].provincia;
+					this.selectedTownship = res[0][0].municipio;
+					this.selectedTypeRoad = res[0][0].tipovia;
+					this.selectedStreet = res[0][0].calle;
+					this.selectedCp = '' + res[0][0].cp;
+					this.addressWirteAddressElem.style.display = 'none';
+					this.addressWriteAddressByCp.style.display = 'block';
+					this.addressWirteCpElem = this.selectedCp;
+					if (this.getCp() === '') {
+						this.addressWirteAddressElem.style.display = 'none';
+						this.addressWriteAddressByCp.style.display = 'block';
+						this.addressWriteAddressByCp.value = `${this.selectedTypeRoad} ${this.selectedStreet} ${this.selectedTownship} ${this.selectedProvince}`
+					}
 
-	setAddressByTextSelection = (typeRoad: any, street: any, township: any, province: any) => {
-		this.selectedTypeRoad = typeRoad;
-		this.selectedStreet = street;
-		this.selectedTownship = township;
-		this.selectedProvince = province;
+					this.cp = this.getCp();
+					this.province = this.getSelectedProvince();
+					this.township = this.getSelectedTownship();
+					this.typeRoad = this.getSelectedTypeRoad();
+					this.street = this.getSelectedStreet();
+					this.number = this.selectedNumber.value;
+				} else {
+					this.selectedProvince = '';
+					this.selectedTownship = '';
+					this.selectedTypeRoad = '';
+					this.selectedStreet = '';
+				}
+			}, (err) => {
+				sessionStorage.setItem('error', err.status);
+				this.router.navigate(['/login']);
+			});
 	}
 
 	findProducts = () => {
 		if (this.getCp() === '') {
-			this.http.get(`http://127.0.0.1:8000/getCp/${this.getSelectedProvince()}/${this.getSelectedTownship()}/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.selectedNumber}/${this.getCp()}`).subscribe((res: any) => {
+			this.http.get(`http://127.0.0.1:8000/getCp/${sessionStorage.getItem('token')}/${this.getSelectedProvince()}/${this.getSelectedTownship()}/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.selectedNumber}`).subscribe((res: any) => {
 				if (res.length === 1) {
 					this.selectedCp = res[0].cp.length === 4 ? `0${res[0].cp}` : res[0].cp;
 					this.cpElem.value = this.selectedCp;
 					this.addressWirteCpElem.value = this.selectedCp;
 					this.switchIcon('cp', 'ok');
-					this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.selectedNumber}/${this.getCp()}`)
+					this.http.get(`http://127.0.0.1:8000/findProducts/${sessionStorage.getItem('token')}/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.selectedNumber}/${this.getCp()}`)
 						.subscribe((res: any) => {
 							if (res.length > 0) { this.hideAlert(); this.switchIcon('number', 'ok') } else { this.showAlert('No hay servicio para este número', 'warning'); this.switchIcon('number', 'warning') }
 							console.log(res);
@@ -393,7 +440,7 @@ export class HomePageComponent implements OnInit {
 				this.router.navigate(['/login']);
 			});
 		} else {
-			this.http.get(`http://127.0.0.1:8000/findProducts/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.selectedNumber}/${this.getCp()}`)
+			this.http.get(`http://127.0.0.1:8000/findProducts/${sessionStorage.getItem('token')}/${this.getSelectedTypeRoad()}/${this.getSelectedStreet()}/${this.getSelectedTownship()}/${this.getSelectedProvince()}/${this.selectedNumber}/${this.getCp()}`)
 				.subscribe((res: any) => {
 					if (res.length > 0) { this.hideAlert(); this.switchIcon('number', 'ok') } else { this.showAlert('No hay servicio para este número', 'warning'); this.switchIcon('number', 'warning') }
 					console.log(res);
@@ -407,7 +454,7 @@ export class HomePageComponent implements OnInit {
 		this.township = this.getSelectedTownship();
 		this.typeRoad = this.getSelectedTypeRoad();
 		this.street = this.getSelectedStreet();
-		this.number = this.numberElem.value;
+		this.number = this.selectedNumber.value;
 	}
 
 	logout = () => {
@@ -446,7 +493,7 @@ export class HomePageComponent implements OnInit {
 		const icon = document.getElementById(`${elemdataName}-icon`) as HTMLDivElement;
 		const spinner = document.getElementById(`${elemdataName}-spinner`) as HTMLDivElement;
 		const control = document.getElementById(elemdataName) as HTMLSelectElement;
-
+		console.log(`${action} ${control}`)
 		switch (action) {
 			case 'ok':
 				if (spinner !== undefined && spinner !== null) spinner.style.display = 'none';
@@ -600,7 +647,7 @@ export class HomePageComponent implements OnInit {
 		this.hideDefaultOption('defaultProvince', true);
 		this.hideDefaultOption('defaultProvince', false);
 		this.switchIcon('province', 'disabled');
-		this.clearTownship();
+		if (this.townshipArray.length !== 0) this.clearTownship();
 	}
 
 	clearTownship = () => {
@@ -609,7 +656,7 @@ export class HomePageComponent implements OnInit {
 		this.townshipElem?.setAttribute('disabled', '');
 		this.hideDefaultOption('defaultTownship', false);
 		this.switchIcon('township', 'disabled');
-		this.clearTypeRoad();
+		if (this.typeRoadArray.length !== 0) this.clearTypeRoad();
 	}
 
 	clearTypeRoad = () => {
@@ -618,7 +665,7 @@ export class HomePageComponent implements OnInit {
 		this.typeRoadElem?.setAttribute('disabled', '');
 		this.hideDefaultOption('defaultTypeRoad', false);
 		this.switchIcon('typeRoad', 'disabled');
-		this.clearStreet();
+		if (this.streetArray.length !== 0) this.clearStreet();
 	}
 
 	clearStreet = () => {
@@ -627,10 +674,11 @@ export class HomePageComponent implements OnInit {
 		this.streetElem?.setAttribute('disabled', '');
 		this.hideDefaultOption('defaultStreet', false);
 		this.switchIcon('street', 'disabled');
-		this.clearNumber();
+		if (this.selectedNumber !== '') this.clearNumber();
 	}
 
 	clearNumber = () => {
+		this.selectedNumber !== '';
 		this.numberElem.value = null;
 		this.numberElem?.setAttribute('disabled', '');
 		this.switchIcon('number', 'disabled');

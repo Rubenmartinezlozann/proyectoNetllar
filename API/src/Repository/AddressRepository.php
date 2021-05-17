@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Expr\GroupBy;
+use JetBrains\PhpStorm\Internal\ReturnTypeContract;
 
 /**
  * @method Address|null find($id, $lockMode = null, $lockVersion = null)
@@ -201,6 +202,111 @@ class AddressRepository extends ServiceEntityRepository
             ->distinct()
             ->getQuery()
             ->getResult();
+    }
+
+    public function getOneAddressByText($addressText, $number, $cp = null)
+    {
+        // $dbAddressData = $cp === null ? $this->findAll() : $this->findBy(['cp' => $cp]);
+        $words = $this->getWords($addressText);
+        $sequencesArray = ['typeRoad', 'street', 'township', 'province'];
+
+        $lenghtSequencesArray = $this->getWordsLenghtSequences($words, $sequencesArray);
+        return $this->getSuggestedAddress($lenghtSequencesArray, $words, $number, $cp);
+    }
+
+    private function getWords($text)
+    {
+        $address = [];
+        $substringStart = 0;
+        $isStartSet = false;
+        for ($i = 0; $i < strlen($text); $i++) {
+            if ((substr($text, $i, 1) === ' ' || substr($text, $i, 1) === ',') && $isStartSet) {
+                $address[] = substr($text, $substringStart, $i - $substringStart);
+                $isStartSet = false;
+                $substringStart = null;
+            } elseif (substr($text, $i, 1) !== ' ' && substr($text, $i, 1) !== ',' && !$isStartSet) {
+                $substringStart = $i;
+                $isStartSet = true;
+            }
+        }
+        $isStartSet ? $address[] = substr($text, $substringStart, strlen($text) - $substringStart) : true;
+        return $address;
+    }
+
+    private function getWordsLenghtSequences($words, $wordsOrder)
+    {
+        $wordsCombinations = [];
+        for ($words1 = count($words); $words1 >= 0; $words1--) {
+            for ($words2 = count($words); $words2 >= 0; $words2--) {
+                for ($words3 = count($words); $words3 >= 0; $words3--) {
+                    for ($words4 = count($words); $words4  >= 0; $words4--) {
+                        $sum = $words1 + $words2 + $words3 + $words4;
+                        if (count($words) === $sum && $words1 !== 0 && $words2 !== 0 && $words3 !== 0 && $words4 !== 0) {
+                            $wordsCombinations[] = [$wordsOrder[0] => $words1, $wordsOrder[1] => $words2, $wordsOrder[2] => $words3, $wordsOrder[3] => $words4];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $wordsCombinations;
+    }
+
+    private function getSuggestedAddress($combinations, $words, $number, $cp)
+    {
+        $data = [];
+        foreach ($combinations as $combination) {
+            $combinationData = [
+                'province' => '',
+                'township' => '',
+                'typeRoad' => '',
+                'street' => ''
+            ];
+
+            $wordsIndex = 0;
+            foreach ($combination as $key => $elem) {
+                for ($i = 0; $i < $elem; $i++) {
+                    $combinationData[$key] = $words[$i + $wordsIndex];
+                    $wordsIndex++;
+                }
+            }
+
+            $res = $this->getAddressByFilter($combinationData['province'], $combinationData['township'], $combinationData['typeRoad'], $combinationData['street'], $number, $cp);
+            if (!empty($res)) $data[] = $res;
+        }
+
+        return $data;
+    }
+
+    private function getAddressByFilter($province, $township, $typeRoad, $street, $number, $cp = null)
+    {
+        $qb = $this->manager->createQueryBuilder('a')
+            ->select('a.cp', 'a.provincia', 'a.municipio', 'a.tipovia', 'a.calle', 'a.numero', 'a.producto')
+            ->from(Address::class, 'a')
+            ->where('a.provincia = :provincia')
+            ->andWhere('a.municipio = :municipio')
+            ->andWhere('a.tipovia = :tipovia')
+            ->andWhere('a.calle = :calle')
+            ->andWhere('a.numero = :numero')
+            ->setParameter('provincia', $province)
+            ->setParameter('municipio', $township)
+            ->setParameter('tipovia', $typeRoad)
+            ->setParameter('calle', $street)
+            ->setParameter('numero', $number);
+
+        if (!empty($cp)) {
+            $qb = $qb->andWhere('a.cp = :cp')
+                ->setParameter('cp', $cp);
+        }
+
+        $qb = $qb->groupBy('a.calle')
+            ->addOrderBy('a.provincia', 'ASC')
+            ->addOrderBy('a.municipio', 'ASC')
+            ->addOrderBy('a.tipovia', 'ASC')
+            ->addOrderBy('a.calle', 'ASC')
+            ->getQuery();
+
+        return $qb->getResult();
     }
 
     // public function getAddressByCp($cp)

@@ -227,6 +227,38 @@ span.elem-left i {
     margin-top: 1em;
 }
 
+#loading-bar {
+    position: absolute;
+    top: 25em;
+    width: 100%;
+    max-width: 100%;
+    margin-left: -1em;
+}
+
+.progress-bar-container {
+    width: 55%;
+    height: 4.5em;
+    border: 2px solid black;
+    background-color: white;
+    opacity: 90%;
+}
+
+#loading-bar p{
+    /* margin-bottom: -0.1em; */
+    margin-left: 1.5em;
+}
+
+.progress {
+    width: 95%;
+    margin: 0px 2.5%;
+    height: 1.25em;
+    margin-bottom: 1em;
+}
+
+.progress-bar{
+    transition: 0.2ms;
+}
+
 .clearBoth {
     clear: both;
 }
