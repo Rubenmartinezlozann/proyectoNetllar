@@ -19,12 +19,6 @@
             </button>
         </div>
     </div>
-    <section id="address-radio-container" class="d-flex flex-row justify-content-center address-radio-container">
-        <input type="radio" name="address-radio" id="address-radio-write" value="write" checked>
-        <label>Escribir dirección</label>
-        <input type="radio" name="address-radio" id="address-radio-select" value="select">
-        <label>Buscar por selección</label>
-    </section>
     <section id="address-write-container" class="address-write-container">
         <div class="row justify-content-center">
             <div class="col-sm-3 col-lg-2">
@@ -38,122 +32,11 @@
                     <option *ngFor='let elem of data;'
                         value="{{elem.tipovia}} {{elem.calle}} {{elem.municipio}} {{elem.provincia}}">
                 </datalist>
-                <input list="datalistCp" id="address-write-addressByCp" style="display: none;"
-                    placeholder="Escribe para buscar...">
-                <datalist id="datalistCp">
-                    <option *ngFor='let elem of dataByCp;'
-                        value="{{elem.tipovia}} {{elem.calle}} {{elem.municipio}} {{elem.provincia}}">
-                </datalist>
             </div>
             <div class="col-sm-3 col-lg-2">
                 <label>Número</label>
                 <br>
                 <input type="number" id="address-write-number" />
-            </div>
-        </div>
-    </section>
-    <section id="address-select-container" class="address-select-container">
-        <div class="row justify-content-center">
-            <div class="col-sm-4 col-md-3 col-lg-2">
-                <label>Código postal</label>
-                <br>
-                <div id="cp-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <div class="d-flex flex-row">
-                    <span id="cp-span" class="input-group-text elem-left">
-                        <i id="cp-icon" class="bi bi-pencil-square"></i>
-                    </span>
-                    <input type="number" id="cp" class="elem-right" />
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-3 col-lg-2">
-                <label for="province">Provincia</label>
-                <br>
-                <div id="province-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <div class="d-flex flex-row">
-                    <span id="province-span" class="input-group-text elem-left">
-                        <i id="province-icon" class="bi bi-pencil-square"></i>
-                    </span>
-                    <select name="province" id="province" class="elem-right" disabled>
-                        <option id="defaultProvince" value="" selected>Seleccionar</option>
-                        <option *ngFor='let elem of provinceArray;' class="text-capitalize" value="{{elem.provincia}}">
-                            {{elem.provincia}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-sm-4 col-md-3 col-lg-2">
-                <label for="township">Municipio</label>
-                <br>
-                <div id="township-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <div class="d-flex flex-row">
-                    <span id="township-span" class="input-group-text elem-left">
-                        <i id="township-icon" class="bi bi-pencil-square"></i>
-                    </span>
-                    <select name="township" id="township" class="elem-right" disabled>
-                        <option selected disabled value="" id="defaultTownship">Seleccionar</option>
-                        <option *ngFor='let elem of townshipArray;' value="{{elem.municipio}}">{{elem.municipio}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-3 col-lg-2">
-                <label>Tipo de via</label>
-                <br>
-                <div id="typeRoad-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <div class="d-flex flex-row">
-                    <span id="typeRoad-span" class="input-group-text elem-left">
-                        <i id="typeRoad-icon" class="bi bi-pencil-square"></i>
-                    </span>
-                    <select name="typeRoad" id="typeRoad" class="elem-right" disabled>
-                        <option selected value="" id="defaultTypeRoad">Seleccionar</option>
-                        <option *ngFor='let elem of typeRoadArray;' value="{{elem.tipovia}}">{{elem.tipovia}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-sm-4 col-md-3 col-lg-2">
-                <label for="street">Calle</label>
-                <br>
-                <div id="street-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <div class="d-flex flex-row">
-                    <span id="street-span" class="input-group-text elem-left">
-                        <i id="street-icon" class="bi bi-pencil-square"></i>
-                    </span>
-                    <select name="street" id="street" class="elem-right" disabled>
-                        <option selected value="" id="defaultStreet">Seleccionar</option>
-                        <option *ngFor='let elem of streetArray;' class="text-capitalize" value="{{elem.calle}}">
-                            {{elem.calle}}
-                        </option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-3 col-lg-2">
-                <label>Número</label>
-                <br>
-                <div id="number-spinner" class="spinner-border spinner-border-sm spinner-inf-left" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <div class="d-flex flex-row">
-                    <span id="number-span" class="input-group-text elem-left">
-                        <i id="number-icon" class="bi bi-pencil-square"></i>
-                    </span>
-                    <br>
-                    <input type="number" id="number" class="elem-right" disabled />
-                </div>
             </div>
         </div>
     </section>
@@ -167,15 +50,6 @@
             <button id="btnClear" class="btnClear">Borrar</button>
         </div>
     </div>
-    <section id="loading-bar" class="row justify-content-center">
-        <div class="progress-bar-container d-flex flex-column justify-content-center">
-            <p>Cargando datos...</p>
-            <div class="progress">
-                <div id="progress-bar" class="progress-bar progress-bar-striped bg-success" style="width: 0%;"
-                    role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-        </div>
-    </section>
     <section id="products-section" class="products-section">
         <div id="address-inf" class="d-flex flex-column col-4 address-inf">
             <h5>Dirección buscada</h5>

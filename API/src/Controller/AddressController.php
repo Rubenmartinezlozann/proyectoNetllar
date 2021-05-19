@@ -25,7 +25,7 @@ class AddressController extends AbstractController
     }
 
     /**
-     * @Route("/getOneAddressByText/{address}/{number}/{cp}", defaults={"cp": null}, name="getOneAddressByText", methods={"GET"})
+     * @Route("/getOneAddressByText/{address}/{number}/{cp}", name="getOneAddressByText", methods={"GET"})
      */
     public function getOneAddressByText($address, $number, $cp): JsonResponse
     {
