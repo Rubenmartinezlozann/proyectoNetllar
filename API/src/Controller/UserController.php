@@ -251,14 +251,8 @@ class UserController extends AbstractController
     /**
      * @Route("/sendMail", name="sendMail", methods={"POST"})
      */
-    public function sendMail(Request $request): JsonResponse
+    public function sendMail(): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        $asunto = empty($data['asunto']) ? ' ' : $data['asunto'];
-        $cuerpo = empty($data['cuerpo']) ? ' ' : $data['cuerpo'];
-        // $correo = !empty($data['correo']) ? ' ' : $data['correo'];
-
         // $headers = "MIME-Version: 1.0\r\n";
         // $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
 
@@ -277,7 +271,6 @@ class UserController extends AbstractController
         // //direcciones que recibirán copia oculta 
         // $headers .= "Bcc: rubenmartinezlozano@gmail.com\r\n";
 
-
         // $email = ((new NotificationEmail())
         //     ->subject($asunto)
         //     ->from('rubenmartinezlozano@gmail.com')
@@ -286,18 +279,6 @@ class UserController extends AbstractController
 
         // $this->mailer->send($email);
 
-        // $message = (new \Swift_Message('Hello Email'))
-        //     ->setFrom('mitseo6@gmail.com') // FIXME: this needs to change ?!
-        //     ->setTo('mohamedbaza16@gmail.com') // admin email here
-        //     ->setBody(
-        //         $this->renderView(
-        //             // templates/emails/registration.html.twig
-        //             'emails/event.html.twig',
-        //             ['event' => '']
-        //         ),
-        //         'text/html'
-        //     );
-
-        return new JsonResponse([mail('rubenmartinezlozano@gmail.com', $asunto, $cuerpo)], Response::HTTP_OK);
+        return new JsonResponse(1, Response::HTTP_OK);
     }
 }
