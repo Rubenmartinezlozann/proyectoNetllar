@@ -11,9 +11,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-use Symfony\Bridge\Twig\Mime\NotificationEmail;
+use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
+use Symfony\Bridge\Twig\Mime\NotificationEmail;
 use Symfony\Component\Mailer\MailerInterface;
 
 use Symfony\Component\Notifier\Notification\Notification;
@@ -253,31 +253,15 @@ class UserController extends AbstractController
      */
     public function sendMail(): JsonResponse
     {
-        // $headers = "MIME-Version: 1.0\r\n";
-        // $headers .= "Content-type: text/html; charset=iso-8859-1\r\n";
+        $transport = Transport::fromDsn('smtp://localhost');
+        $mailer = new Mailer($transport);
+        $email = (new Email())
+            ->from('rubenmartinezlozano@gmail.com')
+            ->to('rubenmartinezlozano@gmail.com')
+            ->subject('prueba')
+            ->text('Esto es una prueba');
 
-        // //dirección del remitente 
-        // $headers .= "From: Ruben <rubenmartinezlozann@gmail.com>\r\n";
-
-        // //dirección de respuesta, si queremos que sea distinta que la del remitente 
-        // $headers .= "Reply-To: rubenmartinezlozann@gmail.com\r\n";
-
-        // //ruta del mensaje desde origen a destino 
-        // $headers .= "Return-path: rubenmartinezlozann@gmail.com\r\n";
-
-        // //direcciones que recibián copia 
-        // $headers .= "Cc: rubenmartinezlozano@gmail.com\r\n";
-
-        // //direcciones que recibirán copia oculta 
-        // $headers .= "Bcc: rubenmartinezlozano@gmail.com\r\n";
-
-        // $email = ((new NotificationEmail())
-        //     ->subject($asunto)
-        //     ->from('rubenmartinezlozano@gmail.com')
-        //     ->to('rubenmartinezlozano@gmail.com')
-        //     ->context(['comment' => $cuerpo]));
-
-        // $this->mailer->send($email);
+        $mailer->send($email);
 
         return new JsonResponse(1, Response::HTTP_OK);
     }

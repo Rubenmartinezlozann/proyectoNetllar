@@ -266,11 +266,14 @@ class AddressRepository extends ServiceEntityRepository
             $wordsIndex = 0;
             foreach ($combination as $key => $elem) {
                 for ($i = 0; $i < $elem; $i++) {
-                    $combinationData[$key] = $words[$i + $wordsIndex];
-                    $wordsIndex++;
+                    if ($combinationData[$key] !== '') {
+                        $combinationData[$key] .= ' ';
+                    }
+                    $combinationData[$key] .= $words[$i + $wordsIndex];
                 }
+                $wordsIndex += $i;
             }
-
+            // $data[] = $combination;
             $res = $this->getAddressByFilter($combinationData['province'], $combinationData['township'], $combinationData['typeRoad'], $combinationData['street'], $number, $cp);
             if (!empty($res)) $data[] = $res;
         }
@@ -299,11 +302,7 @@ class AddressRepository extends ServiceEntityRepository
                 ->setParameter('cp', $cp);
         }
 
-        $qb = $qb->groupBy('a.calle')
-            ->addOrderBy('a.provincia', 'ASC')
-            ->addOrderBy('a.municipio', 'ASC')
-            ->addOrderBy('a.tipovia', 'ASC')
-            ->addOrderBy('a.calle', 'ASC')
+        $qb = $qb
             ->getQuery();
 
         return $qb->getResult();

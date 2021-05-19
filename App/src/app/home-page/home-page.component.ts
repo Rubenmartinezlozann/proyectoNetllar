@@ -380,13 +380,10 @@ export class HomePageComponent implements OnInit {
 	}
 
 	findProductsByText = () => {
-		console.log('si')
 		this.http.get(`http://127.0.0.1:8000/getOneAddressByText/${this.getCp() === '' ? this.addressWirteAddressElem.value : this.addressWriteAddressByCp.value}/${this.selectedNumber}/${this.getCp()}`)
 			.subscribe((res: any) => {
 				console.log(res)
-				console.log(`http://127.0.0.1:8000/getOneAddressByText/${this.getCp() === '' ? this.addressWirteAddressElem.value : this.addressWriteAddressByCp.value}/${this.selectedNumber}/${this.getCp()}`)
 				if (res.length === 1) {
-					console.log(res);
 					this.selectedProvince = res[0][0].provincia;
 					this.selectedTownship = res[0][0].municipio;
 					this.selectedTypeRoad = res[0][0].tipovia;
@@ -617,7 +614,6 @@ export class HomePageComponent implements OnInit {
 	clearAddressWriteSection = () => {
 		this.addressWirteAddressElem.value = '';
 		this.addressWirteCpElem.value = '';
-		console.log(this.addressWirteCpElem)
 		this.addressWriteNumberElem.value = '';
 		this.addressWriteAddressByCp.value = '';
 
