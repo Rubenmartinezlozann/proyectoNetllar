@@ -9,7 +9,7 @@
         </div>
     </div>
     <div id="btn-admin-container" class="btn-admin-container"></div>
-    <div class="row justify-content-center alert-container">
+    <!-- <div class="row justify-content-center alert-container">
         <div id="alert-container"
             class="col-sm-10 col-md-6 col-lg-4 d-flex flex-column justify-content-center alert alert-warning alert-dismissible fade"
             role="alert">
@@ -18,46 +18,52 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
+    </div> -->
+    <div class="row justify-content-center alert-container">
+        <div id="alert-container" class="col-sm-10 col-md-9 col-lg-8 col-xl-7 alert alert-danger fade" role="alert">
+            <p id="alert-text" class="text-center"></p>
+            <button id="alert-button" class="alert-button">
+                <span>&times;</span>
+            </button>
+        </div>
     </div>
     <section id="address-write-container" class="address-write-container">
         <div class="row justify-content-center">
-            <div class="col-sm-3 col-lg-2">
-                <label>Código postal</label>
+            <div class="col-sm-3 col-xl-2">
+                <label style="min-width: 7em;">Código postal</label>
                 <input type="number" id="address-write-cp" />
             </div>
-            <div class="col-sm-6 col-md-9 col-lg-3">
+            <div class="col-sm-6 col-xl-4">
                 <label>Dirección</label>
-                <input list="datalist" id="address-write-address" placeholder="Escribe para buscar...">
+                <input list="datalist" id="address-write-address" placeholder="Escribe para buscar..." disabled>
                 <datalist id="datalist">
                     <option *ngFor='let elem of data;'
                         value="{{elem.tipovia}} {{elem.calle}} {{elem.municipio}} {{elem.provincia}}">
                 </datalist>
             </div>
-            <div class="col-sm-3 col-lg-2">
+            <div class="col-sm-3 col-lg-2 col-xl-1">
                 <label>Número</label>
                 <br>
-                <input type="number" id="address-write-number" />
+                <input type="number" id="address-write-number" disabled />
+            </div>
+        </div>
+        <div id="button-container" class="row justify-content-center">
+            <div class="offset-xl-4 offset-lg-6 offset-sm-6 col-sm-3 col-xl-2">
+                <br>
+                <button id="btnConfirm" class="btnConfirm" disabled>Confirmar</button>
+            </div>
+            <div class="col-sm-3 col-lg-2 col-xl-1">
+                <br>
+                <button id="btnClear" class="btnClear">Borrar</button>
             </div>
         </div>
     </section>
-    <div id="button-container" class="row justify-content-center">
-        <div class="col-sm-4 col-md-3 col-lg-2">
-            <br>
-            <button id="btnConfirm" class="btnConfirm" disabled>Confirmar</button>
-        </div>
-        <div class="col-sm-4 col-md-3 col-lg-2">
-            <br>
-            <button id="btnClear" class="btnClear">Borrar</button>
-        </div>
-    </div>
     <section id="products-section" class="products-section">
         <div id="address-inf" class="d-flex flex-column col-4 address-inf">
             <h5>Dirección buscada</h5>
-            <label>Código postal {{cp}}</label>
-            <label>Provincia {{province}}</label>
-            <label>Municipio {{township}}</label>
-            <label>Dirección {{typeRoad}} {{street}}</label>
-            <label>Número {{number}}</label>
+            <label>Código postal {{selectedCp}}</label>
+            <label>Dirección {{address}}</label>
+            <label>Número {{selectedNumber}}</label>
         </div>
         <div>
             <div class="Card">

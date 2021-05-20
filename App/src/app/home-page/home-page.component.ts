@@ -16,13 +16,14 @@ export class HomePageComponent implements OnInit {
 
 	selectedCp: any = '';
 	selectedNumber: any;
+	address: any;
 
 	count2: number = 0;
 
 	addressWirteCpElem: any;
 	addressWirteAddressElem: any;
 	addressWriteNumberElem: any;
-	addressWriteAddressByCp: any
+	btnConfirm: any;
 
 	loadingIcon: any;
 
@@ -38,25 +39,38 @@ export class HomePageComponent implements OnInit {
 				this.addressWirteCpElem = document.getElementById('address-write-cp') as HTMLInputElement;
 				this.addressWirteAddressElem = document.getElementById('address-write-address') as HTMLInputElement;
 				this.addressWriteNumberElem = document.getElementById('address-write-number') as HTMLInputElement;
+				this.btnConfirm = document.getElementById('btnConfirm') as HTMLButtonElement;
 
 				this.loadingIcon = document.getElementById('loading-page-icon') as HTMLDivElement;
-				this.loadingIcon.style.display='none';
 
 				this.addressWriteNumberElem.addEventListener('input', () => {
 					this.selectedNumber = this.addressWriteNumberElem.value;
-					this.enableButton();
+					if (this.selectedNumber !== '') {
+						this.btnConfirm.removeAttribute('disabled');
+					} else {
+						this.btnConfirm.setAttribute('disabled', '');
+					}
 				});
 
 				this.addressWirteCpElem.addEventListener('input', () => {
 					this.count2++;
 					const count = this.count2;
 					this.switchIcon('address-write-cp', 'edit');
+					this.hideCpAlert('address-write-cp');
 					setTimeout(() => {
 						if (this.count2 === count) {
 							this.selectedCp = this.addressWirteCpElem.value;
-							this.hideCpAlert('address-write-cp');
-							this.showCpError('address-write-cp');
-							this.getData();
+							const text = this.selectedCp.length;
+							if ((text >= 4 && text <= 5) || this.selectedCp === 0) {
+								this.getData();
+							} else if (text > 0) {
+								this.showCpError('address-write-cp');
+								this.addressWirteAddressElem.setAttribute('disabled', '');
+								this.addressWriteNumberElem.setAttribute('disabled', '');
+								this.data = [];
+							} else {
+
+							}
 						}
 					}, 1000);
 				});
@@ -82,28 +96,29 @@ export class HomePageComponent implements OnInit {
 		this.http.get(`http://127.0.0.1:8000/getAllAddress/${sessionStorage.getItem('token')}/${this.getCp()}`).subscribe((res: any) => {
 			this.loadingIcon.style.display = 'none';
 			this.data = res;
+			if (res.length === 0) {
+				this.showNotFoundCp('address-write-cp');
+				this.addressWirteAddressElem.setAttribute('disabled', '');
+				this.addressWriteNumberElem.setAttribute('disabled', '');
+			}
+			else {
+				this.addressWirteAddressElem.removeAttribute('disabled');
+				this.addressWriteNumberElem.removeAttribute('disabled');
+			}
 		});
 	}
 
 	getCp = () => this.selectedCp.length === 4 ? this.selectedCp : (this.selectedCp.substring(0, 1) == 0 ? this.selectedCp.substring(1) : this.selectedCp);
 
-	enableButton = () => {
-		const button = document.getElementById('btnConfirm') as HTMLButtonElement;
-		if (this.selectedNumber !== '') {
-			button.removeAttribute('disabled');
-		} else {
-			button.setAttribute('disabled', '');
-		}
-	}
-
 	findProductsByText = () => {
+		this.loadingIcon.style.display = 'block';
 		this.http.get(`http://127.0.0.1:8000/getOneAddressByText/${this.addressWirteAddressElem.value}/${this.selectedNumber}/${this.getCp()}`)
 			.subscribe((res: any) => {
+				this.loadingIcon.style.display = 'none';
 				console.log(res)
-				if (res.length === 1) {
-					this.selectedCp = '' + res[0][0].cp;
-					this.addressWirteCpElem.value = this.selectedCp;
-				}
+				this.selectedCp = '' + res[0].cp;
+				this.addressWirteCpElem.value = this.selectedCp;
+				this.address = this.addressWirteCpElem.value;
 			}, (err) => {
 				sessionStorage.setItem('error', err.status);
 				this.router.navigate(['/login']);
@@ -115,22 +130,6 @@ export class HomePageComponent implements OnInit {
 			this.router.navigate(['/login']);
 		});
 		this.router.navigate(['/login']);
-	}
-
-	hideDefaultOption = (id: string, hide: boolean = false) => {
-		const elem = document.getElementById(id);
-		if (elem !== null) {
-			if (hide) {
-				elem.style.display = 'none';
-				elem.setAttribute('disabled', '');
-				elem.removeAttribute('selected');
-			} else {
-				elem.style.display = 'block';
-				elem.removeAttribute('disabled');
-				elem.setAttribute('selected', '');
-			}
-		}
-		return hide;
 	}
 
 	switchIcon = (elemdataName: string, action: string) => {
@@ -228,19 +227,13 @@ export class HomePageComponent implements OnInit {
 	}
 
 	showCpError = (idElem: any) => {
-		const text = this.selectedCp.length;
-		if ((text < 4 || text > 5) && text !== 0) {
-			this.switchIcon(idElem, 'error');
-			this.showAlert('El código postal debe tener una longitud de 5 carácteres', 'error');
-		}
+		this.switchIcon(idElem, 'error');
+		this.showAlert('El código postal debe tener una longitud de 5 carácteres', 'error');
 	}
 
 	showNotFoundCp = (idElem: any) => {
-		const text = this.selectedCp.length;
-		if (text >= 4 && text <= 5) {
-			this.switchIcon(idElem, 'warning');
-			this.showAlert('No hay servicio para este código postal', 'warning');
-		}
+		this.switchIcon(idElem, 'warning');
+		this.showAlert('No hay servicio para este código postal', 'warning');
 	}
 
 	hideCpAlert = (idElem: any) => {
@@ -249,17 +242,15 @@ export class HomePageComponent implements OnInit {
 	}
 
 	clearData = () => {
-		this.clearAddressWriteSection();
 		this.selectedCp = '';
 		this.selectedNumber = '';
-	}
-
-	clearAddressWriteSection = () => {
 		this.addressWirteAddressElem.value = '';
 		this.addressWirteCpElem.value = '';
 		this.addressWriteNumberElem.value = '';
-
+		this.data = [];
 		this.switchIcon('address-write-cp', 'edit');
+		this.addressWriteNumberElem.setAttribute('disabled');
+		this.addressWirteAddressElem.setAttribute('disabled');
 	}
 
 	hideAlert = () => {

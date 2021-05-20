@@ -152,6 +152,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
     getUsers = () => {
         const spinner = document.getElementById('spinner') as HTMLDivElement;
         if (spinner.style.display !== 'block') spinner.style.display = 'block';
+        
         this.http.get(`http://127.0.0.1:8000/getUsers/${sessionStorage.getItem('token')}`).subscribe((res: any) => {
             spinner.style.display = 'none';
             this.users = [];
@@ -165,7 +166,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
             this.allUsers = this.users;
         }, (err) => {
             sessionStorage.setItem('error', err.status);
-            this.router.navigate(['/login']);
+            // this.router.navigate(['/login']);
         });
     }
 

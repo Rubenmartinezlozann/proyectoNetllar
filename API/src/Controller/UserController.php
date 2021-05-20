@@ -253,15 +253,15 @@ class UserController extends AbstractController
      */
     public function sendMail(): JsonResponse
     {
-        $transport = Transport::fromDsn('smtp://localhost');
-        $mailer = new Mailer($transport);
-        $email = (new Email())
-            ->from('rubenmartinezlozano@gmail.com')
-            ->to('rubenmartinezlozano@gmail.com')
-            ->subject('prueba')
-            ->text('Esto es una prueba');
+        // $transport = Transport::fromDsn('smtp://localhost');
+        // $mailer = new Mailer($transport);
+        // $email = (new Email())
+        //     ->from('rubenmartinezlozano@gmail.com')
+        //     ->to('rubenmartinezlozano@gmail.com')
+        //     ->subject('prueba')
+        //     ->text('Esto es una prueba');
 
-        $mailer->send($email);
+        // $mailer->send($email);
 
         return new JsonResponse(1, Response::HTTP_OK);
     }

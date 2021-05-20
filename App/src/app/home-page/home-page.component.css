@@ -1,3 +1,7 @@
+.container-fluid {
+    min-height: 27em;
+}
+
 footer, header.jumbotron {
     background-color: rgb(98, 135, 179);
 }
@@ -8,10 +12,10 @@ footer {
     width: 100%;
 }
 
-@media(max-height:55em) {
+@media(max-height:40em) {
     footer {
         position: relative;
-        top: 7em;
+        top: 0em;
     }
 }
 
@@ -151,9 +155,10 @@ button.btnClear:active {
 
 .loading-page-icon {
     display: block;
-    position: relative;
-    left: 49.5%;
-    bottom: 1.5em;
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    margin-right: 1em;
     width: 2em;
     height: 2em;
 }
@@ -185,7 +190,6 @@ span.elem-left, span.elem-right {
 }
 
 span.elem-left#cp-span, span.elem-right#cp-span {
-    /* background-color: rgb(0, 191, 255); */
     background-color: rgb(0, 59, 135);
     color: white;
 }
@@ -223,82 +227,29 @@ span.elem-left i {
     padding-bottom: -1.5em;
 }
 
-.address-radio-container {
-    margin-top: 1em;
+.alert-container p {
+    position: relative;
+    bottom: 0.75em;
 }
 
-#loading-bar {
+.alert-button {
     position: absolute;
-    top: 25em;
-    width: 100%;
-    max-width: 100%;
-    margin-left: -1em;
+    top: 0;
+    right: -0.5em;
+    width: auto;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: none;
 }
 
-.progress-bar-container {
-    width: 55%;
-    height: 4.5em;
-    border: 2px solid black;
-    background-color: white;
-    opacity: 90%;
+.alert-button span {
+    padding: 1em;
+    font-size: 1.25em;
+    color: grey;
 }
 
-#loading-bar p{
-    /* margin-bottom: -0.1em; */
-    margin-left: 1.5em;
-}
-
-.progress {
-    width: 95%;
-    margin: 0px 2.5%;
-    height: 1.25em;
-    margin-bottom: 1em;
-}
-
-.progress-bar{
-    transition: 0.2ms;
-}
-
-.clearBoth {
-    clear: both;
-}
-
-/* button.dropdown-toggle {
+.alert-button span:hover {
     color: black;
-    background-color: transparent;
-} */
-
-/* a:hover {
-    background-color: lightblue;
-} */
-
-/* .suggestedAddressItem, .card-text {
-    font-size: 1em;
-} */
-
-/* .suggestedAddressContainer {
-    max-height: 200px;
-    display: none;
 }
-
-.suggestedAddressContainer::-webkit-scrollbar-track {
-    background-color: whitesmoke;
-    border-radius: 5;
-}
-
-.suggestedAddressContainer::-webkit-scrollbar {
-    width: 10px;
-}
-
-.suggestedAddressContainer::-webkit-scrollbar-thumb {
-    background-color: darkgrey;
-    border-radius: 5px;
-}
-
-.suggestedAddressItem :hover {
-    background-color: rgb(128, 152, 182)
-} */
-
-/* option.defaultProvince, option.defaultTownship, option.defaultTypeRoad, option.defaultStreet {
-    
-} */
